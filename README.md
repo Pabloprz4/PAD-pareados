@@ -1,2 +1,2 @@
-# PAD-emparedado
-PAD grupo Emparedados, para práctica
+# PAD-pareados
+PAD grupo Pareados, para práctica
