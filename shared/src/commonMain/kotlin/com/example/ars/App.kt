@@ -1,14 +1,19 @@
 package com.example.ars
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.remember
+import com.example.ars.di.AppContainer
+import com.example.ars.di.DefaultAppContainer
+import com.example.ars.features.home.presentation.HomeViewModel
+import com.example.ars.features.home.presentation.ui.HomeScreen
 
 @Composable
-@Preview
-fun App() {
+fun App(appContainer: AppContainer = remember { DefaultAppContainer() }) {
     MaterialTheme {
-        Text("Hola mundo")
+        val homeViewModel = remember {
+            HomeViewModel(appContainer.obtenerCriaturasUseCase)
+        }
+        HomeScreen(viewModel = homeViewModel)
     }
 }
