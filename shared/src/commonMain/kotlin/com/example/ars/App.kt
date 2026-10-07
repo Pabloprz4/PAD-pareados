@@ -7,12 +7,13 @@ import com.example.ars.di.AppContainer
 import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreen
+import com.example.ars.core.ui.theme.ArsTheme
 
 @Composable
 fun App(
     appContainer: AppContainer = remember { DefaultAppContainer() }
 ) {
-    MaterialTheme {
+    ArsTheme {
 
         val homeViewModel = remember {
             HomeViewModel(

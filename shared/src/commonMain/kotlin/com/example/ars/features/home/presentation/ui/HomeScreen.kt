@@ -24,6 +24,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.TextButton
+
+
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
@@ -82,44 +88,55 @@ fun HomeScreen(viewModel: HomeViewModel) {
         )
 
         //Los museos que puedes explorar
-        state.museos.forEach { museo ->
-            MuseoCard(museo = museo)
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(state.museos) { museo ->
+                MuseoCard(
+                    museo = museo
+                )
+            }
         }
 
         //Texto de tus criaturas
-        Text(
-        text = "Tus criaturas",
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 24.dp, bottom = 8.dp)
-    )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp, bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-        // Mostramos las criaturas cargadas
-        state.criaturas.forEach { criatura ->
+            Column {
+                Text(
+                    text = "Tu colección",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFB8863B)
+                )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+                Text(
+                    text = "Descubre criaturas explorando museos",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
-                    Text(
-                        text = criatura.nombre,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Text(
-                        text = criatura.museo
-                    )
-
-                    Text(
-                        text = criatura.descripcion
-                    )
+            TextButton(
+                onClick = {
+                    // Más adelante abrirá la colección completa
                 }
+            ) {
+                Text("Ver todas →")
+            }
+        }
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(state.criaturas) { criatura ->
+                CriaturaCard(criatura = criatura)
             }
         }
 
