@@ -9,11 +9,18 @@ import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreen
 
 @Composable
-fun App(appContainer: AppContainer = remember { DefaultAppContainer() }) {
+fun App(
+    appContainer: AppContainer = remember { DefaultAppContainer() }
+) {
     MaterialTheme {
+
         val homeViewModel = remember {
-            HomeViewModel(appContainer.obtenerCriaturasUseCase)
+            HomeViewModel(
+                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                obtenerMuseosUseCase = appContainer.obtenerMuseosUseCase
+            )
         }
+
         HomeScreen(viewModel = homeViewModel)
     }
 }

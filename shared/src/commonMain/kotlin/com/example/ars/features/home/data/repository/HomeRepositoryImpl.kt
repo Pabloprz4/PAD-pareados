@@ -2,7 +2,7 @@ package com.example.ars.features.home.data.repository
 
 import com.example.ars.features.home.domain.model.Criatura
 import com.example.ars.features.home.domain.repository.HomeRepository
-
+import com.example.ars.features.home.domain.model.Museo
 class HomeRepositoryImpl : HomeRepository {
 
     override suspend fun traerCriaturas(): List<Criatura> {
@@ -22,6 +22,35 @@ class HomeRepositoryImpl : HomeRepository {
                 nombre = "Reloj Derretido",
                 museo = "MoMA (Nueva York)",
                 descripcion = "Criatura surrealista inspirada en La persistencia de la memoria de Dalí."
+            )
+        )
+    }
+
+    override suspend fun traerMuseos(): List<Museo> {
+        return listOf(
+            Museo(
+                nombre = "Museo del Prado",
+                ciudad = "Madrid",
+                obrasDescubiertas = 21,
+                obrasTotales = 50,
+                criaturasDescubiertas = 3,
+                criaturasTotales = 12
+            ),
+            Museo(
+                nombre = "Museo Reina Sofía",
+                ciudad = "Madrid",
+                obrasDescubiertas = 8,
+                obrasTotales = 40,
+                criaturasDescubiertas = 1,
+                criaturasTotales = 10
+            ),
+            Museo(
+                nombre = "Museo Thyssen-Bornemisza",
+                ciudad = "Madrid",
+                obrasDescubiertas = 0,
+                obrasTotales = 35,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 8
             )
         )
     }
