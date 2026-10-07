@@ -22,6 +22,8 @@ import ars.shared.generated.resources.ars_icon_image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
@@ -31,6 +33,7 @@ fun HomeScreen(viewModel: HomeViewModel) {
     // Cargamos los museos cuando entramos en la pantalla
     LaunchedEffect(Unit) {
         viewModel.cargarMuseos()
+        viewModel.onCargarCriaturasClick()
     }
 
     Column(
@@ -51,68 +54,46 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 .padding(bottom = 8.dp)
         )
 
+        //Mensaje de bienvenida
+
         Text(
-            text = "Bienvenido a Ars",
+            text = "Bienvenido a ARS",
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(vertical = 8.dp)
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        Text(
+            text = "Descubre arte. Completa misiones. Colecciona criaturas.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
         )
 
         // Sección de museos
         Text(
             text = "¿Qué museo quieres explorar?",
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFFB8863B),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(top = 24.dp, bottom = 16.dp)
         )
 
+        //Los museos que puedes explorar
         state.museos.forEach { museo ->
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-
-                    Text(
-                        text = museo.nombre,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Text(
-                        text = museo.ciudad
-                    )
-
-                    Text(
-                        text = "Obras: ${museo.obrasDescubiertas}/${museo.obrasTotales}"
-                    )
-
-                    Text(
-                        text = "Criaturas: ${museo.criaturasDescubiertas}/${museo.criaturasTotales}"
-                    )
-                }
-            }
+            MuseoCard(museo = museo)
         }
 
-        // Botón que ya teníamos para cargar criaturas
-        Button(
-            onClick = {
-                viewModel.onCargarCriaturasClick()
-            },
-            enabled = !state.cargando,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text(
-                if (state.cargando) {
-                    "Cargando..."
-                } else {
-                    "Explorar Criaturas"
-                }
-            )
-        }
+        //Texto de tus criaturas
+        Text(
+        text = "Tus criaturas",
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp, bottom = 8.dp)
+    )
 
         // Mostramos las criaturas cargadas
         state.criaturas.forEach { criatura ->
