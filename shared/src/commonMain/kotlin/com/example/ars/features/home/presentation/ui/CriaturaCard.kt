@@ -37,7 +37,7 @@ fun CriaturaCard(
     criatura: Criatura,
     modifier: Modifier = Modifier
 ) {
-
+//prueba
     val imagenCriatura = when (criatura.nombre) {
         "Menina Fantasmal" -> Res.drawable.menina_fantasmal
         "Caballo Guernica" -> Res.drawable.caballo_guernica
