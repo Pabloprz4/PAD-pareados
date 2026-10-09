@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_inicio">Inicio</string>
+    <string name="nav_batalla">Batalla</string>
+    <string name="nav_escanear">Escanear</string>
+    <string name="nav_colecciones">Colecciones</string>
+    <string name="nav_ajustes">Ajustes</string>
+</resources>
