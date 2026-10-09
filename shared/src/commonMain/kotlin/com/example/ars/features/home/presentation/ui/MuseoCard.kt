@@ -2,7 +2,6 @@ package com.example.ars.features.home.presentation.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,8 +38,7 @@ import ars.shared.generated.resources.tissen
 @Composable
 fun MuseoCard(
     museo: Museo,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
 
     val progreso = if (museo.obrasTotales > 0) {
@@ -66,8 +64,7 @@ fun MuseoCard(
 
     Card(
         modifier = modifier
-            .width(360.dp)
-            .clickable { onClick() },
+            .width(360.dp),
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -219,12 +216,6 @@ fun MuseoCard(
                         text = "$porcentaje% completado",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Text(
-                        text = "Explorar →",
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

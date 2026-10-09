@@ -5,46 +5,35 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.ars.features.home.presentation.HomeViewModel
+import com.example.ars.features.home.presentation.HomeUiState
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.ars_icon_image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.TextButton
 
-
-
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
-
-    val state = viewModel.uiState
-
-    // Cargamos los museos cuando entramos en la pantalla
-    LaunchedEffect(Unit) {
-        viewModel.cargarMuseos()
-        viewModel.onCargarCriaturasClick()
-    }
+fun HomeScreen(state: HomeUiState) {
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .safeDrawingPadding()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,12 +65,16 @@ fun HomeScreen(viewModel: HomeViewModel) {
             modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
         )
 
+        if (state.cargando) {
+            CircularProgressIndicator(modifier = Modifier.padding(vertical = 16.dp))
+        }
+
         // Sección de museos
         Text(
             text = "¿Qué museo quieres explorar?",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFFB8863B),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp, bottom = 16.dp)
@@ -108,12 +101,12 @@ fun HomeScreen(viewModel: HomeViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Tu colección",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFB8863B)
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
@@ -124,9 +117,8 @@ fun HomeScreen(viewModel: HomeViewModel) {
             }
 
             TextButton(
-                onClick = {
-                    // Más adelante abrirá la colección completa
-                }
+                enabled = false,
+                onClick = {}
             ) {
                 Text("Ver todas →")
             }
