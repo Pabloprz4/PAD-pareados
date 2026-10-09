@@ -28,9 +28,20 @@ import com.example.ars.features.home.domain.model.Criatura
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.ars_icon_image
-import ars.shared.generated.resources.menina_fantasmal
+import ars.shared.generated.resources.menina
 import ars.shared.generated.resources.caballo_guernica
-import ars.shared.generated.resources.reloj_derretido
+import ars.shared.generated.resources.reloj_dali
+import ars.shared.generated.resources.jardin_delicias
+import ars.shared.generated.resources.girasol
+import ars.shared.generated.resources.ninfa_venus
+import ars.shared.generated.resources.el_grito
+import ars.shared.generated.resources.jupiter_monstruo
+import ars.shared.generated.resources.noche_estrellada
+import ars.shared.generated.resources.dos_manos
+import ars.shared.generated.resources.monstruo_ola
+import ars.shared.generated.resources.manzana_verde
+import ars.shared.generated.resources.mona_lisa
+import ars.shared.generated.resources.toro_guernica
 
 @Composable
 fun CriaturaCard(
@@ -38,9 +49,21 @@ fun CriaturaCard(
     modifier: Modifier = Modifier
 ) {
     val imagenCriatura = when (criatura.nombre) {
-        "Menina Fantasmal" -> Res.drawable.menina_fantasmal
+        "Menina Fantasmal" -> Res.drawable.menina
         "Caballo Guernica" -> Res.drawable.caballo_guernica
-        else -> Res.drawable.reloj_derretido
+        "Reloj Derretido" -> Res.drawable.reloj_dali
+        "Humanoide del Jardín" -> Res.drawable.jardin_delicias
+        "Girasol Ardiente" -> Res.drawable.girasol
+        "Ninfa de Venus" -> Res.drawable.ninfa_venus
+        "Espectro del Grito" -> Res.drawable.el_grito
+        "Saturno Devorador" -> Res.drawable.jupiter_monstruo
+        "Remolino Estrellado" -> Res.drawable.noche_estrellada
+        "Manos de la Creación" -> Res.drawable.dos_manos
+        "Garra de Kanagawa" -> Res.drawable.monstruo_ola
+        "Manzana con Traje" -> Res.drawable.manzana_verde
+        "Dama de la Mona Lisa" -> Res.drawable.mona_lisa
+        "Toro Guernica" -> Res.drawable.toro_guernica
+        else -> Res.drawable.ars_icon_image
     }
 
     Card(

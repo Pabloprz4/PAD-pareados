@@ -1,6 +1,7 @@
 package com.example.ars.features.home.presentation.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,7 +39,8 @@ import ars.shared.generated.resources.tissen
 @Composable
 fun MuseoCard(
     museo: Museo,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
 
     val progreso = if (museo.obrasTotales > 0) {
@@ -64,7 +66,8 @@ fun MuseoCard(
 
     Card(
         modifier = modifier
-            .width(360.dp),
+            .width(360.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
