@@ -6,5 +6,6 @@ data class Museo(
     val obrasDescubiertas: Int,
     val obrasTotales: Int,
     val criaturasDescubiertas: Int,
-    val criaturasTotales: Int
+    val criaturasTotales: Int,
+    val id: String // id nuevo
 )

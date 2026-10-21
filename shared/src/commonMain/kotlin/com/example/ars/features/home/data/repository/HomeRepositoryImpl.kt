@@ -89,7 +89,8 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasDescubiertas = 21,
                 obrasTotales = 50,
                 criaturasDescubiertas = 3,
-                criaturasTotales = 12
+                criaturasTotales = 12,
+                id = "museo_001"
             ),
             Museo(
                 nombre = "Museo Reina Sofía",
@@ -97,7 +98,8 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasDescubiertas = 8,
                 obrasTotales = 40,
                 criaturasDescubiertas = 1,
-                criaturasTotales = 10
+                criaturasTotales = 10,
+                id = "museo_002"
             ),
             Museo(
                 nombre = "Museo Thyssen-Bornemisza",
@@ -105,7 +107,8 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasDescubiertas = 0,
                 obrasTotales = 35,
                 criaturasDescubiertas = 0,
-                criaturasTotales = 8
+                criaturasTotales = 8,
+                id = "museo_003"
             )
         )
     }

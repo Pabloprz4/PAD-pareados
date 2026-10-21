@@ -24,7 +24,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class HomeViewModelTest {
-    private val museos = listOf(Museo("Prado", "Madrid", 0, 10, 0, 3))
+    private val museos = listOf(Museo("Prado", "Madrid", 0, 10, 0, 3, id = "museo_001"))
     private val criaturas = listOf(Criatura("Menina", "Prado", "Descripción"))
 
     @Test

@@ -57,6 +57,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            implementation(libs.google.code.scanner)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutinesCore)
