@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Ars</string>
+    <string name="recordatorios_canal_nombre">Recordatorios de Ars</string>
+    <string name="recordatorios_canal_descripcion">Avisos para seguir descubriendo arte en Ars</string>
+    <string name="recordatorio_titulo">Ars</string>
+    <string name="recordatorio_mensaje">Sigue descubriendo arte y ampliando tu colección.</string>
 </resources>

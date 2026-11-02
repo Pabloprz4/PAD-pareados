@@ -1,0 +1,9 @@
+package com.example.ars
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed interface Route {
+    @Serializable
+    data object Home : Route
+}
