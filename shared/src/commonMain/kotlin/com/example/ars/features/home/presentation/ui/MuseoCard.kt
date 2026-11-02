@@ -43,6 +43,7 @@ fun MuseoCard(
     onClick: () -> Unit = {}
 ) {
 
+    // calculamos con decimales y evitamos dividir entre cero si no hay obras
     val progreso = if (museo.obrasTotales > 0) {
         museo.obrasDescubiertas.toFloat() / museo.obrasTotales.toFloat()
     } else {

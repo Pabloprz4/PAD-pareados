@@ -35,17 +35,19 @@ fun App(
         val navController = rememberNavController()
         var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
 
+        // si venimos de una notificación, abrimos su pantalla sin duplicarla en la pila
         LaunchedEffect(toScreen) {
             toScreen?.let { destino ->
                 selectedTabIndex = ArsNavigationItem.Inicio.ordinal
                 navController.navigate(destino) { launchSingleTop = true }
-                onDestinoAbierto()
+                onDestinoAbierto() // lo limpiamos para poder abrir otro aviso al mismo sitio
             }
         }
         Scaffold(
             bottomBar = {
                 ArsNavigationBar(
                     selectedItem = ArsNavigationItem.entries[selectedTabIndex],
+                    // por ahora cambia la pestaña marcada, el contenido sigue siendo Ini
                     onItemSelected = { selectedTabIndex = it.ordinal }
                 )
             }

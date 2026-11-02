@@ -16,7 +16,7 @@ class ObtenerMuseosUseCase(
                 Result.success(museos)
             }
         } catch (cancelacion: CancellationException) {
-            throw cancelacion
+            throw cancelacion // dejamos pasar cancelación, NO es error de datos
         } catch (error: Exception) {
             Result.failure(error)
         }

@@ -16,7 +16,7 @@ class HomeViewModel(
     private val obtenerMuseosUseCase: ObtenerMuseosUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
-    val state = _state.asStateFlow()
+    val state = _state.asStateFlow() // fuera solo dejamos leer el estado
 
     private var contenidoSolicitado = false
 
@@ -28,6 +28,7 @@ class HomeViewModel(
 
     private fun cargarContenido() {
         // La composición puede volver a entrar con el mismo ViewModel.
+        // si ya lo pedimos, no volvemos a cargar al recomponer la pantalla
         if (contenidoSolicitado) return
         contenidoSolicitado = true
         _state.update { it.copy(cargando = true, error = null) }
@@ -35,6 +36,7 @@ class HomeViewModel(
         viewModelScope.launch {
             try {
                 coroutineScope {
+                    // las dos cargas empiezan a la vez, luego esperamos sus resultados
                     val cargaMuseos = async { obtenerMuseosUseCase() }
                     val cargaCriaturas = async { obtenerCriaturasUseCase() }
                     val museos = cargaMuseos.await()
@@ -48,6 +50,7 @@ class HomeViewModel(
                         }
                     )
 
+                    // si falla una carga, conservamos los datos que ya teníamos de esa lista
                     _state.update {
                         it.copy(
                             museos = museos.getOrNull() ?: it.museos,
@@ -59,6 +62,7 @@ class HomeViewModel(
                 }
             } finally {
                 // Ambas cargas han terminado o el ciclo de vida las ha cancelado.
+                // quitamos cargando tanto si termina como si se cancela
                 _state.update { it.copy(cargando = false) }
             }
         }

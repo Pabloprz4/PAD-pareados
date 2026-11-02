@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        toScreen = jsonToRoute(intent)
+        toScreen = jsonToRoute(intent) // si la app estaba cerrada, el destino llega por aquí
         setContent {
             App(
                 toScreen = toScreen,
@@ -50,6 +50,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
+        // programamos al salir de la app, pero no por girar la pantalla
         if (!isChangingConfigurations &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
@@ -58,12 +59,13 @@ class MainActivity : ComponentActivity() {
                 context = applicationContext,
                 titulo = getString(R.string.recordatorio_titulo),
                 mensaje = getString(R.string.recordatorio_mensaje),
-                demoraSegundos = 5L, // Demostración; no es el plazo definitivo del producto.
+                demoraSegundos = 5L, // 5s solo para la prueba
                 destino = Route.Home
             )
         }
     }
 
+    // si la actividad ya estaba abierta, el nuevo aviso llega aquí
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)

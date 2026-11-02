@@ -41,13 +41,14 @@ class NotificacionWorker(
 
     private fun mostrarNotificacion(titulo: String, mensaje: String, rutaJson: String) {
         val gestor = applicationContext.getSystemService(NotificationManager::class.java)
-        crearCanalNotificaciones(gestor)
+        crearCanalNotificaciones(gestor) // el aviso necesita un canal que exista en android
 
         val notificacionId = System.currentTimeMillis().toInt()
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             putExtra(EXTRA_TO_SCREEN, rutaJson)
         }
+        // android lo ejecutará al tocar el aviso, aunque la app ya esté cerrada
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
             notificacionId,
@@ -62,7 +63,7 @@ class NotificacionWorker(
             .setAutoCancel(true)
             .build()
 
-        // El permiso puede haberse revocado después de programar el trabajo.
+        // por si ha quitado el permiso desde que programamos el aviso
         if (applicationContext.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
             PackageManager.PERMISSION_GRANTED
         ) return

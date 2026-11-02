@@ -16,6 +16,7 @@ class InterpretarQrUseCase {
     operator fun invoke(contenido: String?): CodigoArs? {
         if (contenido == null) return null
 
+        // tiene que coincidir todo el texto, no solo contener un código válido
         val coincidencia = formato.matchEntire(contenido)
             ?: return null
 

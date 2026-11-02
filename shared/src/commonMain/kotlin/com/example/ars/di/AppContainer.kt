@@ -11,6 +11,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer : AppContainer {
+    // se crea al usarlo por primera vez y lo comparten los dos casos de uso
     private val homeRepository: HomeRepository by lazy {
         HomeRepositoryImpl()
     }

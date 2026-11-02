@@ -102,6 +102,7 @@ fun CriaturaCard(
                 )
 
                 // Indicador de criatura conseguida
+                // de momento es una etiqueta de ejemplo, no comprueba si ya la has conseguido
                 Text(
                     text = "DESCUBIERTA",
                     color = MaterialTheme.colorScheme.primary,

@@ -11,6 +11,7 @@ import com.example.ars.features.home.presentation.HomeViewModel
 fun HomeScreenRoot(viewModel: HomeViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    // pedimos los datos al entrar con este viewmodel, no en cada recomposición
     LaunchedEffect(viewModel) {
         viewModel.onAction(HomeAction.CargarContenido)
     }

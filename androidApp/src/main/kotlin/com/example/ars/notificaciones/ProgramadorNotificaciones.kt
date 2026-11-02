@@ -16,11 +16,13 @@ object ProgramadorNotificaciones {
         demoraSegundos: Long,
         destino: Route = Route.Home
     ) {
+        // guardamos la ruta como .json, el worker la recibirá luego
         val datos = Data.Builder()
             .putString("title", titulo)
             .putString("message", mensaje)
             .putString("route", Json.encodeToString<Route>(destino))
             .build()
+        // la espera es mínima, android puede lanzar el trabajo más tarde
         val trabajo = OneTimeWorkRequestBuilder<NotificacionWorker>()
             .setInitialDelay(demoraSegundos, TimeUnit.SECONDS)
             .setInputData(datos)

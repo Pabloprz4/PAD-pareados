@@ -35,6 +35,7 @@ class CatalogoRepositoryImpl(
     )
 
     override suspend fun obtenerMuseoPorId(id: String): Museo? {
+        // buscamos en la misma lista de museos que usa inicio
         return homeRepository.traerMuseos()
             .firstOrNull { museo -> museo.id == id }
     }

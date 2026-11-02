@@ -13,6 +13,7 @@ class ValidarQrUseCase(
         contenido: String?,
         museoActivoId: String?
     ): ResultadoValidacionQr {
+        // primero comprobamos el formato, después si existe en el catálogo
         return when (val codigo = interpretarQrUseCase(contenido)) {
             null -> ResultadoValidacionQr.CodigoInvalido
 
@@ -43,6 +44,7 @@ class ValidarQrUseCase(
             id = obra.museoId
         ) ?: return ResultadoValidacionQr.MuseoDesconocido
 
+        // la obra solo vale si antes hemos escaneado el museo al que pertenece
         return when {
             museoActivoId == null -> {
                 ResultadoValidacionQr.RequiereEscanearMuseo
