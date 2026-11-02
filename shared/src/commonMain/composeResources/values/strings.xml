@@ -5,4 +5,25 @@
     <string name="nav_escanear">Escanear</string>
     <string name="nav_colecciones">Colecciones</string>
     <string name="nav_ajustes">Ajustes</string>
+    <string name="escaner_titulo">Escanear QR</string>
+    <string name="escaner_indicaciones">Escanea primero el museo y después sus obras.</string>
+    <string name="escaner_museo_activo">Museo activo: %1$s</string>
+    <string name="escaner_ninguno">Ninguno</string>
+    <string name="escaner_leer_qr">Leer QR</string>
+    <string name="escaner_leyendo">Leyendo QR…</string>
+    <string name="escaner_validando">Comprobando el código…</string>
+    <string name="escaner_error">No se ha podido completar la lectura. Comprueba la conexión si es la primera vez y vuelve a intentarlo.</string>
+    <string name="escaner_contenido">Contenido leído</string>
+    <string name="escaner_museo_identificado">Museo identificado</string>
+    <string name="escaner_obra_identificada">Obra identificada</string>
+    <string name="escaner_id">ID: %1$s</string>
+    <string name="escaner_ciudad">Ciudad: %1$s</string>
+    <string name="escaner_autor">Autor: %1$s</string>
+    <string name="escaner_museo">Museo: %1$s</string>
+    <string name="escaner_codigo_invalido">El QR está vacío o no tiene el formato de Ars.</string>
+    <string name="escaner_museo_desconocido">El museo no está en el catálogo.</string>
+    <string name="escaner_obra_desconocida">La obra no está en el catálogo.</string>
+    <string name="escaner_requiere_museo">Escanea primero el QR del museo.</string>
+    <string name="escaner_museo_incorrecto">Para leer esta obra, escanea primero el QR de %1$s.</string>
+    <string name="escaner_datos_muestra">Catálogo de muestra</string>
 </resources>

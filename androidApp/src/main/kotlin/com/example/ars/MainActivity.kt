@@ -13,12 +13,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ars.features.escaner.presentation.LectorQrAndroid
 import com.example.ars.notificaciones.EXTRA_TO_SCREEN
 import com.example.ars.notificaciones.ProgramadorNotificaciones
 import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
     private var toScreen by mutableStateOf<Route?>(null)
+    private val lectorQr by lazy { LectorQrAndroid(this) }
 
     private val solicitarPermiso = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -37,7 +39,8 @@ class MainActivity : ComponentActivity() {
                 onDestinoAbierto = {
                     toScreen = null
                     intent?.removeExtra(EXTRA_TO_SCREEN)
-                }
+                },
+                onLeerQr = lectorQr::leer
             )
         }
         if (savedInstanceState == null &&

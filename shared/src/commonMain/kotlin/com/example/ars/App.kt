@@ -8,20 +8,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.ars.core.ui.navigation.ArsNavigationBar
 import com.example.ars.core.ui.navigation.ArsNavigationItem
 import com.example.ars.core.ui.theme.ArsTheme
 import com.example.ars.di.AppContainer
 import com.example.ars.di.DefaultAppContainer
+import com.example.ars.features.escaner.presentation.EscanerViewModel
+import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
 import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 
@@ -29,26 +30,47 @@ import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 fun App(
     appContainer: AppContainer = remember { DefaultAppContainer() },
     toScreen: Route? = null,
-    onDestinoAbierto: () -> Unit = {}
+    onDestinoAbierto: () -> Unit = {},
+    onLeerQr: ((onLeido: (String?) -> Unit, onCancelado: () -> Unit, onError: () -> Unit) -> Unit)? = null
 ) {
     ArsTheme {
         val navController = rememberNavController()
-        var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val selectedItem = if (backStackEntry?.destination?.hasRoute<Route.Escaner>() == true) {
+            ArsNavigationItem.Escanear
+        } else ArsNavigationItem.Inicio
+
+        // este viewmodel pertenece al host, así conserva el museo al volver a inicio
+        val escanerViewModel = if (onLeerQr != null) {
+            viewModel { EscanerViewModel(validarQrUseCase = appContainer.validarQrUseCase) }
+        } else null
 
         // si venimos de una notificación, abrimos su pantalla sin duplicarla en la pila
         LaunchedEffect(toScreen) {
             toScreen?.let { destino ->
-                selectedTabIndex = ArsNavigationItem.Inicio.ordinal
-                navController.navigate(destino) { launchSingleTop = true }
+                if (destino != Route.Escaner || onLeerQr != null) {
+                    navController.navigate(destino) {
+                        popUpTo<Route.Home>()
+                        launchSingleTop = true
+                    }
+                }
                 onDestinoAbierto() // lo limpiamos para poder abrir otro aviso al mismo sitio
             }
         }
         Scaffold(
             bottomBar = {
                 ArsNavigationBar(
-                    selectedItem = ArsNavigationItem.entries[selectedTabIndex],
-                    // por ahora cambia la pestaña marcada, el contenido sigue siendo Ini
-                    onItemSelected = { selectedTabIndex = it.ordinal }
+                    selectedItem = selectedItem,
+                    mostrarEscaner = onLeerQr != null,
+                    onItemSelected = { item ->
+                        when (item) {
+                            ArsNavigationItem.Inicio -> navController.popBackStack<Route.Home>(inclusive = false)
+                            ArsNavigationItem.Escanear -> navController.navigate(Route.Escaner) {
+                                launchSingleTop = true
+                            }
+                            else -> Unit
+                        }
+                    }
                 )
             }
         ) { innerPadding ->
@@ -70,6 +92,11 @@ fun App(
                             )
                         }
                         HomeScreenRoot(viewModel = homeViewModel)
+                    }
+                    if (onLeerQr != null && escanerViewModel != null) {
+                        composable<Route.Escaner> {
+                            EscanerScreenRoot(viewModel = escanerViewModel, onLeerQr = onLeerQr)
+                        }
                     }
                 }
             }

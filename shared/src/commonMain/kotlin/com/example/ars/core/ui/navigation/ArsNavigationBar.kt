@@ -47,7 +47,8 @@ enum class ArsNavigationItem(
 fun ArsNavigationBar(
     selectedItem: ArsNavigationItem,
     onItemSelected: (ArsNavigationItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mostrarEscaner: Boolean = true
 ) {
     val colors = MaterialTheme.colorScheme
 
@@ -58,7 +59,9 @@ fun ArsNavigationBar(
             tonalElevation = 0.dp
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                ArsNavigationItem.entries.forEach { item ->
+                ArsNavigationItem.entries.filter {
+                    mostrarEscaner || it != ArsNavigationItem.Escanear
+                }.forEach { item ->
                     NavigationBarItem(
                         selected = item == selectedItem,
                         onClick = { onItemSelected(item) },
