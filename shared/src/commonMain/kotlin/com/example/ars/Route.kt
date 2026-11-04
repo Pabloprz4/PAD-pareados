@@ -9,4 +9,7 @@ sealed interface Route {
 
     @Serializable
     data object Escaner : Route
+
+    @Serializable
+    data object Museos : Route
 }

@@ -1,3 +1,4 @@
+
 package com.example.ars
 
 import androidx.compose.foundation.layout.Box
@@ -31,21 +32,39 @@ fun App(
     appContainer: AppContainer = remember { DefaultAppContainer() },
     toScreen: Route? = null,
     onDestinoAbierto: () -> Unit = {},
-    onLeerQr: ((onLeido: (String?) -> Unit, onCancelado: () -> Unit, onError: () -> Unit) -> Unit)? = null
+    onLeerQr: ((
+        onLeido: (String?) -> Unit,
+        onCancelado: () -> Unit,
+        onError: () -> Unit
+    ) -> Unit)? = null
 ) {
     ArsTheme {
         val navController = rememberNavController()
         val backStackEntry by navController.currentBackStackEntryAsState()
-        val selectedItem = if (backStackEntry?.destination?.hasRoute<Route.Escaner>() == true) {
-            ArsNavigationItem.Escanear
-        } else ArsNavigationItem.Inicio
 
-        // este viewmodel pertenece al host, así conserva el museo al volver a inicio
+        // Detectamos qué sección está seleccionada
+        val selectedItem = when {
+            backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
+                ArsNavigationItem.Escanear
+
+            backStackEntry?.destination?.hasRoute<Route.Museos>() == true ->
+                ArsNavigationItem.Museos
+
+            else -> ArsNavigationItem.Inicio
+        }
+
+        // Este ViewModel pertenece al host, así conserva
+        // el museo al volver a Inicio
         val escanerViewModel = if (onLeerQr != null) {
-            viewModel { EscanerViewModel(validarQrUseCase = appContainer.validarQrUseCase) }
+            viewModel {
+                EscanerViewModel(
+                    validarQrUseCase = appContainer.validarQrUseCase
+                )
+            }
         } else null
 
-        // si venimos de una notificación, abrimos su pantalla sin duplicarla en la pila
+        // Si venimos de una notificación, abrimos su pantalla
+        // sin duplicarla en la pila
         LaunchedEffect(toScreen) {
             toScreen?.let { destino ->
                 if (destino != Route.Escaner || onLeerQr != null) {
@@ -54,9 +73,11 @@ fun App(
                         launchSingleTop = true
                     }
                 }
-                onDestinoAbierto() // lo limpiamos para poder abrir otro aviso al mismo sitio
+
+                onDestinoAbierto()
             }
         }
+
         Scaffold(
             bottomBar = {
                 ArsNavigationBar(
@@ -64,10 +85,21 @@ fun App(
                     mostrarEscaner = onLeerQr != null,
                     onItemSelected = { item ->
                         when (item) {
-                            ArsNavigationItem.Inicio -> navController.popBackStack<Route.Home>(inclusive = false)
-                            ArsNavigationItem.Escanear -> navController.navigate(Route.Escaner) {
-                                launchSingleTop = true
-                            }
+                            ArsNavigationItem.Inicio ->
+                                navController.popBackStack<Route.Home>(
+                                    inclusive = false
+                                )
+
+                            ArsNavigationItem.Museos ->
+                                navController.navigate(Route.Museos) {
+                                    launchSingleTop = true
+                                }
+
+                            ArsNavigationItem.Escanear ->
+                                navController.navigate(Route.Escaner) {
+                                    launchSingleTop = true
+                                }
+
                             else -> Unit
                         }
                     }
@@ -87,17 +119,30 @@ fun App(
                     composable<Route.Home> {
                         val homeViewModel = viewModel {
                             HomeViewModel(
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                                obtenerMuseosUseCase = appContainer.obtenerMuseosUseCase
+                                obtenerCriaturasUseCase =
+                                    appContainer.obtenerCriaturasUseCase,
+                                obtenerMuseosUseCase =
+                                    appContainer.obtenerMuseosUseCase
                             )
                         }
-                        HomeScreenRoot(viewModel = homeViewModel)
+
+                        HomeScreenRoot(
+                            viewModel = homeViewModel
+                        )
                     }
+
                     if (onLeerQr != null && escanerViewModel != null) {
                         composable<Route.Escaner> {
-                            EscanerScreenRoot(viewModel = escanerViewModel, onLeerQr = onLeerQr)
+                            EscanerScreenRoot(
+                                viewModel = escanerViewModel,
+                                onLeerQr = onLeerQr
+                            )
                         }
                     }
+
+                    // Próximo paso:
+                    // Registrar aquí composable<Route.Museos>
+                    // cuando creemos MuseosScreen.kt
                 }
             }
         }

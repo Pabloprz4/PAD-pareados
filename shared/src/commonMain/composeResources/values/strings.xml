@@ -26,4 +26,5 @@
     <string name="escaner_requiere_museo">Escanea primero el QR del museo.</string>
     <string name="escaner_museo_incorrecto">Para leer esta obra, escanea primero el QR de %1$s.</string>
     <string name="escaner_datos_muestra">Catálogo de muestra</string>
+    <string name="nav_museos">Museos</string>
 </resources>

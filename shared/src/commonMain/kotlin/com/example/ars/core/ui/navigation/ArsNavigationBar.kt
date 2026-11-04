@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.nav_ajustes
-import ars.shared.generated.resources.nav_batalla
+import ars.shared.generated.resources.nav_museos
 import ars.shared.generated.resources.nav_colecciones
 import ars.shared.generated.resources.nav_escanear
 import ars.shared.generated.resources.nav_inicio
@@ -26,7 +26,7 @@ import ars.shared.generated.resources.nav_house
 import ars.shared.generated.resources.nav_images
 import ars.shared.generated.resources.nav_scan_line
 import ars.shared.generated.resources.nav_settings
-import ars.shared.generated.resources.nav_swords
+import ars.shared.generated.resources.nav_landmark
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -37,7 +37,7 @@ enum class ArsNavigationItem(
     val icon: DrawableResource
 ) {
     Inicio(Res.string.nav_inicio, Res.drawable.nav_house),
-    Batalla(Res.string.nav_batalla, Res.drawable.nav_swords),
+    Museos(Res.string.nav_museos, Res.drawable.nav_landmark),
     Escanear(Res.string.nav_escanear, Res.drawable.nav_scan_line),
     Colecciones(Res.string.nav_colecciones, Res.drawable.nav_images),
     Ajustes(Res.string.nav_ajustes, Res.drawable.nav_settings)
