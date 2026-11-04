@@ -26,6 +26,7 @@ import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
 import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreenRoot
+import com.example.ars.features.museos.presentation.ui.MuseosScreen
 
 @Composable
 fun App(
@@ -131,6 +132,11 @@ fun App(
                         )
                     }
 
+                    //Acceso a los museos
+                    composable<Route.Museos> {
+                        MuseosScreen()
+                    }
+
                     if (onLeerQr != null && escanerViewModel != null) {
                         composable<Route.Escaner> {
                             EscanerScreenRoot(
@@ -140,9 +146,6 @@ fun App(
                         }
                     }
 
-                    // Próximo paso:
-                    // Registrar aquí composable<Route.Museos>
-                    // cuando creemos MuseosScreen.kt
                 }
             }
         }
