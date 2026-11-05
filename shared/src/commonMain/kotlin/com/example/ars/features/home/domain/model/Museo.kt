@@ -1,3 +1,4 @@
+
 package com.example.ars.features.home.domain.model
 
 data class Museo(
@@ -7,5 +8,7 @@ data class Museo(
     val obrasTotales: Int,
     val criaturasDescubiertas: Int,
     val criaturasTotales: Int,
-    val id: String // id nuevo
+    val id: String,
+    val pais: String = "España",
+    val destacado: Boolean = false
 )

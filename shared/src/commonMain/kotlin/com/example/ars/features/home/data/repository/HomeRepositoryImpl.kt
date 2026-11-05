@@ -81,8 +81,11 @@ class HomeRepositoryImpl : HomeRepository {
         )
     }
 
+
+
     override suspend fun traerMuseos(): List<Museo> {
         return listOf(
+            // NACIONALES
             Museo(
                 nombre = "Museo del Prado",
                 ciudad = "Madrid",
@@ -90,7 +93,9 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasTotales = 50,
                 criaturasDescubiertas = 3,
                 criaturasTotales = 12,
-                id = "museo_001"
+                id = "museo_001",
+                pais = "España",
+                destacado = true
             ),
             Museo(
                 nombre = "Museo Reina Sofía",
@@ -99,7 +104,9 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasTotales = 40,
                 criaturasDescubiertas = 1,
                 criaturasTotales = 10,
-                id = "museo_002"
+                id = "museo_002",
+                pais = "España",
+                destacado = true
             ),
             Museo(
                 nombre = "Museo Thyssen-Bornemisza",
@@ -108,8 +115,84 @@ class HomeRepositoryImpl : HomeRepository {
                 obrasTotales = 35,
                 criaturasDescubiertas = 0,
                 criaturasTotales = 8,
-                id = "museo_003"
+                id = "museo_003",
+                pais = "España",
+                destacado = true
+            ),
+
+            // INTERNACIONALES
+            Museo(
+                nombre = "MoMA (Nueva York)",
+                ciudad = "Nueva York",
+                obrasDescubiertas = 0,
+                obrasTotales = 30,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 2,
+                id = "museo_004",
+                pais = "Estados Unidos"
+            ),
+            Museo(
+                nombre = "Museo Van Gogh",
+                ciudad = "Ámsterdam",
+                obrasDescubiertas = 0,
+                obrasTotales = 25,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_005",
+                pais = "Países Bajos"
+            ),
+            Museo(
+                nombre = "Galería Uffizi (Florencia)",
+                ciudad = "Florencia",
+                obrasDescubiertas = 0,
+                obrasTotales = 30,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_006",
+                pais = "Italia"
+            ),
+            Museo(
+                nombre = "Museo MUNCH (Oslo)",
+                ciudad = "Oslo",
+                obrasDescubiertas = 0,
+                obrasTotales = 25,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_007",
+                pais = "Noruega"
+            ),
+            Museo(
+                nombre = "Museos Vaticanos",
+                ciudad = "Ciudad del Vaticano",
+                obrasDescubiertas = 0,
+                obrasTotales = 30,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_008",
+                pais = "Ciudad del Vaticano"
+            ),
+            Museo(
+                nombre = "Museo Metropolitano de Arte (Nueva York)",
+                ciudad = "Nueva York",
+                obrasDescubiertas = 0,
+                obrasTotales = 35,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_009",
+                pais = "Estados Unidos"
+            ),
+            Museo(
+                nombre = "Museo del Louvre",
+                ciudad = "París",
+                obrasDescubiertas = 0,
+                obrasTotales = 40,
+                criaturasDescubiertas = 0,
+                criaturasTotales = 1,
+                id = "museo_010",
+                pais = "Francia"
             )
         )
     }
+
+
 }

@@ -85,7 +85,7 @@ fun HomeScreen(state: HomeUiState) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(state.museos) { museo ->
+            items(state.museos.filter { it.destacado }) { museo ->
                 MuseoCard(
                     museo = museo
                 )
