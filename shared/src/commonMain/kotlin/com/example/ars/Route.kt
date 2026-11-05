@@ -12,4 +12,7 @@ sealed interface Route {
 
     @Serializable
     data object Museos : Route
+
+    @Serializable
+    data object Ajustes : Route
 }

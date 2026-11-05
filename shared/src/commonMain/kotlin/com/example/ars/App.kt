@@ -1,4 +1,3 @@
-
 package com.example.ars
 
 import androidx.compose.foundation.layout.Box
@@ -30,10 +29,10 @@ import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
 import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 
-import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
-
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
+
+import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
 
 @Composable
 fun App(
@@ -50,17 +49,13 @@ fun App(
         val navController = rememberNavController()
         val backStackEntry by navController.currentBackStackEntryAsState()
 
-        // ViewModel compartido entre Inicio y Museos
         val homeViewModel = viewModel {
             HomeViewModel(
-                obtenerCriaturasUseCase =
-                    appContainer.obtenerCriaturasUseCase,
-                obtenerMuseosUseCase =
-                    appContainer.obtenerMuseosUseCase
+                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                obtenerMuseosUseCase = appContainer.obtenerMuseosUseCase
             )
         }
 
-        // ViewModel del escáner
         val escanerViewModel = if (onLeerQr != null) {
             viewModel {
                 EscanerViewModel(
@@ -69,7 +64,6 @@ fun App(
             }
         } else null
 
-        // Sección seleccionada en la barra inferior
         val selectedItem = when {
             backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
                 ArsNavigationItem.Escanear
@@ -77,11 +71,13 @@ fun App(
             backStackEntry?.destination?.hasRoute<Route.Museos>() == true ->
                 ArsNavigationItem.Museos
 
+            backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
+                ArsNavigationItem.Ajustes
+
             else ->
                 ArsNavigationItem.Inicio
         }
 
-        // Navegación desde notificaciones
         LaunchedEffect(toScreen) {
             toScreen?.let { destino ->
                 if (destino != Route.Escaner || onLeerQr != null) {
@@ -90,7 +86,6 @@ fun App(
                         launchSingleTop = true
                     }
                 }
-
                 onDestinoAbierto()
             }
         }
@@ -103,9 +98,7 @@ fun App(
                     onItemSelected = { item ->
                         when (item) {
                             ArsNavigationItem.Inicio -> {
-                                navController.popBackStack<Route.Home>(
-                                    inclusive = false
-                                )
+                                navController.popBackStack<Route.Home>(inclusive = false)
                             }
 
                             ArsNavigationItem.Museos -> {
@@ -120,13 +113,18 @@ fun App(
                                 }
                             }
 
+                            ArsNavigationItem.Ajustes -> {
+                                navController.navigate(Route.Ajustes) {
+                                    launchSingleTop = true
+                                }
+                            }
+
                             else -> Unit
                         }
                     }
                 )
             }
         ) { innerPadding ->
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -137,29 +135,23 @@ fun App(
                     navController = navController,
                     startDestination = Route.Home
                 ) {
-
-                    // Pantalla de Inicio
                     composable<Route.Home> {
-                        HomeScreenRoot(
-                            viewModel = homeViewModel
-                        )
+                        HomeScreenRoot(viewModel = homeViewModel)
                     }
 
-                    // Pantalla de Museos
                     composable<Route.Museos> {
                         val museosViewModel = viewModel {
                             MuseosViewModel(
-                                obtenerCatalogoMuseosUseCase =
-                                    appContainer.obtenerCatalogoMuseosUseCase
+                                obtenerCatalogoMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase
                             )
                         }
-
-                        MuseosScreenRoot(
-                            viewModel = museosViewModel
-                        )
+                        MuseosScreenRoot(viewModel = museosViewModel)
                     }
 
-                    // Pantalla del escáner
+                    composable<Route.Ajustes> {
+                        AjustesScreenRoot()
+                    }
+
                     if (onLeerQr != null && escanerViewModel != null) {
                         composable<Route.Escaner> {
                             EscanerScreenRoot(
