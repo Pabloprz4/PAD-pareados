@@ -32,6 +32,9 @@ import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
 
+import com.example.ars.features.museos.presentation.MuseosViewModel
+import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
+
 @Composable
 fun App(
     appContainer: AppContainer = remember { DefaultAppContainer() },
@@ -144,12 +147,15 @@ fun App(
 
                     // Pantalla de Museos
                     composable<Route.Museos> {
+                        val museosViewModel = viewModel {
+                            MuseosViewModel(
+                                obtenerCatalogoMuseosUseCase =
+                                    appContainer.obtenerCatalogoMuseosUseCase
+                            )
+                        }
+
                         MuseosScreenRoot(
-                            viewModel = homeViewModel,
-                            onMuseoClick = { museo ->
-                                // Próximo paso:
-                                // abrir las obras del museo seleccionado
-                            }
+                            viewModel = museosViewModel
                         )
                     }
 

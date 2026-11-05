@@ -1,22 +1,35 @@
+
 package com.example.ars.di
 
 import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
 import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
+
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
 import com.example.ars.features.home.domain.usecase.ObtenerMuseosUseCase
 
+import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
+import com.example.ars.features.museos.domain.repository.MuseosRepository
+import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
+
 interface AppContainer {
+    // Home
     val obtenerCriaturasUseCase: ObtenerCriaturasUseCase
     val obtenerMuseosUseCase: ObtenerMuseosUseCase
+
+    // Escáner
     val validarQrUseCase: ValidarQrUseCase
+
+    // Museos
+    val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase
 }
 
 class DefaultAppContainer : AppContainer {
-    // inicio y el escáner usan la misma lista de museos
+
+    // Repositorio de Inicio
     private val homeRepository: HomeRepository by lazy {
         HomeRepositoryImpl()
     }
@@ -24,10 +37,12 @@ class DefaultAppContainer : AppContainer {
     override val obtenerCriaturasUseCase: ObtenerCriaturasUseCase by lazy {
         ObtenerCriaturasUseCase(repository = homeRepository)
     }
+
     override val obtenerMuseosUseCase: ObtenerMuseosUseCase by lazy {
         ObtenerMuseosUseCase(repository = homeRepository)
     }
 
+    // Repositorio del Escáner
     private val catalogoRepository: CatalogoRepository by lazy {
         CatalogoRepositoryImpl(homeRepository = homeRepository)
     }
@@ -36,6 +51,18 @@ class DefaultAppContainer : AppContainer {
         ValidarQrUseCase(
             interpretarQrUseCase = InterpretarQrUseCase(),
             catalogoRepository = catalogoRepository
+        )
+    }
+
+    // Repositorio propio de Museos
+    private val museosRepository: MuseosRepository by lazy {
+        MuseosRepositoryImpl()
+    }
+
+    override val obtenerCatalogoMuseosUseCase:
+            ObtenerCatalogoMuseosUseCase by lazy {
+        ObtenerCatalogoMuseosUseCase(
+            repository = museosRepository
         )
     }
 }

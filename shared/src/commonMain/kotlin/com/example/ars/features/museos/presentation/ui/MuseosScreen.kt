@@ -19,8 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.ars.features.home.domain.model.Museo
-import com.example.ars.features.home.presentation.ui.MuseoCard
+
+import com.example.ars.features.museos.domain.model.Museo
+
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.ars_icon_image
@@ -30,19 +31,14 @@ fun MuseosScreen(
     museos: List<Museo>,
     onMuseoClick: (Museo) -> Unit = {}
 ) {
-    val nacionales = museos.filter {
-        it.pais == "España"
-    }
+    val nacionales = museos.filter { it.pais == "España" }
+    val internacionales = museos.filter { it.pais != "España" }
 
-    val internacionales = museos.filter {
-        it.pais != "España"
-    }
+    val descubiertas = museos.sumOf { it.obrasDescubiertas }
+    val totales = museos.sumOf { it.obrasTotales }
 
-    val obrasDescubiertas = museos.sumOf { it.obrasDescubiertas }
-    val obrasTotales = museos.sumOf { it.obrasTotales }
-
-    val progreso = if (obrasTotales > 0) {
-        obrasDescubiertas.toFloat() / obrasTotales
+    val progreso = if (totales > 0) {
+        (descubiertas.toFloat() / totales).coerceIn(0f, 1f)
     } else {
         0f
     }
@@ -52,7 +48,7 @@ fun MuseosScreen(
             .fillMaxSize()
             .background(Color(0xFFF8F5EF)),
         contentPadding = PaddingValues(20.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(22.dp)
     ) {
         item {
             Column(
@@ -60,11 +56,9 @@ fun MuseosScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(
-                        Res.drawable.ars_icon_image
-                    ),
+                    painter = painterResource(Res.drawable.ars_icon_image),
                     contentDescription = "Logo Ars",
-                    modifier = Modifier.size(100.dp)
+                    modifier = Modifier.size(90.dp)
                 )
 
                 Text(
@@ -100,7 +94,7 @@ fun MuseosScreen(
                     )
 
                     Text(
-                        text = "$obrasDescubiertas / $obrasTotales obras descubiertas",
+                        text = "$descubiertas / $totales obras descubiertas",
                         style = MaterialTheme.typography.headlineSmall
                     )
 
@@ -126,11 +120,10 @@ fun MuseosScreen(
 
         item {
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 8.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(nacionales) { museo ->
-                    MuseoCard(
+                items(nacionales, key = { it.id }) { museo ->
+                    MuseoCatalogoCard(
                         museo = museo,
                         onClick = { onMuseoClick(museo) }
                     )
@@ -148,11 +141,10 @@ fun MuseosScreen(
 
         item {
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 8.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(internacionales) { museo ->
-                    MuseoCard(
+                items(internacionales, key = { it.id }) { museo ->
+                    MuseoCatalogoCard(
                         museo = museo,
                         onClick = { onMuseoClick(museo) }
                     )

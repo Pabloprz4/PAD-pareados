@@ -1,12 +1,13 @@
+
 package com.example.ars.features.home.data.repository
 
 import com.example.ars.features.home.domain.model.Criatura
-import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.home.domain.repository.HomeRepository
+
 class HomeRepositoryImpl : HomeRepository {
 
     override suspend fun traerCriaturas(): List<Criatura> {
-        // La cosa sería llamar a una base de datos local en vez de esto, pero de momento ponemos esto perracos
         return listOf(
             Criatura(
                 nombre = "Menina Fantasmal",
@@ -81,11 +82,8 @@ class HomeRepositoryImpl : HomeRepository {
         )
     }
 
-
-
     override suspend fun traerMuseos(): List<Museo> {
         return listOf(
-            // NACIONALES
             Museo(
                 nombre = "Museo del Prado",
                 ciudad = "Madrid",
@@ -118,81 +116,7 @@ class HomeRepositoryImpl : HomeRepository {
                 id = "museo_003",
                 pais = "España",
                 destacado = true
-            ),
-
-            // INTERNACIONALES
-            Museo(
-                nombre = "MoMA (Nueva York)",
-                ciudad = "Nueva York",
-                obrasDescubiertas = 0,
-                obrasTotales = 30,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 2,
-                id = "museo_004",
-                pais = "Estados Unidos"
-            ),
-            Museo(
-                nombre = "Museo Van Gogh",
-                ciudad = "Ámsterdam",
-                obrasDescubiertas = 0,
-                obrasTotales = 25,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_005",
-                pais = "Países Bajos"
-            ),
-            Museo(
-                nombre = "Galería Uffizi (Florencia)",
-                ciudad = "Florencia",
-                obrasDescubiertas = 0,
-                obrasTotales = 30,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_006",
-                pais = "Italia"
-            ),
-            Museo(
-                nombre = "Museo MUNCH (Oslo)",
-                ciudad = "Oslo",
-                obrasDescubiertas = 0,
-                obrasTotales = 25,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_007",
-                pais = "Noruega"
-            ),
-            Museo(
-                nombre = "Museos Vaticanos",
-                ciudad = "Ciudad del Vaticano",
-                obrasDescubiertas = 0,
-                obrasTotales = 30,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_008",
-                pais = "Ciudad del Vaticano"
-            ),
-            Museo(
-                nombre = "Museo Metropolitano de Arte (Nueva York)",
-                ciudad = "Nueva York",
-                obrasDescubiertas = 0,
-                obrasTotales = 35,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_009",
-                pais = "Estados Unidos"
-            ),
-            Museo(
-                nombre = "Museo del Louvre",
-                ciudad = "París",
-                obrasDescubiertas = 0,
-                obrasTotales = 40,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 1,
-                id = "museo_010",
-                pais = "Francia"
             )
         )
     }
-
-
 }
