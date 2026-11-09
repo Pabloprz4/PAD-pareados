@@ -1,3 +1,4 @@
+
 package com.example.ars.features.home.presentation.ui
 
 import androidx.compose.runtime.Composable
@@ -8,13 +9,18 @@ import com.example.ars.features.home.presentation.HomeAction
 import com.example.ars.features.home.presentation.HomeViewModel
 
 @Composable
-fun HomeScreenRoot(viewModel: HomeViewModel) {
+fun HomeScreenRoot(
+    viewModel: HomeViewModel,
+    onExplorarMuseos: () -> Unit = {}
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    // pedimos los datos al entrar con este viewmodel, no en cada recomposición
     LaunchedEffect(viewModel) {
         viewModel.onAction(HomeAction.CargarContenido)
     }
 
-    HomeScreen(state = state)
+    HomeScreen(
+        state = state,
+        onExplorarMuseos = onExplorarMuseos
+    )
 }

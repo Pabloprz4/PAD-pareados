@@ -136,7 +136,14 @@ fun App(
                     startDestination = Route.Home
                 ) {
                     composable<Route.Home> {
-                        HomeScreenRoot(viewModel = homeViewModel)
+                        HomeScreenRoot(
+                            viewModel = homeViewModel,
+                            onExplorarMuseos = {
+                                navController.navigate(Route.Museos) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        )
                     }
 
                     composable<Route.Museos> {
