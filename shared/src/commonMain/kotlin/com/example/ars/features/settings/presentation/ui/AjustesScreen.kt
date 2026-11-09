@@ -15,6 +15,15 @@ fun AjustesScreenRoot(
     onModoOscuroCambiado: (Boolean) -> Unit
 ) {
     var notificacionesMisiones by remember { mutableStateOf(true) }
+    val coloresInterruptor = if (modoOscuro) {
+        SwitchDefaults.colors()
+    } else {
+        val colorApagado = MaterialTheme.colorScheme.onSurfaceVariant
+        SwitchDefaults.colors(
+            uncheckedThumbColor = colorApagado,
+            uncheckedBorderColor = colorApagado
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -56,7 +65,8 @@ fun AjustesScreenRoot(
                     // pendiente
                     Switch(
                         checked = notificacionesMisiones,
-                        onCheckedChange = { notificacionesMisiones = it }
+                        onCheckedChange = { notificacionesMisiones = it },
+                        colors = coloresInterruptor
                     )
                 }
 
@@ -77,7 +87,8 @@ fun AjustesScreenRoot(
                     }
                     Switch(
                         checked = modoOscuro,
-                        onCheckedChange = onModoOscuroCambiado
+                        onCheckedChange = onModoOscuroCambiado,
+                        colors = coloresInterruptor
                     )
                 }
             }
