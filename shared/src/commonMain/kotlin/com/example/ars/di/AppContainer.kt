@@ -14,6 +14,9 @@ import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.museos.domain.repository.MuseosRepository
 import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 
+import com.example.ars.features.home.domain.repository.ProgresoRepository
+import com.example.ars.features.home.data.repository.ProgresoRepositoryImpl
+
 interface AppContainer {
     // Home
     val obtenerCriaturasUseCase: ObtenerCriaturasUseCase
@@ -23,6 +26,9 @@ interface AppContainer {
 
     // Museos
     val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase
+
+    //Progresos
+    val progresoRepository: ProgresoRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -55,5 +61,11 @@ class DefaultAppContainer : AppContainer {
 
     override val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase by lazy {
         ObtenerCatalogoMuseosUseCase(repository = museosRepository)
+    }
+
+
+    //Progresos
+    override val progresoRepository: ProgresoRepository by lazy {
+        ProgresoRepositoryImpl()
     }
 }

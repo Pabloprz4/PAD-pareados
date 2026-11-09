@@ -18,6 +18,7 @@ import com.example.ars.features.escaner.presentation.LectorQrAndroid
 import com.example.ars.notificaciones.EXTRA_TO_SCREEN
 import com.example.ars.notificaciones.ProgramadorNotificaciones
 import kotlinx.serialization.json.Json
+import com.example.ars.core.storage.inicializarAlmacenamientoLocal
 
 class MainActivity : ComponentActivity() {
     private var toScreen by mutableStateOf<Route?>(null)
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        //Inicializamos lo que tenemos guardado
+        inicializarAlmacenamientoLocal(applicationContext)
 
         toScreen = jsonToRoute(intent) // si la app estaba cerrada, el destino llega por aquí
         setContent {
