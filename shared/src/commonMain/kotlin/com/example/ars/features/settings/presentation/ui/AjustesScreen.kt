@@ -1,6 +1,8 @@
 package com.example.ars.features.ajustes.presentation.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -8,13 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AjustesScreenRoot() {
+fun AjustesScreenRoot(
+    modoOscuro: Boolean,
+    onModoOscuroCambiado: (Boolean) -> Unit
+) {
     var notificacionesMisiones by remember { mutableStateOf(true) }
-    var modoOscuro by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
         Text(
@@ -48,6 +53,7 @@ fun AjustesScreenRoot() {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    // pendiente
                     Switch(
                         checked = notificacionesMisiones,
                         onCheckedChange = { notificacionesMisiones = it }
@@ -71,7 +77,7 @@ fun AjustesScreenRoot() {
                     }
                     Switch(
                         checked = modoOscuro,
-                        onCheckedChange = { modoOscuro = it }
+                        onCheckedChange = onModoOscuroCambiado
                     )
                 }
             }

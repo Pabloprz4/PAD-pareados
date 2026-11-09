@@ -1,6 +1,6 @@
 package com.example.ars.features.escaner.domain.model
 
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 
 sealed interface ResultadoValidacionQr {
     data class MuseoValido(val museo: Museo) : ResultadoValidacionQr

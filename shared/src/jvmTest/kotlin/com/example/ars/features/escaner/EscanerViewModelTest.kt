@@ -9,7 +9,7 @@ import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
 import com.example.ars.features.escaner.presentation.EscanerAction
 import com.example.ars.features.escaner.presentation.EscanerViewModel
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

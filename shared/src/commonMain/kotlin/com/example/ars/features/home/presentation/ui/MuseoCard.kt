@@ -29,7 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.prado

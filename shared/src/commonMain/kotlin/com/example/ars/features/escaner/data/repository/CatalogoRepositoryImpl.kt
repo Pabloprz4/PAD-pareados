@@ -2,11 +2,11 @@ package com.example.ars.features.escaner.data.repository
 
 import com.example.ars.features.escaner.domain.model.Obra
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
-import com.example.ars.features.home.domain.model.Museo
-import com.example.ars.features.home.domain.repository.HomeRepository
+import com.example.ars.features.museos.domain.model.Museo
+import com.example.ars.features.museos.domain.repository.MuseosRepository
 
 class CatalogoRepositoryImpl(
-    private val homeRepository: HomeRepository
+    private val museosRepository: MuseosRepository
 ) : CatalogoRepository {
 
     // catalogo local para prueba
@@ -35,8 +35,8 @@ class CatalogoRepositoryImpl(
     )
 
     override suspend fun obtenerMuseoPorId(id: String): Museo? {
-        // buscamos en la misma lista de museos que usa inicio
-        return homeRepository.traerMuseos()
+        // el QR busca en el mismo catálogo que muestran Inicio y Museos
+        return museosRepository.obtenerMuseos()
             .firstOrNull { museo -> museo.id == id }
     }
 

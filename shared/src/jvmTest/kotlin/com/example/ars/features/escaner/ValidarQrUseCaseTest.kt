@@ -11,7 +11,8 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 
 class ValidarQrUseCaseTest {
-    private val validar = DefaultAppContainer().validarQrUseCase
+    private val contenedor = DefaultAppContainer()
+    private val validar = contenedor.validarQrUseCase
 
     @Test
     fun interpretaSoloElFormatoCompletoDeArs() {
@@ -26,10 +27,12 @@ class ValidarQrUseCaseTest {
 
     @Test
     fun identificaMuseosYRechazaLosDesconocidos() = runBlocking {
-        val resultado = assertIs<ResultadoValidacionQr.MuseoValido>(
-            validar("ars:v1:museo:museo_001", museoActivoId = null)
-        )
-        assertEquals("Museo del Prado", resultado.museo.nombre)
+        val museos = contenedor.obtenerCatalogoMuseosUseCase().getOrThrow()
+        assertEquals(10, museos.size)
+        for (museo in museos) {
+            val resultado = validar("ars:v1:museo:${museo.id}", museoActivoId = null)
+            assertEquals(ResultadoValidacionQr.MuseoValido(museo), resultado)
+        }
         assertEquals(ResultadoValidacionQr.MuseoDesconocido,
             validar("ars:v1:museo:desconocido", museoActivoId = null))
         assertEquals(ResultadoValidacionQr.CodigoInvalido, validar("", museoActivoId = null))

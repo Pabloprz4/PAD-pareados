@@ -9,7 +9,6 @@ import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
-import com.example.ars.features.home.domain.usecase.ObtenerMuseosUseCase
 
 import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.museos.domain.repository.MuseosRepository
@@ -18,7 +17,6 @@ import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCa
 interface AppContainer {
     // Home
     val obtenerCriaturasUseCase: ObtenerCriaturasUseCase
-    val obtenerMuseosUseCase: ObtenerMuseosUseCase
 
     // Escáner
     val validarQrUseCase: ValidarQrUseCase
@@ -38,13 +36,14 @@ class DefaultAppContainer : AppContainer {
         ObtenerCriaturasUseCase(repository = homeRepository)
     }
 
-    override val obtenerMuseosUseCase: ObtenerMuseosUseCase by lazy {
-        ObtenerMuseosUseCase(repository = homeRepository)
+    // Inicio, Museos y el escáner comparten el catálogo
+    private val museosRepository: MuseosRepository by lazy {
+        MuseosRepositoryImpl()
     }
 
     // Repositorio del Escáner
     private val catalogoRepository: CatalogoRepository by lazy {
-        CatalogoRepositoryImpl(homeRepository = homeRepository)
+        CatalogoRepositoryImpl(museosRepository = museosRepository)
     }
 
     override val validarQrUseCase: ValidarQrUseCase by lazy {
@@ -54,15 +53,7 @@ class DefaultAppContainer : AppContainer {
         )
     }
 
-    // Repositorio propio de Museos
-    private val museosRepository: MuseosRepository by lazy {
-        MuseosRepositoryImpl()
-    }
-
-    override val obtenerCatalogoMuseosUseCase:
-            ObtenerCatalogoMuseosUseCase by lazy {
-        ObtenerCatalogoMuseosUseCase(
-            repository = museosRepository
-        )
+    override val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase by lazy {
+        ObtenerCatalogoMuseosUseCase(repository = museosRepository)
     }
 }

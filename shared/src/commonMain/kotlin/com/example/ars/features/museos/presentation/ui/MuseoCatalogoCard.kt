@@ -171,8 +171,8 @@ fun MuseoCatalogoCard(
                         .fillMaxWidth()
                         .height(8.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    color = Color(0xFFB78643),
-                    trackColor = Color(0xFFE9DFD2)
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
 
                 Text(

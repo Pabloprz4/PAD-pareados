@@ -1,7 +1,7 @@
 package com.example.ars.features.escaner.domain.repository
 
 import com.example.ars.features.escaner.domain.model.Obra
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 
 interface CatalogoRepository {
 

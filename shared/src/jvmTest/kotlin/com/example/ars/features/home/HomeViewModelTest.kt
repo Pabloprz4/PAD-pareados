@@ -2,10 +2,11 @@ package com.example.ars.features.home
 
 import androidx.lifecycle.ViewModelStore
 import com.example.ars.features.home.domain.model.Criatura
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
-import com.example.ars.features.home.domain.usecase.ObtenerMuseosUseCase
+import com.example.ars.features.museos.domain.repository.MuseosRepository
+import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 import com.example.ars.features.home.presentation.HomeAction
 import com.example.ars.features.home.presentation.HomeViewModel
 import kotlinx.coroutines.CancellationException
@@ -24,7 +25,18 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class HomeViewModelTest {
-    private val museos = listOf(Museo("Prado", "Madrid", 0, 10, 0, 3, id = "museo_001"))
+    private val museos = listOf(
+        Museo(
+            id = "museo_001",
+            nombre = "Prado",
+            ciudad = "Madrid",
+            pais = "España",
+            obrasDescubiertas = 0,
+            obrasTotales = 10,
+            criaturasDescubiertas = 0,
+            criaturasTotales = 3
+        )
+    )
     private val criaturas = listOf(Criatura("Menina", "Prado", "Descripción"))
 
     @Test
@@ -133,20 +145,20 @@ class HomeViewModelTest {
 
     @Test
     fun casosDeUsoPropaganLaCancelacion(): Unit = runBlocking {
-        val repository = object : HomeRepository {
-            override suspend fun traerMuseos(): List<Museo> = throw CancellationException("cancelado")
+        val repository = object : HomeRepository, MuseosRepository {
+            override suspend fun obtenerMuseos(): List<Museo> = throw CancellationException("cancelado")
             override suspend fun traerCriaturas(): List<Criatura> = throw CancellationException("cancelado")
         }
-        assertFailsWith<CancellationException> { ObtenerMuseosUseCase(repository)() }
+        assertFailsWith<CancellationException> { ObtenerCatalogoMuseosUseCase(repository)() }
         assertFailsWith<CancellationException> { ObtenerCriaturasUseCase(repository)() }
     }
 
-    private fun crearViewModel(repository: HomeRepository) = HomeViewModel(
+    private fun crearViewModel(repository: RepositorioControlado) = HomeViewModel(
         obtenerCriaturasUseCase = ObtenerCriaturasUseCase(repository),
-        obtenerMuseosUseCase = ObtenerMuseosUseCase(repository)
+        obtenerMuseosUseCase = ObtenerCatalogoMuseosUseCase(repository)
     )
 
-    private class RepositorioControlado : HomeRepository {
+    private class RepositorioControlado : HomeRepository, MuseosRepository {
         val museos = CompletableDeferred<List<Museo>>()
         val criaturas = CompletableDeferred<List<Criatura>>()
         val museosIniciados = CompletableDeferred<Unit>()
@@ -156,7 +168,7 @@ class HomeViewModelTest {
         var peticionesMuseos = 0
         var peticionesCriaturas = 0
 
-        override suspend fun traerMuseos(): List<Museo> {
+        override suspend fun obtenerMuseos(): List<Museo> {
             peticionesMuseos++
             museosIniciados.complete(Unit)
             return try { museos.await() } finally { museosFinalizados.complete(Unit) }

@@ -2,7 +2,6 @@
 package com.example.ars.features.home.data.repository
 
 import com.example.ars.features.home.domain.model.Criatura
-import com.example.ars.features.home.domain.model.Museo
 import com.example.ars.features.home.domain.repository.HomeRepository
 
 class HomeRepositoryImpl : HomeRepository {
@@ -78,44 +77,6 @@ class HomeRepositoryImpl : HomeRepository {
                 nombre = "Toro Guernica",
                 museo = "Museo Reina Sofía",
                 descripcion = "Criatura cubista inspirada en el toro del Guernica de Pablo Picasso."
-            )
-        )
-    }
-
-    override suspend fun traerMuseos(): List<Museo> {
-        return listOf(
-            Museo(
-                nombre = "Museo del Prado",
-                ciudad = "Madrid",
-                obrasDescubiertas = 21,
-                obrasTotales = 50,
-                criaturasDescubiertas = 3,
-                criaturasTotales = 12,
-                id = "museo_001",
-                pais = "España",
-                destacado = true
-            ),
-            Museo(
-                nombre = "Museo Reina Sofía",
-                ciudad = "Madrid",
-                obrasDescubiertas = 8,
-                obrasTotales = 40,
-                criaturasDescubiertas = 1,
-                criaturasTotales = 10,
-                id = "museo_002",
-                pais = "España",
-                destacado = true
-            ),
-            Museo(
-                nombre = "Museo Thyssen-Bornemisza",
-                ciudad = "Madrid",
-                obrasDescubiertas = 0,
-                obrasTotales = 35,
-                criaturasDescubiertas = 0,
-                criaturasTotales = 8,
-                id = "museo_003",
-                pais = "España",
-                destacado = true
             )
         )
     }

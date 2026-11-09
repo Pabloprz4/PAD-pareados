@@ -8,7 +8,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -43,16 +46,23 @@ fun App(
         onLeido: (String?) -> Unit,
         onCancelado: () -> Unit,
         onError: () -> Unit
-    ) -> Unit)? = null
+    ) -> Unit)? = null,
+    onModoOscuroCambiado: (Boolean) -> Unit = {}
 ) {
-    ArsTheme {
+    var modoOscuro by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(modoOscuro) {
+        onModoOscuroCambiado(modoOscuro)
+    }
+
+    ArsTheme(modoOscuro = modoOscuro) {
         val navController = rememberNavController()
         val backStackEntry by navController.currentBackStackEntryAsState()
 
         val homeViewModel = viewModel {
             HomeViewModel(
                 obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                obtenerMuseosUseCase = appContainer.obtenerMuseosUseCase
+                obtenerMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase
             )
         }
 
@@ -96,30 +106,20 @@ fun App(
                     selectedItem = selectedItem,
                     mostrarEscaner = onLeerQr != null,
                     onItemSelected = { item ->
-                        when (item) {
-                            ArsNavigationItem.Inicio -> {
-                                navController.popBackStack<Route.Home>(inclusive = false)
-                            }
+                        val destino = when (item) {
+                            ArsNavigationItem.Inicio -> Route.Home
+                            ArsNavigationItem.Museos -> Route.Museos
+                            ArsNavigationItem.Escanear -> Route.Escaner
+                            ArsNavigationItem.Ajustes -> Route.Ajustes
+                            ArsNavigationItem.Colecciones -> null
+                        }
 
-                            ArsNavigationItem.Museos -> {
-                                navController.navigate(Route.Museos) {
-                                    launchSingleTop = true
-                                }
+                        if (destino != null && item != selectedItem) {
+                            navController.navigate(destino) {
+                                // cambiamos de sección y dejamos Inicio para volver atrás
+                                popUpTo<Route.Home>()
+                                launchSingleTop = true
                             }
-
-                            ArsNavigationItem.Escanear -> {
-                                navController.navigate(Route.Escaner) {
-                                    launchSingleTop = true
-                                }
-                            }
-
-                            ArsNavigationItem.Ajustes -> {
-                                navController.navigate(Route.Ajustes) {
-                                    launchSingleTop = true
-                                }
-                            }
-
-                            else -> Unit
                         }
                     }
                 )
@@ -149,7 +149,10 @@ fun App(
                     }
 
                     composable<Route.Ajustes> {
-                        AjustesScreenRoot()
+                        AjustesScreenRoot(
+                            modoOscuro = modoOscuro,
+                            onModoOscuroCambiado = { modoOscuro = it }
+                        )
                     }
 
                     if (onLeerQr != null && escanerViewModel != null) {

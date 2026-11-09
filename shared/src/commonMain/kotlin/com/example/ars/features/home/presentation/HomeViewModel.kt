@@ -3,7 +3,7 @@ package com.example.ars.features.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
-import com.example.ars.features.home.domain.usecase.ObtenerMuseosUseCase
+import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val obtenerCriaturasUseCase: ObtenerCriaturasUseCase,
-    private val obtenerMuseosUseCase: ObtenerMuseosUseCase
+    private val obtenerMuseosUseCase: ObtenerCatalogoMuseosUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow() // fuera solo dejamos leer el estado

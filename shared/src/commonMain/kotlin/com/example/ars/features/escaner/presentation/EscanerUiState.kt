@@ -1,7 +1,7 @@
 package com.example.ars.features.escaner.presentation
 
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
-import com.example.ars.features.home.domain.model.Museo
+import com.example.ars.features.museos.domain.model.Museo
 
 data class EscanerUiState(
     val museoActivo: Museo? = null,
