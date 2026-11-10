@@ -1,5 +1,6 @@
 package com.example.ars.features.home.presentation.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +47,9 @@ import ars.shared.generated.resources.toro_guernica
 @Composable
 fun CriaturaCard(
     criatura: Criatura,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    borde: BorderStroke? = null,
+    etiqueta: String = "DESCUBIERTA"
 ) {
     val imagenCriatura = when (criatura.nombre) {
         "Menina Fantasmal" -> Res.drawable.menina
@@ -74,7 +77,8 @@ fun CriaturaCard(
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp
-        )
+        ),
+        border = borde
     ) {
 
         Column {
@@ -100,10 +104,8 @@ fun CriaturaCard(
                     contentScale = ContentScale.Fit
                 )
 
-                // Indicador de criatura conseguida
-                // de momento es una etiqueta de ejemplo, no comprueba si ya la has conseguido
                 Text(
-                    text = "DESCUBIERTA",
+                    text = etiqueta,
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,

@@ -13,12 +13,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -92,7 +90,8 @@ fun PrimeraCriaturaScreen(
                     val seleccionada =
                         criatura.id == state.criaturaSeleccionadaId
 
-                    Surface(
+                    CriaturaCard(
+                        criatura = criatura,
                         modifier = Modifier.selectable(
                             selected = seleccionada,
                             enabled = !state.guardando,
@@ -105,36 +104,13 @@ fun PrimeraCriaturaScreen(
                                 )
                             }
                         ),
-                        shape = RoundedCornerShape(28.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        border = BorderStroke(
-                            width = if (seleccionada) 3.dp else 1.dp,
-                            color = if (seleccionada) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.outlineVariant
-                            }
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(6.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            CriaturaCard(criatura = criatura)
-
-                            Text(
-                                text = if (seleccionada) {
-                                    "Seleccionada"
-                                } else {
-                                    "Toca para elegir"
-                                },
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(bottom = 6.dp)
-                            )
-                        }
-                    }
+                        borde = if (seleccionada) {
+                            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                        } else {
+                            null
+                        },
+                        etiqueta = if (seleccionada) "Seleccionada" else "Inicial"
+                    )
                 }
             }
 
@@ -143,11 +119,11 @@ fun PrimeraCriaturaScreen(
                     "criatura_001" ->
                         "Una compañera misteriosa nacida del arte de Velázquez."
 
-                    "criatura_005" ->
-                        "Una chispa de energía inspirada en los girasoles de Van Gogh."
+                    "criatura_012" ->
+                        "Un misterioso compañero inspirado en El hijo del hombre de René Magritte."
 
-                    "criatura_011" ->
-                        "La fuerza de una gran ola te acompañará en tu aventura."
+                    "criatura_002" ->
+                        "Un compañero cubista inspirado en el Guernica de Pablo Picasso."
 
                     else ->
                         "Desliza para conocerlas y toca tu favorita."

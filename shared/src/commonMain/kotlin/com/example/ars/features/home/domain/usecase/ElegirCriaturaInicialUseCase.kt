@@ -49,8 +49,8 @@ class ElegirCriaturaInicialUseCase(
     companion object {
         val IDS_INICIALES: List<String> = listOf(
             "criatura_001", // Menina Fantasmal
-            "criatura_005", // Girasol Ardiente
-            "criatura_011"  // Garra de Kanagawa
+            "criatura_012", // Manzana con Traje
+            "criatura_002"  // Caballo Guernica
         )
     }
 }
