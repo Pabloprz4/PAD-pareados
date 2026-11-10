@@ -87,7 +87,7 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "TU COLECCION DE CRIATURAS",
+                    text = "ÚLTIMAS CRIATURAS DESCUBIERTAS",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -108,13 +108,33 @@ fun HomeScreen(
             }
         }
 
+
+
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(state.criaturas) { criatura ->
+            items(
+                items = state.ultimasCriaturas,
+                key = { it.id }
+            ) { criatura ->
                 CriaturaCard(criatura = criatura)
             }
+        }
+
+        if (
+            !state.cargando &&
+            state.error == null &&
+            state.criaturasDescubiertas.isEmpty()
+        ) {
+            Text(
+                text = "Todavía no has descubierto criaturas.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            )
         }
 
         // 2. MISIONES EMPEZADAS

@@ -15,4 +15,10 @@ sealed interface Route {
 
     @Serializable
     data object Ajustes : Route
+
+    @Serializable
+    data object PrimeraCriatura : Route
+
+
+
 }

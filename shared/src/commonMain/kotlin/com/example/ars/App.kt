@@ -19,23 +19,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
 import com.example.ars.core.ui.navigation.ArsNavigationBar
 import com.example.ars.core.ui.navigation.ArsNavigationItem
 import com.example.ars.core.ui.theme.ArsTheme
 import com.example.ars.di.AppContainer
 import com.example.ars.di.DefaultAppContainer
-
+import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
 import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
-
 import com.example.ars.features.home.presentation.HomeViewModel
+import com.example.ars.features.home.presentation.PrimeraCriaturaViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreenRoot
-
+import com.example.ars.features.home.presentation.ui.PrimeraCriaturaScreenRoot
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
-
-import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
 
 @Composable
 fun App(
@@ -59,10 +56,16 @@ fun App(
         val navController = rememberNavController()
         val backStackEntry by navController.currentBackStackEntryAsState()
 
+        val mostrandoBienvenida =
+            backStackEntry == null ||
+                    backStackEntry?.destination
+                        ?.hasRoute<Route.PrimeraCriatura>() == true
+
         val homeViewModel = viewModel {
             HomeViewModel(
                 obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                obtenerMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase
+                obtenerMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
+                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase
             )
         }
 
@@ -72,7 +75,9 @@ fun App(
                     validarQrUseCase = appContainer.validarQrUseCase
                 )
             }
-        } else null
+        } else {
+            null
+        }
 
         val selectedItem = when {
             backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
@@ -88,41 +93,46 @@ fun App(
                 ArsNavigationItem.Inicio
         }
 
-        LaunchedEffect(toScreen) {
-            toScreen?.let { destino ->
-                if (destino != Route.Escaner || onLeerQr != null) {
-                    navController.navigate(destino) {
-                        popUpTo<Route.Home>()
-                        launchSingleTop = true
+        // Esperamos a terminar la bienvenida antes de abrir una notificación.
+        LaunchedEffect(toScreen, mostrandoBienvenida) {
+            if (!mostrandoBienvenida) {
+                toScreen?.let { destino ->
+                    if (destino != Route.Escaner || onLeerQr != null) {
+                        navController.navigate(destino) {
+                            popUpTo<Route.Home>()
+                            launchSingleTop = true
+                        }
                     }
+
+                    onDestinoAbierto()
                 }
-                onDestinoAbierto()
             }
         }
 
         Scaffold(
             bottomBar = {
-                ArsNavigationBar(
-                    selectedItem = selectedItem,
-                    mostrarEscaner = onLeerQr != null,
-                    onItemSelected = { item ->
-                        val destino = when (item) {
-                            ArsNavigationItem.Inicio -> Route.Home
-                            ArsNavigationItem.Museos -> Route.Museos
-                            ArsNavigationItem.Escanear -> Route.Escaner
-                            ArsNavigationItem.Ajustes -> Route.Ajustes
-                            ArsNavigationItem.Colecciones -> null
-                        }
+                if (!mostrandoBienvenida) {
+                    ArsNavigationBar(
+                        selectedItem = selectedItem,
+                        mostrarEscaner = onLeerQr != null,
+                        onItemSelected = { item ->
+                            val destino = when (item) {
+                                ArsNavigationItem.Inicio -> Route.Home
+                                ArsNavigationItem.Museos -> Route.Museos
+                                ArsNavigationItem.Escanear -> Route.Escaner
+                                ArsNavigationItem.Ajustes -> Route.Ajustes
+                                ArsNavigationItem.Colecciones -> null
+                            }
 
-                        if (destino != null && item != selectedItem) {
-                            navController.navigate(destino) {
-                                // cambiamos de sección y dejamos Inicio para volver atrás
-                                popUpTo<Route.Home>()
-                                launchSingleTop = true
+                            if (destino != null && item != selectedItem) {
+                                navController.navigate(destino) {
+                                    popUpTo<Route.Home>()
+                                    launchSingleTop = true
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         ) { innerPadding ->
             Box(
@@ -133,8 +143,35 @@ fun App(
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = Route.Home
+                    startDestination = Route.PrimeraCriatura
                 ) {
+                    composable<Route.PrimeraCriatura> {
+                        val primeraCriaturaViewModel: PrimeraCriaturaViewModel =
+                            viewModel {
+                                PrimeraCriaturaViewModel(
+                                    obtenerCriaturasUseCase =
+                                        appContainer.obtenerCriaturasUseCase,
+                                    obtenerProgresoUseCase =
+                                        appContainer.obtenerProgresoUseCase,
+                                    elegirCriaturaInicialUseCase =
+                                        appContainer.elegirCriaturaInicialUseCase
+                                )
+                            }
+
+                        PrimeraCriaturaScreenRoot(
+                            viewModel = primeraCriaturaViewModel,
+                            onEleccionCompletada = {
+                                navController.navigate(Route.Home) {
+                                    popUpTo<Route.PrimeraCriatura> {
+                                        inclusive = true
+                                    }
+
+                                    launchSingleTop = true
+                                }
+                            }
+                        )
+                    }
+
                     composable<Route.Home> {
                         HomeScreenRoot(
                             viewModel = homeViewModel,
@@ -149,10 +186,14 @@ fun App(
                     composable<Route.Museos> {
                         val museosViewModel = viewModel {
                             MuseosViewModel(
-                                obtenerCatalogoMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase
+                                obtenerCatalogoMuseosUseCase =
+                                    appContainer.obtenerCatalogoMuseosUseCase
                             )
                         }
-                        MuseosScreenRoot(viewModel = museosViewModel)
+
+                        MuseosScreenRoot(
+                            viewModel = museosViewModel
+                        )
                     }
 
                     composable<Route.Ajustes> {
