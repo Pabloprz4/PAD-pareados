@@ -12,7 +12,7 @@
     <string name="escaner_leer_qr">Leer QR</string>
     <string name="escaner_leyendo">Leyendo QR…</string>
     <string name="escaner_validando">Comprobando el código…</string>
-    <string name="escaner_error">No se ha podido completar la lectura. Comprueba la conexión si es la primera vez y vuelve a intentarlo.</string>
+    <string name="escaner_error">No se ha podido leer el QR o guardar la visita. Vuelve a intentarlo. Si el lector no se abre por primera vez, comprueba la conexión.</string>
     <string name="escaner_contenido">Contenido leído</string>
     <string name="escaner_museo_identificado">Museo identificado</string>
     <string name="escaner_obra_identificada">Obra identificada</string>
@@ -27,4 +27,23 @@
     <string name="escaner_museo_incorrecto">Para leer esta obra, escanea primero el QR de %1$s.</string>
     <string name="escaner_datos_muestra">Catálogo de muestra</string>
     <string name="nav_museos">Museos</string>
+    <string name="museo_bloqueado">Museo bloqueado</string>
+    <string name="museo_escanear">Escanea el QR del museo para desbloquearlo.</string>
+    <string name="museo_informacion">Museo</string>
+    <string name="museo_obras">Obras</string>
+    <string name="museo_misiones">Misiones</string>
+    <string name="museo_criaturas">Criaturas del museo</string>
+    <string name="museo_sin_criaturas">Aún no hay criaturas configuradas para este museo.</string>
+    <string name="museo_sin_misiones">Aún no hay misiones configuradas para este museo.</string>
+    <string name="museo_misiones_muestra">Misiones de muestra. El seguimiento y sus recompensas están pendientes.</string>
+    <string name="museo_nuevo">¡Museo desbloqueado!</string>
+    <string name="museo_repetido">Esta visita ya estaba registrada.</string>
+    <string name="museo_bienvenida">Has conseguido a %1$s como bienvenida.</string>
+    <string name="museo_cerrar">Cerrar</string>
+    <string name="museo_obtenida">Obtenida</string>
+    <string name="museo_pendiente">Pendiente</string>
+    <string name="museo_estado_criatura">%1$s · %2$s</string>
+    <string name="museo_error">No se ha podido cargar el museo. Vuelve a intentarlo.</string>
+    <string name="museo_reintentar">Reintentar</string>
+    <string name="museo_obras_pendientes">Las obras de este museo aparecerán aquí.</string>
 </resources>

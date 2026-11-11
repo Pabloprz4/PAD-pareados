@@ -1,6 +1,8 @@
 package com.example.ars.features.home
 
 import androidx.lifecycle.ViewModelStore
+import com.example.ars.ProgresoEnMemoria
+import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.home.domain.model.Criatura
 import com.example.ars.features.museos.domain.model.Museo
 import com.example.ars.features.home.domain.repository.HomeRepository
@@ -110,7 +112,7 @@ class HomeViewModelTest {
                     repository.museos.completeExceptionally(IllegalStateException())
                     repository.criaturas.completeExceptionally(IllegalArgumentException("Fallo de criaturas"))
                     val state = viewModel.state.first { !it.cargando }
-                    assertEquals("No se han podido cargar los museos\nFallo de criaturas", state.error)
+                    assertEquals("No se han podido cargar los museos.\nFallo de criaturas", state.error)
                 } finally {
                     store.clear()
                 }
@@ -155,7 +157,8 @@ class HomeViewModelTest {
 
     private fun crearViewModel(repository: RepositorioControlado) = HomeViewModel(
         obtenerCriaturasUseCase = ObtenerCriaturasUseCase(repository),
-        obtenerMuseosUseCase = ObtenerCatalogoMuseosUseCase(repository)
+        obtenerMuseosUseCase = ObtenerCatalogoMuseosUseCase(repository),
+        obtenerProgresoUseCase = ObtenerProgresoUseCase(ProgresoEnMemoria())
     )
 
     private class RepositorioControlado : HomeRepository, MuseosRepository {

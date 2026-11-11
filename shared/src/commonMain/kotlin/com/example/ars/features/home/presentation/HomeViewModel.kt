@@ -21,8 +21,6 @@ class HomeViewModel(
     private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
 
-    private var contenidoSolicitado = false
-
     fun onAction(action: HomeAction) {
         when (action) {
             HomeAction.CargarContenido -> cargarContenido()
@@ -30,9 +28,8 @@ class HomeViewModel(
     }
 
     private fun cargarContenido() {
-        if (contenidoSolicitado) return
-
-        contenidoSolicitado = true
+        // al volver del escáner volvemos a leer las visitas y criaturas guardadas
+        if (_state.value.cargando) return
 
         _state.update {
             it.copy(
@@ -74,11 +71,6 @@ class HomeViewModel(
                                 ?: "No se ha podido cargar tu progreso."
                         }
                     )
-
-                    // Permite reintentar la carga si alguna operación falla.
-                    if (errores.isNotEmpty()) {
-                        contenidoSolicitado = false
-                    }
 
                     _state.update {
                         it.copy(

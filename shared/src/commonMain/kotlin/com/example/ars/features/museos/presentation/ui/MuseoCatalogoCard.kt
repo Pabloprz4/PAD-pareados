@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -14,7 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.nav_lock
+import ars.shared.generated.resources.museo_bloqueado
+import ars.shared.generated.resources.museo_escanear
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,21 +34,12 @@ import com.example.ars.features.museos.domain.model.Museo
 
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
-import ars.shared.generated.resources.prado
-import ars.shared.generated.resources.rsofia
-import ars.shared.generated.resources.tissen
-import ars.shared.generated.resources.moma
-import ars.shared.generated.resources.vangogh
-import ars.shared.generated.resources.uffizi
-import ars.shared.generated.resources.munch
-import ars.shared.generated.resources.vaticano
-import ars.shared.generated.resources.met
-import ars.shared.generated.resources.louvre
 
 
 @Composable
 fun MuseoCatalogoCard(
     museo: Museo,
+    desbloqueado: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -53,28 +52,13 @@ fun MuseoCatalogoCard(
 
     val porcentaje = (progreso * 100).toInt()
 
-    // Fotografías disponibles actualmente en Ars.
-    // Añadiremos las de los museos internacionales después.
-
-    val imagen = when (museo.id) {
-        "museo_001" -> Res.drawable.prado
-        "museo_002" -> Res.drawable.rsofia
-        "museo_003" -> Res.drawable.tissen
-        "museo_004" -> Res.drawable.moma
-        "museo_005" -> Res.drawable.vangogh
-        "museo_006" -> Res.drawable.uffizi
-        "museo_007" -> Res.drawable.munch
-        "museo_008" -> Res.drawable.vaticano
-        "museo_009" -> Res.drawable.met
-        "museo_010" -> Res.drawable.louvre
-        else -> Res.drawable.prado
-    }
 
 
     Card(
         modifier = modifier
             .width(320.dp)
-            .clickable(onClick = onClick),
+            .alpha(if (desbloqueado) 1f else 0.7f)
+            .clickable(enabled = desbloqueado, onClick = onClick),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -90,10 +74,13 @@ fun MuseoCatalogoCard(
                     .height(190.dp)
             ) {
                 Image(
-                    painter = painterResource(imagen),
+                    painter = painterResource(imagenMuseo(museo.id)),
                     contentDescription = museo.nombre,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    colorFilter = if (desbloqueado) null else {
+                        ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                    }
                 )
 
                 Box(
@@ -108,6 +95,17 @@ fun MuseoCatalogoCard(
                             )
                         )
                 )
+
+                if (!desbloqueado) {
+                    Icon(
+                        painter = painterResource(Res.drawable.nav_lock),
+                        contentDescription = stringResource(Res.string.museo_bloqueado),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.align(Alignment.TopEnd).padding(12.dp)
+                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+                            .padding(8.dp).size(20.dp)
+                    )
+                }
 
                 Column(
                     modifier = Modifier
@@ -176,7 +174,9 @@ fun MuseoCatalogoCard(
                 )
 
                 Text(
-                    text = "$porcentaje% completado",
+                    text = if (desbloqueado) "$porcentaje% completado" else {
+                        stringResource(Res.string.museo_escanear)
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

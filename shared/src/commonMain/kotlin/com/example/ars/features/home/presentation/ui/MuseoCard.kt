@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +24,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import com.example.ars.features.museos.presentation.ui.imagenMuseo
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.nav_lock
+import ars.shared.generated.resources.museo_bloqueado
+import ars.shared.generated.resources.museo_escanear
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -32,13 +42,11 @@ import androidx.compose.ui.unit.sp
 import com.example.ars.features.museos.domain.model.Museo
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
-import ars.shared.generated.resources.prado
-import ars.shared.generated.resources.rsofia
-import ars.shared.generated.resources.tissen
 
 @Composable
 fun MuseoCard(
     museo: Museo,
+    desbloqueado: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -52,14 +60,10 @@ fun MuseoCard(
 
     val porcentaje = (progreso * 100).toInt()
 
-    val imagenMuseo = when (museo.nombre) {
-        "Museo del Prado" -> Res.drawable.prado
-        "Museo Reina Sofía" -> Res.drawable.rsofia
-        "Museo Thyssen-Bornemisza" -> Res.drawable.tissen
-        else -> Res.drawable.prado
-    }
 
-    val estado = if (museo.obrasDescubiertas == 0) {
+    val estado = if (!desbloqueado) {
+        stringResource(Res.string.museo_bloqueado)
+    } else if (museo.obrasDescubiertas == 0) {
         "SIN EXPLORAR"
     } else {
         "EN PROGRESO"
@@ -68,7 +72,8 @@ fun MuseoCard(
     Card(
         modifier = modifier
             .width(360.dp)
-            .clickable { onClick() },
+            .alpha(if (desbloqueado) 1f else 0.7f)
+            .clickable(enabled = desbloqueado, onClick = onClick),
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -88,10 +93,13 @@ fun MuseoCard(
             ) {
 
                 Image(
-                    painter = painterResource(imagenMuseo),
+                    painter = painterResource(imagenMuseo(museo.id)),
                     contentDescription = museo.nombre,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    colorFilter = if (desbloqueado) null else {
+                        ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                    }
                 )
 
                 // Degradado para poder leer el texto encima de la imagen
@@ -127,6 +135,17 @@ fun MuseoCard(
                             vertical = 6.dp
                         )
                 )
+
+                if (!desbloqueado) {
+                    Icon(
+                        painter = painterResource(Res.drawable.nav_lock),
+                        contentDescription = stringResource(Res.string.museo_bloqueado),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
+                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+                            .padding(8.dp).size(20.dp)
+                    )
+                }
 
                 // Información sobre la fotografía
                 Column(
@@ -217,7 +236,9 @@ fun MuseoCard(
                 ) {
 
                     Text(
-                        text = "$porcentaje% completado",
+                        text = if (desbloqueado) "$porcentaje% completado" else {
+                            stringResource(Res.string.museo_escanear)
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

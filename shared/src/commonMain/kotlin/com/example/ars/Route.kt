@@ -14,7 +14,11 @@ sealed interface Route {
     data object Museos : Route
 
     @Serializable
-    data class DetalleMuseo(val museoId: String) : Route
+    data class DetalleMuseo(
+        val museoId: String,
+        val yaVisitado: Boolean? = null,
+        val criaturaObtenidaId: String? = null
+    ) : Route
 
     @Serializable
     data object Ajustes : Route

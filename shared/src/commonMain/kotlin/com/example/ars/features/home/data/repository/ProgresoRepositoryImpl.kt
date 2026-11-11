@@ -4,6 +4,8 @@ import com.example.ars.core.storage.guardarTextoLocal
 import com.example.ars.core.storage.leerTextoLocal
 import com.example.ars.features.home.domain.model.ProgresoUsuario
 import com.example.ars.features.home.domain.repository.ProgresoRepository
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -12,6 +14,9 @@ import kotlinx.serialization.json.Json
 class ProgresoRepositoryImpl : ProgresoRepository {
 
     private val clave = "ars_progreso_usuario"
+    private companion object {
+        val mutex = Mutex()
+    }
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -34,5 +39,17 @@ class ProgresoRepositoryImpl : ProgresoRepository {
             clave = clave,
             contenido = contenido
         )
+    }
+
+    override suspend fun actualizarProgreso(
+        cambio: (ProgresoUsuario) -> ProgresoUsuario
+    ): ProgresoUsuario = mutex.withLock {
+        // el starter y las visitas se guardan de uno en uno para no pisarse
+        val anterior = obtenerProgreso()
+        val nuevo = cambio(anterior)
+        if (nuevo != anterior) {
+            guardarProgreso(nuevo)
+        }
+        nuevo
     }
 }

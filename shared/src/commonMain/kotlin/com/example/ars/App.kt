@@ -5,6 +5,12 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,7 +81,8 @@ fun App(
         val escanerViewModel = if (onLeerQr != null) {
             viewModel {
                 EscanerViewModel(
-                    validarQrUseCase = appContainer.validarQrUseCase
+                    validarQrUseCase = appContainer.validarQrUseCase,
+                    registrarVisitaMuseoUseCase = appContainer.registrarVisitaMuseoUseCase
                 )
             }
         } else {
@@ -183,6 +190,11 @@ fun App(
                                 navController.navigate(Route.Museos) {
                                     launchSingleTop = true
                                 }
+                            },
+                            onMuseoClick = { museoId ->
+                                navController.navigate(Route.DetalleMuseo(museoId)) {
+                                    launchSingleTop = true
+                                }
                             }
                         )
                     }
@@ -191,7 +203,9 @@ fun App(
                         val museosViewModel = viewModel {
                             MuseosViewModel(
                                 obtenerCatalogoMuseosUseCase =
-                                    appContainer.obtenerCatalogoMuseosUseCase
+                                    appContainer.obtenerCatalogoMuseosUseCase,
+                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase
                             )
                         }
 
@@ -207,21 +221,30 @@ fun App(
                         )
                     }
 
-                    composable<Route.DetalleMuseo> { entrada ->
+                    dialog<Route.DetalleMuseo> { entrada ->
                         val ruta = entrada.toRoute<Route.DetalleMuseo>()
 
                         val detalleMuseoViewModel = viewModel {
                             MuseosViewModel(
                                 obtenerCatalogoMuseosUseCase =
-                                    appContainer.obtenerCatalogoMuseosUseCase
+                                    appContainer.obtenerCatalogoMuseosUseCase,
+                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase
                             )
                         }
 
-                        DetalleMuseoScreenRoot(
-                            museoId = ruta.museoId,
-                            viewModel = detalleMuseoViewModel,
-                            onVolver = { navController.popBackStack() }
-                        )
+                        Surface(
+                            shape = RoundedCornerShape(24.dp),
+                            modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
+                        ) {
+                            DetalleMuseoScreenRoot(
+                                museoId = ruta.museoId,
+                                viewModel = detalleMuseoViewModel,
+                                onVolver = { navController.popBackStack() },
+                                yaVisitado = ruta.yaVisitado,
+                                criaturaObtenidaId = ruta.criaturaObtenidaId
+                            )
+                        }
                     }
 
                     composable<Route.Ajustes> {
@@ -235,7 +258,18 @@ fun App(
                         composable<Route.Escaner> {
                             EscanerScreenRoot(
                                 viewModel = escanerViewModel,
-                                onLeerQr = onLeerQr
+                                onLeerQr = onLeerQr,
+                                onMuseoEscaneado = { visita ->
+                                    navController.navigate(
+                                        Route.DetalleMuseo(
+                                            museoId = visita.museoId,
+                                            yaVisitado = visita.yaVisitado,
+                                            criaturaObtenidaId = visita.criaturaObtenidaId
+                                        )
+                                    ) {
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
                     }

@@ -28,6 +28,7 @@ import ars.shared.generated.resources.ars_icon_image
 @Composable
 fun MuseosScreen(
     museos: List<Museo>,
+    museosVisitados: List<String>,
     onMuseoClick: (Museo) -> Unit = {}
 ) {
     val nacionales = museos.filter { it.pais == "España" }
@@ -124,6 +125,7 @@ fun MuseosScreen(
                 items(nacionales, key = { it.id }) { museo ->
                     MuseoCatalogoCard(
                         museo = museo,
+                        desbloqueado = museo.id in museosVisitados,
                         onClick = { onMuseoClick(museo) }
                     )
                 }
@@ -145,6 +147,7 @@ fun MuseosScreen(
                 items(internacionales, key = { it.id }) { museo ->
                     MuseoCatalogoCard(
                         museo = museo,
+                        desbloqueado = museo.id in museosVisitados,
                         onClick = { onMuseoClick(museo) }
                     )
                 }

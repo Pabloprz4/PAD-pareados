@@ -5,6 +5,7 @@ import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
 import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
+import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.home.domain.repository.HomeRepository
@@ -26,6 +27,7 @@ interface AppContainer {
 
     // Escáner
     val validarQrUseCase: ValidarQrUseCase
+    val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase
 
     // Museos
     val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase
@@ -64,6 +66,10 @@ class DefaultAppContainer : AppContainer {
             interpretarQrUseCase = InterpretarQrUseCase(),
             catalogoRepository = catalogoRepository
         )
+    }
+
+    override val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase by lazy {
+        RegistrarVisitaMuseoUseCase(progresoRepository, homeRepository)
     }
 
     override val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase by lazy {

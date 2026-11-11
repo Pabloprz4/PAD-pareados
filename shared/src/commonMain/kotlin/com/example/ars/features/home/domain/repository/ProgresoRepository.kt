@@ -7,4 +7,8 @@ interface ProgresoRepository {
     suspend fun obtenerProgreso(): ProgresoUsuario
 
     suspend fun guardarProgreso(progreso: ProgresoUsuario)
+
+    suspend fun actualizarProgreso(
+        cambio: (ProgresoUsuario) -> ProgresoUsuario
+    ): ProgresoUsuario
 }

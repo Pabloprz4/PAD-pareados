@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
+import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EscanerViewModel(
-    private val validarQrUseCase: ValidarQrUseCase
+    private val validarQrUseCase: ValidarQrUseCase,
+    private val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(EscanerUiState())
     val state = _state.asStateFlow()
@@ -27,6 +29,9 @@ class EscanerViewModel(
             EscanerAction.LecturaCancelada -> {
                 // cancelar conserva el museo y el último resultado
                 _state.update { it.copy(leyendo = false) }
+            }
+            EscanerAction.MuseoAbierto -> {
+                _state.update { it.copy(visitaPorAbrir = null) }
             }
             EscanerAction.LecturaFallida -> {
                 _state.update {
@@ -47,9 +52,16 @@ class EscanerViewModel(
                     contenido = contenido,
                     museoActivoId = _state.value.museoActivo?.id
                 )
+                // solo abrimos la ficha cuando la visita se ha guardado
+                val visita = if (resultado is ResultadoValidacionQr.MuseoValido) {
+                    registrarVisitaMuseoUseCase(resultado.museo).getOrThrow()
+                } else {
+                    null
+                }
                 _state.update {
                     it.copy(
                         resultado = resultado,
+                        visitaPorAbrir = visita,
                         // solo un QR de museo válido cambia el museo activo
                         museoActivo = if (resultado is ResultadoValidacionQr.MuseoValido) {
                             resultado.museo

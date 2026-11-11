@@ -2,10 +2,14 @@
 package com.example.ars.features.museos.presentation
 
 import com.example.ars.features.museos.domain.model.Museo
+import com.example.ars.features.home.domain.model.Criatura
+import com.example.ars.features.home.domain.model.ProgresoUsuario
 
 data class MuseosUiState(
     val museos: List<Museo> = emptyList(),
-    val cargando: Boolean = false,
+    val progreso: ProgresoUsuario = ProgresoUsuario(),
+    val criaturas: List<Criatura> = emptyList(),
+    val cargando: Boolean = true,
     val error: String? = null
 ) {
     val museosNacionales: List<Museo>

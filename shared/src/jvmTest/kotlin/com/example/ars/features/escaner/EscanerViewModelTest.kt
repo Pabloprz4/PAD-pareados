@@ -1,6 +1,9 @@
 package com.example.ars.features.escaner
 
 import androidx.lifecycle.ViewModelStore
+import com.example.ars.ProgresoEnMemoria
+import com.example.ars.features.home.data.repository.HomeRepositoryImpl
+import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.escaner.domain.model.Obra
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
@@ -10,6 +13,7 @@ import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
 import com.example.ars.features.escaner.presentation.EscanerAction
 import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.museos.domain.model.Museo
+import com.example.ars.features.museos.domain.model.ResultadoVisitaMuseo
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -28,6 +32,11 @@ class EscanerViewModelTest {
     fun activaElMuseoYPermiteRepetirLecturas() = comprobar { vm ->
         leer(vm, "ars:v1:museo:museo_001")
         assertEquals("museo_001", vm.state.value.museoActivo?.id)
+        assertFalse(assertIs<ResultadoVisitaMuseo>(vm.state.value.visitaPorAbrir).yaVisitado)
+        vm.onAction(EscanerAction.MuseoAbierto)
+        assertNull(vm.state.value.visitaPorAbrir)
+        leer(vm, "ars:v1:museo:museo_001")
+        assertTrue(assertIs<ResultadoVisitaMuseo>(vm.state.value.visitaPorAbrir).yaVisitado)
         leer(vm, "ars:v1:obra:obra_001")
         val resultado = assertIs<ResultadoValidacionQr.ObraValida>(vm.state.value.resultado)
         assertEquals("Las meninas", resultado.obra.titulo)
@@ -87,7 +96,7 @@ class EscanerViewModelTest {
                     }
                     override suspend fun obtenerObraPorId(id: String): Obra? = null
                 }
-                val vm = EscanerViewModel(ValidarQrUseCase(InterpretarQrUseCase(), repository))
+                val vm = EscanerViewModel(ValidarQrUseCase(InterpretarQrUseCase(), repository), registrarVisita())
                 val store = ViewModelStore().apply { put("escaner", vm) }
                 try {
                     vm.onAction(EscanerAction.LeerQr)
@@ -110,10 +119,41 @@ class EscanerViewModelTest {
         }
     }
 
+
+    @Test
+    fun falloDeGuardadoNoActivaNiAbreElMuseo() = runBlocking {
+        withTimeout(5_000) {
+            withContext(Dispatchers.Main) {
+                val progreso = ProgresoEnMemoria().apply { fallaGuardado = true }
+                val vm = EscanerViewModel(
+                    DefaultAppContainer().validarQrUseCase,
+                    RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())
+                )
+                val store = ViewModelStore().apply { put("escaner", vm) }
+                try {
+                    leer(vm, "ars:v1:museo:museo_001")
+                    assertTrue(vm.state.value.error)
+                    assertNull(vm.state.value.museoActivo)
+                    assertNull(vm.state.value.visitaPorAbrir)
+                    assertTrue(progreso.progreso.museosVisitados.isEmpty())
+                    progreso.fallaGuardado = false
+                    leer(vm, "ars:v1:museo:museo_001")
+                    assertFalse(vm.state.value.error)
+                    assertEquals(listOf("museo_001"), progreso.progreso.museosVisitados)
+                } finally {
+                    store.clear()
+                }
+            }
+        }
+    }
+
+    private fun registrarVisita() =
+        RegistrarVisitaMuseoUseCase(ProgresoEnMemoria(), HomeRepositoryImpl())
+
     private fun comprobar(block: suspend (EscanerViewModel) -> Unit) = runBlocking {
         withTimeout(5_000) {
             withContext(Dispatchers.Main) {
-                val vm = EscanerViewModel(DefaultAppContainer().validarQrUseCase)
+                val vm = EscanerViewModel(DefaultAppContainer().validarQrUseCase, registrarVisita())
                 val store = ViewModelStore().apply { put("escaner", vm) }
                 try {
                     block(vm)

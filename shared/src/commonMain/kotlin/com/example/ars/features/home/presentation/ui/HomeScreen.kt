@@ -33,7 +33,8 @@ import ars.shared.generated.resources.ars_icon_image
 @Composable
 fun HomeScreen(
     state: HomeUiState,
-    onExplorarMuseos: () -> Unit = {}
+    onExplorarMuseos: () -> Unit = {},
+    onMuseoClick: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -205,7 +206,11 @@ fun HomeScreen(
                 items = state.museos.filter { it.destacado },
                 key = { it.id }
             ) { museo ->
-                MuseoCard(museo = museo)
+                MuseoCard(
+                    museo = museo,
+                    desbloqueado = museo.id in state.progreso.museosVisitados,
+                    onClick = { onMuseoClick(museo.id) }
+                )
             }
         }
 

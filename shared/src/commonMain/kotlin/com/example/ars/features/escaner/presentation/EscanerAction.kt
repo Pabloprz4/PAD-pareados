@@ -5,4 +5,5 @@ sealed interface EscanerAction {
     data class QrLeido(val contenido: String?) : EscanerAction
     data object LecturaCancelada : EscanerAction
     data object LecturaFallida : EscanerAction
+    data object MuseoAbierto : EscanerAction
 }
