@@ -33,6 +33,9 @@ import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 import com.example.ars.features.home.presentation.ui.PrimeraCriaturaScreenRoot
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
+import androidx.navigation.toRoute
+import com.example.ars.features.museos.presentation.ui.DetalleMuseoScreenRoot
+
 
 @Composable
 fun App(
@@ -83,7 +86,8 @@ fun App(
             backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
                 ArsNavigationItem.Escanear
 
-            backStackEntry?.destination?.hasRoute<Route.Museos>() == true ->
+            backStackEntry?.destination?.hasRoute<Route.Museos>() == true ||
+                    backStackEntry?.destination?.hasRoute<Route.DetalleMuseo>() == true ->
                 ArsNavigationItem.Museos
 
             backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
@@ -192,7 +196,31 @@ fun App(
                         }
 
                         MuseosScreenRoot(
-                            viewModel = museosViewModel
+                            viewModel = museosViewModel,
+                            onMuseoClick = { museo ->
+                                navController.navigate(
+                                    Route.DetalleMuseo(museoId = museo.id)
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        )
+                    }
+
+                    composable<Route.DetalleMuseo> { entrada ->
+                        val ruta = entrada.toRoute<Route.DetalleMuseo>()
+
+                        val detalleMuseoViewModel = viewModel {
+                            MuseosViewModel(
+                                obtenerCatalogoMuseosUseCase =
+                                    appContainer.obtenerCatalogoMuseosUseCase
+                            )
+                        }
+
+                        DetalleMuseoScreenRoot(
+                            museoId = ruta.museoId,
+                            viewModel = detalleMuseoViewModel,
+                            onVolver = { navController.popBackStack() }
                         )
                     }
 
