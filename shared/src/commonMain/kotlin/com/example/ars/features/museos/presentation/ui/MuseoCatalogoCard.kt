@@ -174,7 +174,7 @@ fun MuseoCatalogoCard(
                 )
 
                 Text(
-                    text = if (desbloqueado) "$porcentaje% completado" else {
+                    text = if (desbloqueado) "$porcentaje% de obras escaneadas" else {
                         stringResource(Res.string.museo_escanear)
                     },
                     style = MaterialTheme.typography.bodySmall,

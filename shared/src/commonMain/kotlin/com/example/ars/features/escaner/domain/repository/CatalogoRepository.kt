@@ -8,4 +8,5 @@ interface CatalogoRepository {
     // si id no existe, null
     suspend fun obtenerMuseoPorId(id: String): Museo?
     suspend fun obtenerObraPorId(id: String): Obra?
+    suspend fun obtenerObras(): List<Obra>
 }

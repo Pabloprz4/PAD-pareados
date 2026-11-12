@@ -24,6 +24,12 @@ sealed interface Route {
     data object Ajustes : Route
 
     @Serializable
+    data class DetalleObra(
+        val obraId: String,
+        val criaturaBienvenidaId: String? = null
+    ) : Route
+
+    @Serializable
     data object PrimeraCriatura : Route
 
 

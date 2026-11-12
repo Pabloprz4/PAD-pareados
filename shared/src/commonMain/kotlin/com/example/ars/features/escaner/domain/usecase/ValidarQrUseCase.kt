@@ -8,56 +8,21 @@ class ValidarQrUseCase(
     private val interpretarQrUseCase: InterpretarQrUseCase,
     private val catalogoRepository: CatalogoRepository
 ) {
-
-    suspend operator fun invoke(
-        contenido: String?,
-        museoActivoId: String?
-    ): ResultadoValidacionQr {
+    suspend operator fun invoke(contenido: String?): ResultadoValidacionQr {
         // primero comprobamos el formato, después si existe en el catálogo
         return when (val codigo = interpretarQrUseCase(contenido)) {
             null -> ResultadoValidacionQr.CodigoInvalido
-
             is CodigoArs.Museo -> {
-                val museo = catalogoRepository.obtenerMuseoPorId(
-                    id = codigo.museoId
-                ) ?: return ResultadoValidacionQr.MuseoDesconocido
-
-                ResultadoValidacionQr.MuseoValido(museo = museo)
+                val museo = catalogoRepository.obtenerMuseoPorId(codigo.museoId)
+                    ?: return ResultadoValidacionQr.MuseoDesconocido
+                ResultadoValidacionQr.MuseoValido(museo)
             }
-
-            is CodigoArs.Obra -> validarObra(
-                obraId = codigo.obraId,
-                museoActivoId = museoActivoId
-            )
-        }
-    }
-
-    private suspend fun validarObra(
-        obraId: String,
-        museoActivoId: String?
-    ): ResultadoValidacionQr {
-        val obra = catalogoRepository.obtenerObraPorId(
-            id = obraId
-        ) ?: return ResultadoValidacionQr.ObraDesconocida
-
-        val museo = catalogoRepository.obtenerMuseoPorId(
-            id = obra.museoId
-        ) ?: return ResultadoValidacionQr.MuseoDesconocido
-
-        // la obra solo vale si antes hemos escaneado el museo al que pertenece
-        return when {
-            museoActivoId == null -> {
-                ResultadoValidacionQr.RequiereEscanearMuseo
-            }
-
-            museoActivoId != museo.id -> {
-                ResultadoValidacionQr.MuseoIncorrecto(
-                    museoEsperado = museo
-                )
-            }
-
-            else -> {
-                ResultadoValidacionQr.ObraValida(obra = obra)
+            is CodigoArs.Obra -> {
+                val obra = catalogoRepository.obtenerObraPorId(codigo.obraId)
+                    ?: return ResultadoValidacionQr.ObraDesconocida
+                val museo = catalogoRepository.obtenerMuseoPorId(obra.museoId)
+                    ?: return ResultadoValidacionQr.MuseoDesconocido
+                ResultadoValidacionQr.ObraValida(obra, museo)
             }
         }
     }

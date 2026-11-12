@@ -33,6 +33,7 @@ import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
 import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
+import com.example.ars.features.escaner.presentation.ui.DetalleObraScreenRoot
 import com.example.ars.features.home.presentation.HomeViewModel
 import com.example.ars.features.home.presentation.PrimeraCriaturaViewModel
 import com.example.ars.features.home.presentation.ui.HomeScreenRoot
@@ -82,7 +83,8 @@ fun App(
             viewModel {
                 EscanerViewModel(
                     validarQrUseCase = appContainer.validarQrUseCase,
-                    registrarVisitaMuseoUseCase = appContainer.registrarVisitaMuseoUseCase
+                    registrarVisitaMuseoUseCase = appContainer.registrarVisitaMuseoUseCase,
+                    registrarObraUseCase = appContainer.registrarObraUseCase
                 )
             }
         } else {
@@ -94,7 +96,8 @@ fun App(
                 ArsNavigationItem.Escanear
 
             backStackEntry?.destination?.hasRoute<Route.Museos>() == true ||
-                    backStackEntry?.destination?.hasRoute<Route.DetalleMuseo>() == true ->
+                    backStackEntry?.destination?.hasRoute<Route.DetalleMuseo>() == true ||
+                    backStackEntry?.destination?.hasRoute<Route.DetalleObra>() == true ->
                 ArsNavigationItem.Museos
 
             backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
@@ -205,7 +208,8 @@ fun App(
                                 obtenerCatalogoMuseosUseCase =
                                     appContainer.obtenerCatalogoMuseosUseCase,
                                 obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase
+                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
                             )
                         }
 
@@ -229,7 +233,8 @@ fun App(
                                 obtenerCatalogoMuseosUseCase =
                                     appContainer.obtenerCatalogoMuseosUseCase,
                                 obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase
+                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
                             )
                         }
 
@@ -241,8 +246,36 @@ fun App(
                                 museoId = ruta.museoId,
                                 viewModel = detalleMuseoViewModel,
                                 onVolver = { navController.popBackStack() },
+                                onObraClick = { obraId ->
+                                    navController.navigate(Route.DetalleObra(obraId)) {
+                                        launchSingleTop = true
+                                    }
+                                },
                                 yaVisitado = ruta.yaVisitado,
                                 criaturaObtenidaId = ruta.criaturaObtenidaId
+                            )
+                        }
+                    }
+
+                    dialog<Route.DetalleObra> { entrada ->
+                        val ruta = entrada.toRoute<Route.DetalleObra>()
+                        val obraViewModel = viewModel {
+                            MuseosViewModel(
+                                obtenerCatalogoMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
+                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
+                            )
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(24.dp),
+                            modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
+                        ) {
+                            DetalleObraScreenRoot(
+                                obraId = ruta.obraId,
+                                viewModel = obraViewModel,
+                                criaturaBienvenidaId = ruta.criaturaBienvenidaId,
+                                onCerrar = { navController.popBackStack() }
                             )
                         }
                     }
@@ -266,6 +299,13 @@ fun App(
                                             yaVisitado = visita.yaVisitado,
                                             criaturaObtenidaId = visita.criaturaObtenidaId
                                         )
+                                    ) {
+                                        launchSingleTop = true
+                                    }
+                                },
+                                onObraEscaneada = { registro ->
+                                    navController.navigate(
+                                        Route.DetalleObra(registro.obraId, registro.criaturaBienvenidaId)
                                     ) {
                                         launchSingleTop = true
                                     }

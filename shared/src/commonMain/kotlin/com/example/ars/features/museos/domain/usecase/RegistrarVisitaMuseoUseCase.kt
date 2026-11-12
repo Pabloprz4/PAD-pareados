@@ -23,19 +23,12 @@ class RegistrarVisitaMuseoUseCase(
             var criaturaObtenidaId: String? = null
             progresoRepository.actualizarProgreso { progreso ->
                 yaVisitado = museo.id in progreso.museosVisitados
-                if (yaVisitado) {
-                    progreso
-                } else {
-                    // si la criatura ya era tu starter, no la añadimos otra vez
-                    criaturaObtenidaId = bienvenidaId?.takeIf {
-                        it !in progreso.criaturasDescubiertas
-                    }
-                    progreso.copy(
-                        museosVisitados = progreso.museosVisitados + museo.id,
-                        criaturasDescubiertas = listOfNotNull(criaturaObtenidaId) +
-                            progreso.criaturasDescubiertas
-                    )
+                val nuevo = progreso.conVisita(museo)
+                // si la criatura ya era tu starter, no la añadimos otra vez
+                criaturaObtenidaId = nuevo.criaturasDescubiertas.firstOrNull {
+                    it !in progreso.criaturasDescubiertas
                 }
+                nuevo
             }
             Result.success(ResultadoVisitaMuseo(museo.id, yaVisitado, criaturaObtenidaId))
         } catch (cancelacion: CancellationException) {

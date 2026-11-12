@@ -1,6 +1,7 @@
 package com.example.ars.features.escaner
 
 import com.example.ars.di.DefaultAppContainer
+import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.escaner.domain.model.CodigoArs
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
@@ -27,28 +28,22 @@ class ValidarQrUseCaseTest {
 
     @Test
     fun identificaMuseosYRechazaLosDesconocidos() = runBlocking {
-        val museos = contenedor.obtenerCatalogoMuseosUseCase().getOrThrow()
+        val museos = MuseosRepositoryImpl().obtenerMuseos()
         assertEquals(10, museos.size)
         for (museo in museos) {
-            val resultado = validar("ars:v1:museo:${museo.id}", museoActivoId = null)
+            val resultado = validar("ars:v1:museo:${museo.id}")
             assertEquals(ResultadoValidacionQr.MuseoValido(museo), resultado)
         }
         assertEquals(ResultadoValidacionQr.MuseoDesconocido,
-            validar("ars:v1:museo:desconocido", museoActivoId = null))
-        assertEquals(ResultadoValidacionQr.CodigoInvalido, validar("", museoActivoId = null))
+            validar("ars:v1:museo:desconocido"))
+        assertEquals(ResultadoValidacionQr.CodigoInvalido, validar(""))
     }
 
     @Test
-    fun unaObraNecesitaElMuseoCorrecto() = runBlocking {
-        val contenido = "ars:v1:obra:obra_001"
-        assertEquals(ResultadoValidacionQr.RequiereEscanearMuseo, validar(contenido, null))
-        val incorrecto = assertIs<ResultadoValidacionQr.MuseoIncorrecto>(
-            validar(contenido, "museo_002")
-        )
-        assertEquals("museo_001", incorrecto.museoEsperado.id)
-        val correcto = assertIs<ResultadoValidacionQr.ObraValida>(validar(contenido, "museo_001"))
+    fun identificaLaObraYSuMuseoSinExigirUnQrPrevio() = runBlocking {
+        val correcto = assertIs<ResultadoValidacionQr.ObraValida>(validar("ars:v1:obra:obra_001"))
         assertEquals("Las meninas", correcto.obra.titulo)
-        assertEquals(ResultadoValidacionQr.ObraDesconocida,
-            validar("ars:v1:obra:desconocida", "museo_001"))
+        assertEquals("museo_001", correcto.museo.id)
+        assertEquals(ResultadoValidacionQr.ObraDesconocida, validar("ars:v1:obra:desconocida"))
     }
 }

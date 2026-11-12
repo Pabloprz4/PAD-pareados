@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ars.shared.generated.resources.*
+import com.example.ars.features.escaner.presentation.ui.ObraCard
 import com.example.ars.features.museos.presentation.MuseosAction
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import org.jetbrains.compose.resources.stringResource
@@ -22,6 +23,7 @@ fun DetalleMuseoScreenRoot(
     museoId: String,
     viewModel: MuseosViewModel,
     onVolver: () -> Unit,
+    onObraClick: (String) -> Unit,
     yaVisitado: Boolean? = null,
     criaturaObtenidaId: String? = null
 ) {
@@ -58,7 +60,21 @@ fun DetalleMuseoScreenRoot(
                     MuseoInformacion(museo, estado.criaturas, estado.progreso)
                 }
             },
-            contenidoObras = { Text(stringResource(Res.string.museo_obras_pendientes)) },
+            contenidoObras = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    val obras = estado.obras.filter { it.museoId == museo.id }
+                    if (obras.isEmpty()) {
+                        Text(stringResource(Res.string.museo_obras_pendientes))
+                    }
+                    obras.forEach { obra ->
+                        ObraCard(
+                            obra = obra,
+                            escaneada = obra.id in estado.progreso.obrasEscaneadas,
+                            onClick = { onObraClick(obra.id) }
+                        )
+                    }
+                }
+            },
             contenidoMisiones = { MuseoMisiones(museo) }
         )
     }

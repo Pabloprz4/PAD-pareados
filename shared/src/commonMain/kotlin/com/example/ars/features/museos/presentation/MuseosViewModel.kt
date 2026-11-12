@@ -3,6 +3,7 @@ package com.example.ars.features.museos.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
+import com.example.ars.features.escaner.domain.usecase.ObtenerObrasUseCase
 import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 import kotlinx.coroutines.CancellationException
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 class MuseosViewModel(
     private val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase,
     private val obtenerProgresoUseCase: ObtenerProgresoUseCase,
-    private val obtenerCriaturasUseCase: ObtenerCriaturasUseCase
+    private val obtenerCriaturasUseCase: ObtenerCriaturasUseCase,
+    private val obtenerObrasUseCase: ObtenerObrasUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(MuseosUiState())
     val state = _state.asStateFlow()
@@ -31,9 +33,10 @@ class MuseosViewModel(
             try {
                 val museos = obtenerCatalogoMuseosUseCase().getOrThrow()
                 val progreso = obtenerProgresoUseCase().getOrThrow()
+                val obras = obtenerObrasUseCase().getOrThrow()
                 val criaturas = obtenerCriaturasUseCase().getOrThrow()
                 _state.update {
-                    it.copy(museos = museos, progreso = progreso, criaturas = criaturas)
+                    it.copy(museos = museos, progreso = progreso, criaturas = criaturas, obras = obras)
                 }
             } catch (cancelacion: CancellationException) {
                 throw cancelacion

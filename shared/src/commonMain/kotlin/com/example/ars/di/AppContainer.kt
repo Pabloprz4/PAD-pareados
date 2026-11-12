@@ -5,6 +5,8 @@ import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
 import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
+import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
+import com.example.ars.features.escaner.domain.usecase.ObtenerObrasUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
@@ -27,6 +29,8 @@ interface AppContainer {
 
     // Escáner
     val validarQrUseCase: ValidarQrUseCase
+    val registrarObraUseCase: RegistrarObraUseCase
+    val obtenerObrasUseCase: ObtenerObrasUseCase
     val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase
 
     // Museos
@@ -68,12 +72,20 @@ class DefaultAppContainer : AppContainer {
         )
     }
 
+    override val registrarObraUseCase: RegistrarObraUseCase by lazy {
+        RegistrarObraUseCase(progresoRepository, homeRepository)
+    }
+
+    override val obtenerObrasUseCase: ObtenerObrasUseCase by lazy {
+        ObtenerObrasUseCase(catalogoRepository)
+    }
+
     override val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase by lazy {
         RegistrarVisitaMuseoUseCase(progresoRepository, homeRepository)
     }
 
     override val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase by lazy {
-        ObtenerCatalogoMuseosUseCase(repository = museosRepository)
+        ObtenerCatalogoMuseosUseCase(museosRepository, catalogoRepository, progresoRepository)
     }
 
 

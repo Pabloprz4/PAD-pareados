@@ -94,7 +94,7 @@ fun MuseosScreen(
                     )
 
                     Text(
-                        text = "$descubiertas / $totales obras descubiertas",
+                        text = "$descubiertas / $totales obras escaneadas",
                         style = MaterialTheme.typography.headlineSmall
                     )
 

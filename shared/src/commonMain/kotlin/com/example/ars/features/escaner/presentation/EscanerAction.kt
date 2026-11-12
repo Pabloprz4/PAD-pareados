@@ -6,4 +6,6 @@ sealed interface EscanerAction {
     data object LecturaCancelada : EscanerAction
     data object LecturaFallida : EscanerAction
     data object MuseoAbierto : EscanerAction
+    data object ObraAbierta : EscanerAction
+    data object AvisoCerrado : EscanerAction
 }

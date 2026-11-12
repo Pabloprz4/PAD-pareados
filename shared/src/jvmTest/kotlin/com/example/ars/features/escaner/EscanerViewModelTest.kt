@@ -3,6 +3,7 @@ package com.example.ars.features.escaner
 import androidx.lifecycle.ViewModelStore
 import com.example.ars.ProgresoEnMemoria
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
+import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.escaner.domain.model.Obra
@@ -40,11 +41,18 @@ class EscanerViewModelTest {
         leer(vm, "ars:v1:obra:obra_001")
         val resultado = assertIs<ResultadoValidacionQr.ObraValida>(vm.state.value.resultado)
         assertEquals("Las meninas", resultado.obra.titulo)
+        assertEquals("obra_001", vm.state.value.obraPorAbrir?.obraId)
+        vm.onAction(EscanerAction.ObraAbierta)
+        assertNull(vm.state.value.obraPorAbrir)
         leer(vm, "ars:v1:obra:obra_001")
         assertEquals(resultado, vm.state.value.resultado)
+        assertTrue(vm.state.value.obraRepetida)
+        assertNull(vm.state.value.obraPorAbrir)
+        vm.onAction(EscanerAction.AvisoCerrado)
+        assertFalse(vm.state.value.obraRepetida)
         leer(vm, "ars:v1:obra:obra_003")
-        assertIs<ResultadoValidacionQr.MuseoIncorrecto>(vm.state.value.resultado)
-        assertEquals("museo_001", vm.state.value.museoActivo?.id)
+        assertIs<ResultadoValidacionQr.ObraValida>(vm.state.value.resultado)
+        assertEquals("museo_002", vm.state.value.museoActivo?.id)
         leer(vm, "ars:v1:museo:museo_002")
         leer(vm, "ars:v1:obra:obra_003")
         assertEquals("Guernica", assertIs<ResultadoValidacionQr.ObraValida>(vm.state.value.resultado).obra.titulo)
@@ -52,8 +60,8 @@ class EscanerViewModelTest {
 
     @Test
     fun rechazosYCancelacionConservanElMuseo() = comprobar { vm ->
-        leer(vm, "ars:v1:obra:obra_001")
-        assertEquals(ResultadoValidacionQr.RequiereEscanearMuseo, vm.state.value.resultado)
+        leer(vm, "ars:v1:obra:desconocida")
+        assertEquals(ResultadoValidacionQr.ObraDesconocida, vm.state.value.resultado)
         assertNull(vm.state.value.museoActivo)
         leer(vm, "ars:v1:museo:museo_001")
         val museo = vm.state.value.museoActivo
@@ -95,8 +103,9 @@ class EscanerViewModelTest {
                         return consulta.await()
                     }
                     override suspend fun obtenerObraPorId(id: String): Obra? = null
+                    override suspend fun obtenerObras(): List<Obra> = emptyList()
                 }
-                val vm = EscanerViewModel(ValidarQrUseCase(InterpretarQrUseCase(), repository), registrarVisita())
+                val vm = crearViewModel(ValidarQrUseCase(InterpretarQrUseCase(), repository))
                 val store = ViewModelStore().apply { put("escaner", vm) }
                 try {
                     vm.onAction(EscanerAction.LeerQr)
@@ -125,10 +134,7 @@ class EscanerViewModelTest {
         withTimeout(5_000) {
             withContext(Dispatchers.Main) {
                 val progreso = ProgresoEnMemoria().apply { fallaGuardado = true }
-                val vm = EscanerViewModel(
-                    DefaultAppContainer().validarQrUseCase,
-                    RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())
-                )
+                val vm = crearViewModel(progreso = progreso)
                 val store = ViewModelStore().apply { put("escaner", vm) }
                 try {
                     leer(vm, "ars:v1:museo:museo_001")
@@ -147,13 +153,19 @@ class EscanerViewModelTest {
         }
     }
 
-    private fun registrarVisita() =
-        RegistrarVisitaMuseoUseCase(ProgresoEnMemoria(), HomeRepositoryImpl())
+    private fun crearViewModel(
+        validar: ValidarQrUseCase = DefaultAppContainer().validarQrUseCase,
+        progreso: ProgresoEnMemoria = ProgresoEnMemoria()
+    ) = EscanerViewModel(
+        validar,
+        RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl()),
+        RegistrarObraUseCase(progreso, HomeRepositoryImpl())
+    )
 
     private fun comprobar(block: suspend (EscanerViewModel) -> Unit) = runBlocking {
         withTimeout(5_000) {
             withContext(Dispatchers.Main) {
-                val vm = EscanerViewModel(DefaultAppContainer().validarQrUseCase, registrarVisita())
+                val vm = crearViewModel()
                 val store = ViewModelStore().apply { put("escaner", vm) }
                 try {
                     block(vm)

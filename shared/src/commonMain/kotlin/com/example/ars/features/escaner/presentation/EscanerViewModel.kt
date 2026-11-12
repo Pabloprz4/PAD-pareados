@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
+import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class EscanerViewModel(
     private val validarQrUseCase: ValidarQrUseCase,
-    private val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase
+    private val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase,
+    private val registrarObraUseCase: RegistrarObraUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(EscanerUiState())
     val state = _state.asStateFlow()
@@ -22,13 +24,19 @@ class EscanerViewModel(
         when (action) {
             EscanerAction.LeerQr -> {
                 if (!_state.value.leyendo && !_state.value.validando) {
-                    _state.update { it.copy(leyendo = true, error = false) }
+                    _state.update { it.copy(leyendo = true, error = false, obraRepetida = false) }
                 }
             }
             is EscanerAction.QrLeido -> validar(action.contenido)
             EscanerAction.LecturaCancelada -> {
                 // cancelar conserva el museo y el último resultado
                 _state.update { it.copy(leyendo = false) }
+            }
+            EscanerAction.ObraAbierta -> {
+                _state.update { it.copy(obraPorAbrir = null) }
+            }
+            EscanerAction.AvisoCerrado -> {
+                _state.update { it.copy(obraRepetida = false) }
             }
             EscanerAction.MuseoAbierto -> {
                 _state.update { it.copy(visitaPorAbrir = null) }
@@ -48,13 +56,15 @@ class EscanerViewModel(
         }
         viewModelScope.launch {
             try {
-                val resultado = validarQrUseCase(
-                    contenido = contenido,
-                    museoActivoId = _state.value.museoActivo?.id
-                )
+                val resultado = validarQrUseCase(contenido)
                 // solo abrimos la ficha cuando la visita se ha guardado
                 val visita = if (resultado is ResultadoValidacionQr.MuseoValido) {
                     registrarVisitaMuseoUseCase(resultado.museo).getOrThrow()
+                } else {
+                    null
+                }
+                val registro = if (resultado is ResultadoValidacionQr.ObraValida) {
+                    registrarObraUseCase(resultado.obra, resultado.museo).getOrThrow()
                 } else {
                     null
                 }
@@ -62,10 +72,13 @@ class EscanerViewModel(
                     it.copy(
                         resultado = resultado,
                         visitaPorAbrir = visita,
-                        // solo un QR de museo válido cambia el museo activo
-                        museoActivo = if (resultado is ResultadoValidacionQr.MuseoValido) {
-                            resultado.museo
-                        } else it.museoActivo
+                        obraPorAbrir = registro?.takeUnless { it.yaEscaneada },
+                        obraRepetida = registro?.yaEscaneada == true,
+                        museoActivo = when (resultado) {
+                            is ResultadoValidacionQr.MuseoValido -> resultado.museo
+                            is ResultadoValidacionQr.ObraValida -> resultado.museo
+                            else -> it.museoActivo
+                        }
                     )
                 }
             } catch (cancelacion: CancellationException) {
