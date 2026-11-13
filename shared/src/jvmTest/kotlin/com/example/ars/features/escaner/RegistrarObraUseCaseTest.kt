@@ -6,6 +6,7 @@ import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.home.domain.model.ProgresoUsuario
 import com.example.ars.features.home.domain.usecase.ElegirCriaturaInicialUseCase
+import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
@@ -28,9 +29,9 @@ class RegistrarObraUseCaseTest {
     @Test
     fun unaObraDesbloqueaSuMuseoSinConcederLaCriaturaDeLaObra() = runBlocking {
         val progreso = ProgresoEnMemoria(ProgresoUsuario("criatura_012", listOf("criatura_012")))
-        val museo = museos.obtenerMuseos().first()
+        val museo = museos.obtenerMuseos().first().copy(misiones = emptyList())
         val obra = catalogo.obtenerObras()[1]
-        val registrar = RegistrarObraUseCase(progreso, criaturas)
+        val registrar = RegistrarObraUseCase(progreso, criaturas, catalogo)
         val primera = registrar(obra, museo).getOrThrow()
         assertFalse(primera.yaEscaneada)
         assertEquals(listOf(obra.id), progreso.progreso.obrasEscaneadas)
@@ -48,7 +49,7 @@ class RegistrarObraUseCaseTest {
         val anterior = ProgresoUsuario("criatura_001", listOf("criatura_001"), listOf("museo_001"))
         val progreso = ProgresoEnMemoria(anterior)
         val obra = catalogo.obtenerObras().first()
-        val resultado = RegistrarObraUseCase(progreso, criaturas)(obra, museos.obtenerMuseos().first()).getOrThrow()
+        val resultado = RegistrarObraUseCase(progreso, criaturas, catalogo)(obra, museos.obtenerMuseos().first().copy(misiones = emptyList())).getOrThrow()
         assertNull(resultado.criaturaBienvenidaId)
         assertEquals(anterior.criaturasDescubiertas, progreso.progreso.criaturasDescubiertas)
         assertEquals(anterior.museosVisitados, progreso.progreso.museosVisitados)
@@ -57,8 +58,8 @@ class RegistrarObraUseCaseTest {
     @Test
     fun unFalloDeGuardadoNoDejaVisitaNiObraAMedias() = runBlocking {
         val progreso = ProgresoEnMemoria().apply { fallaGuardado = true }
-        val registrar = RegistrarObraUseCase(progreso, criaturas)
-        val museo = museos.obtenerMuseos().first()
+        val registrar = RegistrarObraUseCase(progreso, criaturas, catalogo)
+        val museo = museos.obtenerMuseos().first().copy(misiones = emptyList())
         val obra = catalogo.obtenerObras().first()
         assertTrue(registrar(obra, museo).isFailure)
         assertEquals(ProgresoUsuario(), progreso.progreso)
@@ -70,7 +71,7 @@ class RegistrarObraUseCaseTest {
     @Test
     fun rechazaUnaAsociacionIncorrectaAntesDeGuardar() = runBlocking {
         val progreso = ProgresoEnMemoria()
-        val resultado = RegistrarObraUseCase(progreso, criaturas)(
+        val resultado = RegistrarObraUseCase(progreso, criaturas, catalogo)(
             catalogo.obtenerObras().first(), museos.obtenerMuseos()[1]
         )
         assertTrue(resultado.isFailure)
@@ -80,15 +81,15 @@ class RegistrarObraUseCaseTest {
     @Test
     fun lecturasSimultaneasConservanObrasVisitaYStarterSinDuplicarlos() = runBlocking {
         val progreso = ProgresoEnMemoria()
-        val registrar = RegistrarObraUseCase(progreso, criaturas)
-        val museo = museos.obtenerMuseos().first()
+        val registrar = RegistrarObraUseCase(progreso, criaturas, catalogo)
+        val museo = museos.obtenerMuseos().first().copy(misiones = emptyList())
         val obras = catalogo.obtenerObras()
         coroutineScope {
             listOf(
                 async { registrar(obras[0], museo).getOrThrow() },
                 async { registrar(obras[1], museo).getOrThrow() },
                 async { registrar(obras[0], museo).getOrThrow() },
-                async { RegistrarVisitaMuseoUseCase(progreso, criaturas)(museo).getOrThrow() },
+                async { RegistrarVisitaMuseoUseCase(progreso, criaturas, catalogo)(museo).getOrThrow() },
                 async { ElegirCriaturaInicialUseCase(progreso)("criatura_012").getOrThrow() }
             ).awaitAll()
         }
@@ -104,14 +105,14 @@ class RegistrarObraUseCaseTest {
             criaturasDescubiertas = listOf("criatura_001", "criatura_001"),
             obrasEscaneadas = listOf("obra_001", "obra_001", "desconocida")
         ))
-        val lista = ObtenerCatalogoMuseosUseCase(museos, catalogo, progreso)().getOrThrow()
+        val lista = ObtenerCatalogoMuseosUseCase(museos, catalogo, ObtenerProgresoUseCase(progreso, museos, catalogo))().getOrThrow()
         val prado = lista.first()
         assertEquals(2, prado.obrasTotales)
         assertEquals(1, prado.obrasDescubiertas)
         assertEquals(3, prado.criaturasTotales)
         assertEquals(1, prado.criaturasDescubiertas)
-        assertEquals(1, lista[1].obrasTotales)
-        assertEquals(0, lista[2].obrasTotales)
+        assertEquals(2, lista[1].obrasTotales)
+        assertEquals(2, lista[2].obrasTotales)
     }
 
     @Test
@@ -121,5 +122,6 @@ class RegistrarObraUseCaseTest {
         assertEquals("criatura_012", progreso.criaturaInicialId)
         assertEquals(listOf("museo_002"), progreso.museosVisitados)
         assertTrue(progreso.obrasEscaneadas.isEmpty())
+        assertTrue(progreso.misionesCompletadas.isEmpty())
     }
 }

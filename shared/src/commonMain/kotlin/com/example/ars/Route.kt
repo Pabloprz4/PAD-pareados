@@ -17,7 +17,8 @@ sealed interface Route {
     data class DetalleMuseo(
         val museoId: String,
         val yaVisitado: Boolean? = null,
-        val criaturaObtenidaId: String? = null
+        val criaturaObtenidaId: String? = null,
+        val recompensasIds: List<String> = emptyList()
     ) : Route
 
     @Serializable
@@ -26,7 +27,8 @@ sealed interface Route {
     @Serializable
     data class DetalleObra(
         val obraId: String,
-        val criaturaBienvenidaId: String? = null
+        val criaturaBienvenidaId: String? = null,
+        val recompensasIds: List<String> = emptyList()
     ) : Route
 
     @Serializable

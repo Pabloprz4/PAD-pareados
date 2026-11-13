@@ -1,5 +1,6 @@
 package com.example.ars.features.museos.domain.usecase
 
+import com.example.ars.features.escaner.domain.repository.CatalogoRepository
 import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.repository.ProgresoRepository
 import com.example.ars.features.museos.domain.model.Museo
@@ -8,7 +9,9 @@ import kotlinx.coroutines.CancellationException
 
 class RegistrarVisitaMuseoUseCase(
     private val progresoRepository: ProgresoRepository,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val catalogoRepository: CatalogoRepository,
+    private val evaluarMisionesUseCase: EvaluarMisionesUseCase = EvaluarMisionesUseCase()
 ) {
     suspend operator fun invoke(museo: Museo): Result<ResultadoVisitaMuseo> {
         return try {
@@ -19,6 +22,8 @@ class RegistrarVisitaMuseoUseCase(
                 }
             }
 
+            val obras = catalogoRepository.obtenerObras()
+            var recompensasIds: List<String> = emptyList()
             var yaVisitado = false
             var criaturaObtenidaId: String? = null
             progresoRepository.actualizarProgreso { progreso ->
@@ -28,9 +33,13 @@ class RegistrarVisitaMuseoUseCase(
                 criaturaObtenidaId = nuevo.criaturasDescubiertas.firstOrNull {
                     it !in progreso.criaturasDescubiertas
                 }
-                nuevo
+                val evaluado = evaluarMisionesUseCase(museo, obras, nuevo).progreso
+                recompensasIds = evaluado.criaturasDescubiertas.filterNot {
+                    it in nuevo.criaturasDescubiertas
+                }
+                evaluado
             }
-            Result.success(ResultadoVisitaMuseo(museo.id, yaVisitado, criaturaObtenidaId))
+            Result.success(ResultadoVisitaMuseo(museo.id, yaVisitado, criaturaObtenidaId, recompensasIds))
         } catch (cancelacion: CancellationException) {
             throw cancelacion
         } catch (error: Exception) {

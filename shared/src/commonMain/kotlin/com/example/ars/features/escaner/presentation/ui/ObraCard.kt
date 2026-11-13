@@ -28,6 +28,23 @@ fun imagenObra(obraId: String): DrawableResource = when (obraId) {
     "obra_001" -> Res.drawable.obra_meninas
     "obra_002" -> Res.drawable.obra_jardin
     "obra_003" -> Res.drawable.obra_guernica
+    "obra_reina_ventana" -> Res.drawable.obra_ventana
+    "obra_thyssen_caballero" -> Res.drawable.obra_caballero
+    "obra_thyssen_hotel" -> Res.drawable.obra_hotel
+    "obra_moma_noche" -> Res.drawable.obra_noche_estrellada
+    "obra_moma_memoria" -> Res.drawable.obra_memoria
+    "obra_vangogh_girasoles" -> Res.drawable.obra_girasoles
+    "obra_vangogh_almendro" -> Res.drawable.obra_almendro
+    "obra_uffizi_venus" -> Res.drawable.obra_venus
+    "obra_uffizi_primavera" -> Res.drawable.obra_primavera
+    "obra_munch_grito" -> Res.drawable.obra_grito
+    "obra_munch_madonna" -> Res.drawable.obra_madonna
+    "obra_vaticano_creacion" -> Res.drawable.obra_creacion_adan
+    "obra_vaticano_atenas" -> Res.drawable.obra_escuela_atenas
+    "obra_met_ola" -> Res.drawable.obra_gran_ola
+    "obra_met_washington" -> Res.drawable.obra_washington
+    "obra_louvre_mona_lisa" -> Res.drawable.obra_mona_lisa
+    "obra_louvre_libertad" -> Res.drawable.obra_libertad
     else -> Res.drawable.ars_icon_image
 }
 

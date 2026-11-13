@@ -33,7 +33,6 @@
     <string name="museo_criaturas">Criaturas del museo</string>
     <string name="museo_sin_criaturas">Aún no hay criaturas configuradas para este museo.</string>
     <string name="museo_sin_misiones">Aún no hay misiones configuradas para este museo.</string>
-    <string name="museo_misiones_muestra">Misiones de muestra. El seguimiento y sus recompensas están pendientes.</string>
     <string name="museo_nuevo">¡Museo desbloqueado!</string>
     <string name="museo_repetido">Esta visita ya estaba registrada.</string>
     <string name="museo_bienvenida">Has conseguido a %1$s como bienvenida.</string>
@@ -50,4 +49,13 @@
     <string name="obra_pendiente">Pendiente de escanear</string>
     <string name="obra_error">No se ha podido cargar la obra. Vuelve a intentarlo.</string>
     <string name="obra_escanear">Escanea el QR de esta obra para abrir su ficha.</string>
+    <string name="mision_progreso">%1$d / %2$d obras</string>
+    <string name="mision_completada">Completada</string>
+    <string name="mision_proximamente">Próximamente. Aún faltan obras disponibles.</string>
+    <string name="mision_recompensa">Recompensa: %1$s</string>
+    <string name="mision_conjunta">Completa todas las misiones para conseguir a %1$s.</string>
+    <string name="mision_conjunta_obtenida">Recompensa del museo obtenida: %1$s.</string>
+    <string name="mision_recompensa_pendiente">La recompensa de estas misiones está pendiente de definir.</string>
+    <string name="mision_premio_nuevo">¡Misión completada! Has conseguido a %1$s.</string>
+    <string name="mision_sin_pendientes">No tienes misiones pendientes en los museos visitados.</string>
 </resources>

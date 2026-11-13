@@ -2,6 +2,8 @@ package com.example.ars.features.escaner
 
 import androidx.lifecycle.ViewModelStore
 import com.example.ars.ProgresoEnMemoria
+import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
+import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
@@ -158,8 +160,8 @@ class EscanerViewModelTest {
         progreso: ProgresoEnMemoria = ProgresoEnMemoria()
     ) = EscanerViewModel(
         validar,
-        RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl()),
-        RegistrarObraUseCase(progreso, HomeRepositoryImpl())
+        RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl())),
+        RegistrarObraUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))
     )
 
     private fun comprobar(block: suspend (EscanerViewModel) -> Unit) = runBlocking {

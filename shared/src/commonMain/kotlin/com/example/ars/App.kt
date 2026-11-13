@@ -252,7 +252,8 @@ fun App(
                                     }
                                 },
                                 yaVisitado = ruta.yaVisitado,
-                                criaturaObtenidaId = ruta.criaturaObtenidaId
+                                criaturaObtenidaId = ruta.criaturaObtenidaId,
+                                recompensasIds = ruta.recompensasIds
                             )
                         }
                     }
@@ -275,6 +276,7 @@ fun App(
                                 obraId = ruta.obraId,
                                 viewModel = obraViewModel,
                                 criaturaBienvenidaId = ruta.criaturaBienvenidaId,
+                                recompensasIds = ruta.recompensasIds,
                                 onCerrar = { navController.popBackStack() }
                             )
                         }
@@ -297,7 +299,8 @@ fun App(
                                         Route.DetalleMuseo(
                                             museoId = visita.museoId,
                                             yaVisitado = visita.yaVisitado,
-                                            criaturaObtenidaId = visita.criaturaObtenidaId
+                                            criaturaObtenidaId = visita.criaturaObtenidaId,
+                                            recompensasIds = visita.recompensasIds
                                         )
                                     ) {
                                         launchSingleTop = true
@@ -305,7 +308,7 @@ fun App(
                                 },
                                 onObraEscaneada = { registro ->
                                     navController.navigate(
-                                        Route.DetalleObra(registro.obraId, registro.criaturaBienvenidaId)
+                                        Route.DetalleObra(registro.obraId, registro.criaturaBienvenidaId, registro.recompensasIds)
                                     ) {
                                         launchSingleTop = true
                                     }

@@ -1,6 +1,8 @@
 package com.example.ars.features.escaner.domain.usecase
 
 import com.example.ars.features.escaner.domain.model.Obra
+import com.example.ars.features.escaner.domain.repository.CatalogoRepository
+import com.example.ars.features.museos.domain.usecase.EvaluarMisionesUseCase
 import com.example.ars.features.escaner.domain.model.ResultadoRegistroObra
 import com.example.ars.features.home.domain.repository.HomeRepository
 import com.example.ars.features.home.domain.repository.ProgresoRepository
@@ -9,7 +11,9 @@ import kotlinx.coroutines.CancellationException
 
 class RegistrarObraUseCase(
     private val progresoRepository: ProgresoRepository,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val catalogoRepository: CatalogoRepository,
+    private val evaluarMisionesUseCase: EvaluarMisionesUseCase = EvaluarMisionesUseCase()
 ) {
     suspend operator fun invoke(obra: Obra, museo: Museo): Result<ResultadoRegistroObra> {
         return try {
@@ -21,6 +25,8 @@ class RegistrarObraUseCase(
                 }
             }
 
+            val obras = catalogoRepository.obtenerObras()
+            var recompensasIds: List<String> = emptyList()
             var yaEscaneada = false
             var criaturaBienvenidaId: String? = null
             progresoRepository.actualizarProgreso { progreso ->
@@ -33,11 +39,16 @@ class RegistrarObraUseCase(
                     criaturaBienvenidaId = visita.criaturasDescubiertas.firstOrNull {
                         it !in progreso.criaturasDescubiertas
                     }
-                    // visita y obra se guardan juntas, una sola vez
-                    visita.copy(obrasEscaneadas = progreso.obrasEscaneadas + obra.id)
+                    // obra, misiones y recompensas se guardan juntas
+                    val conObra = visita.copy(obrasEscaneadas = progreso.obrasEscaneadas + obra.id)
+                    val nuevo = evaluarMisionesUseCase(museo, obras, conObra).progreso
+                    recompensasIds = nuevo.criaturasDescubiertas.filterNot {
+                        it in conObra.criaturasDescubiertas
+                    }
+                    nuevo
                 }
             }
-            Result.success(ResultadoRegistroObra(obra.id, yaEscaneada, criaturaBienvenidaId))
+            Result.success(ResultadoRegistroObra(obra.id, yaEscaneada, criaturaBienvenidaId, recompensasIds))
         } catch (cancelacion: CancellationException) {
             throw cancelacion
         } catch (error: Exception) {

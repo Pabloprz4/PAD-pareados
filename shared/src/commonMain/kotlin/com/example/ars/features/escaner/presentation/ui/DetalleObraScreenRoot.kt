@@ -21,6 +21,7 @@ fun DetalleObraScreenRoot(
     obraId: String,
     viewModel: MuseosViewModel,
     criaturaBienvenidaId: String?,
+    recompensasIds: List<String>,
     onCerrar: () -> Unit
 ) {
     val estado by viewModel.state.collectAsStateWithLifecycle()
@@ -45,6 +46,7 @@ fun DetalleObraScreenRoot(
             obra = obra,
             museo = museo.nombre,
             bienvenida = estado.criaturas.firstOrNull { it.id == criaturaBienvenidaId }?.nombre,
+            recompensas = estado.criaturas.filter { it.id in recompensasIds }.map { it.nombre },
             onCerrar = onCerrar
         )
     }

@@ -8,7 +8,8 @@ data class ProgresoUsuario(
     val criaturaInicialId: String? = null,
     val criaturasDescubiertas: List<String> = emptyList(),
     val museosVisitados: List<String> = emptyList(),
-    val obrasEscaneadas: List<String> = emptyList()
+    val obrasEscaneadas: List<String> = emptyList(),
+    val misionesCompletadas: List<String> = emptyList()
 ) {
     fun conVisita(museo: Museo): ProgresoUsuario {
         if (museo.id in museosVisitados) return this

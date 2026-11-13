@@ -73,7 +73,7 @@ class DefaultAppContainer : AppContainer {
     }
 
     override val registrarObraUseCase: RegistrarObraUseCase by lazy {
-        RegistrarObraUseCase(progresoRepository, homeRepository)
+        RegistrarObraUseCase(progresoRepository, homeRepository, catalogoRepository)
     }
 
     override val obtenerObrasUseCase: ObtenerObrasUseCase by lazy {
@@ -81,11 +81,11 @@ class DefaultAppContainer : AppContainer {
     }
 
     override val registrarVisitaMuseoUseCase: RegistrarVisitaMuseoUseCase by lazy {
-        RegistrarVisitaMuseoUseCase(progresoRepository, homeRepository)
+        RegistrarVisitaMuseoUseCase(progresoRepository, homeRepository, catalogoRepository)
     }
 
     override val obtenerCatalogoMuseosUseCase: ObtenerCatalogoMuseosUseCase by lazy {
-        ObtenerCatalogoMuseosUseCase(museosRepository, catalogoRepository, progresoRepository)
+        ObtenerCatalogoMuseosUseCase(museosRepository, catalogoRepository, obtenerProgresoUseCase)
     }
 
 
@@ -97,7 +97,9 @@ class DefaultAppContainer : AppContainer {
     //Criaturas iniciales
     override val obtenerProgresoUseCase: ObtenerProgresoUseCase by lazy {
         ObtenerProgresoUseCase(
-            repository = progresoRepository
+            repository = progresoRepository,
+            museosRepository = museosRepository,
+            catalogoRepository = catalogoRepository
         )
     }
 

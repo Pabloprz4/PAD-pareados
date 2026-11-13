@@ -3,6 +3,7 @@ package com.example.ars.features.home
 import androidx.lifecycle.ViewModelStore
 import com.example.ars.ProgresoEnMemoria
 import com.example.ars.CatalogoEnMemoria
+import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.home.domain.model.Criatura
 import com.example.ars.features.museos.domain.model.Museo
@@ -152,14 +153,17 @@ class HomeViewModelTest {
             override suspend fun obtenerMuseos(): List<Museo> = throw CancellationException("cancelado")
             override suspend fun traerCriaturas(): List<Criatura> = throw CancellationException("cancelado")
         }
-        assertFailsWith<CancellationException> { ObtenerCatalogoMuseosUseCase(repository, CatalogoEnMemoria(), ProgresoEnMemoria())() }
+        assertFailsWith<CancellationException> { ObtenerCatalogoMuseosUseCase(repository, CatalogoEnMemoria(), obtenerProgreso())() }
         assertFailsWith<CancellationException> { ObtenerCriaturasUseCase(repository)() }
     }
 
+    private fun obtenerProgreso() =
+        ObtenerProgresoUseCase(ProgresoEnMemoria(), MuseosRepositoryImpl(), CatalogoEnMemoria())
+
     private fun crearViewModel(repository: RepositorioControlado) = HomeViewModel(
         obtenerCriaturasUseCase = ObtenerCriaturasUseCase(repository),
-        obtenerMuseosUseCase = ObtenerCatalogoMuseosUseCase(repository, CatalogoEnMemoria(), ProgresoEnMemoria()),
-        obtenerProgresoUseCase = ObtenerProgresoUseCase(ProgresoEnMemoria())
+        obtenerMuseosUseCase = ObtenerCatalogoMuseosUseCase(repository, CatalogoEnMemoria(), obtenerProgreso()),
+        obtenerProgresoUseCase = obtenerProgreso()
     )
 
     private class RepositorioControlado : HomeRepository, MuseosRepository {

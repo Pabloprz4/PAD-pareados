@@ -59,14 +59,3 @@ fun MuseoInformacion(museo: Museo, criaturas: List<Criatura>, progreso: Progreso
         }
     }
 }
-
-@Composable
-fun MuseoMisiones(museo: Museo) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(Res.string.museo_misiones_muestra))
-        if (museo.misiones.isEmpty()) {
-            Text(stringResource(Res.string.museo_sin_misiones))
-        }
-        museo.misiones.forEach { mision -> Text("• $mision") }
-    }
-}

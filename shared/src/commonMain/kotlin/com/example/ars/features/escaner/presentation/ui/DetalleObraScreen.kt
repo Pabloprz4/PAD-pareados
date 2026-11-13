@@ -21,7 +21,13 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun DetalleObraScreen(obra: Obra, museo: String, bienvenida: String?, onCerrar: () -> Unit) {
+fun DetalleObraScreen(
+    obra: Obra,
+    museo: String,
+    bienvenida: String?,
+    recompensas: List<String>,
+    onCerrar: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -38,5 +44,8 @@ fun DetalleObraScreen(obra: Obra, museo: String, bienvenida: String?, onCerrar: 
         Text(museo, style = MaterialTheme.typography.bodyMedium)
         Text(obra.descripcion)
         bienvenida?.let { Text(stringResource(Res.string.museo_bienvenida, it)) }
+        recompensas.forEach { nombre ->
+            Text(stringResource(Res.string.mision_premio_nuevo, nombre))
+        }
     }
 }

@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,6 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.ars.features.home.presentation.HomeUiState
+import com.example.ars.features.museos.presentation.ui.MisionCard
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.mision_sin_pendientes
 import org.jetbrains.compose.resources.painterResource
 import ars.shared.generated.resources.Res
 import ars.shared.generated.resources.ars_icon_image
@@ -149,32 +150,20 @@ fun HomeScreen(
                 .padding(top = 32.dp, bottom = 12.dp)
         )
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Todavía no tienes misiones empezadas",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Text(
-                    text = "Explora un museo y comienza tu primera aventura.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                TextButton(onClick = onExplorarMuseos) {
-                    Text("Explorar museos →")
-                }
+        val pendientes = state.museos
+            .filter { it.id in state.progreso.museosVisitados }
+            .flatMap { museo ->
+                museo.progresoMisiones.filterNot { it.completada }.map { museo.nombre to it }
             }
+        if (pendientes.isEmpty()) {
+            Text(stringResource(Res.string.mision_sin_pendientes))
+        }
+        pendientes.take(3).forEach { (museo, mision) ->
+            Text(museo, style = MaterialTheme.typography.titleMedium)
+            MisionCard(mision, state.criaturas)
+        }
+        TextButton(onClick = onExplorarMuseos) {
+            Text("Explorar museos →")
         }
 
         // 3. MUSEOS DESTACADOS

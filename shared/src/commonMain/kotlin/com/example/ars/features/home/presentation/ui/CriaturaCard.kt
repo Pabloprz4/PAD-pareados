@@ -43,6 +43,7 @@ import ars.shared.generated.resources.monstruo_ola
 import ars.shared.generated.resources.manzana_verde
 import ars.shared.generated.resources.mona_lisa
 import ars.shared.generated.resources.toro_guernica
+import ars.shared.generated.resources.caballero
 
 @Composable
 fun CriaturaCard(
@@ -66,6 +67,7 @@ fun CriaturaCard(
         "Manzana con Traje" -> Res.drawable.manzana_verde
         "Dama de la Mona Lisa" -> Res.drawable.mona_lisa
         "Toro Guernica" -> Res.drawable.toro_guernica
+        "Caballero del Paisaje" -> Res.drawable.caballero
         else -> Res.drawable.ars_icon_image
     }
 

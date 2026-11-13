@@ -18,3 +18,116 @@ Imagen procedente de la ficha del museo. Se conserva el crédito de la obra.
 https://www.museoreinasofia.es/colecciones/obra/guernica/
 https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp
 © Sucesión Pablo Picasso. VEGAP, Madrid.
+
+Ampliación del catálogo, 13/11/2026
+Reproducciones reducidas y recomprimidas a JPEG, con un máximo de 960 píxeles en su lado mayor.
+Las descripciones de Ars son resúmenes propios basados en las fichas enlazadas.
+
+obra_ventana.jpg
+Salvador Dalí. Figura en una ventana, 1925.
+Imagen del Museo Nacional Centro de Arte Reina Sofía. © Salvador Dalí, Fundació Gala-Salvador Dalí, VEGAP, Madrid.
+Ficha de la obra: https://www.museoreinasofia.es/colecciones/obra/figura-en-una-finestra-figura-en-una-ventana/
+https://recursos.museoreinasofia.es/styles/large_portrait/public/Obra/AS02157_2.jpg.webp
+
+obra_caballero.jpg
+Vittore Carpaccio. Joven caballero en un paisaje, Hacia 1505.
+Vittore Carpaccio. Joven caballero en un paisaje, hacia 1505. © Museo Nacional Thyssen-Bornemisza, Madrid.
+Ficha de la obra: https://www.museothyssen.org/coleccion/artistas/carpaccio-vittore/joven-caballero-paisaje
+https://www.museothyssen.org/sites/default/files/styles/full_resolution/public/imagen/2025-01/CARPACCIO%2C%20Vittore_Joven%20caballero%20en%20un%20paisaje_82%20%281935.3%29_visor.jpg
+
+obra_hotel.jpg
+Edward Hopper. Habitación de hotel, 1931.
+Imagen del Museo Nacional Thyssen-Bornemisza, Madrid. © Herederos de Josephine Hopper / Cortesía de ARS (Artist Rights Society), VEGAP, Madrid. Todos los derechos reservados.
+Ficha de la obra: https://www.museothyssen.org/coleccion/artistas/hopper-edward/habitacion-hotel
+https://www.museothyssen.org/sites/default/files/styles/full_resolution/public/imagen/2026-02/HOPPER%2C%20Edward_Habitacion%20de%20hotel_594%20%281977.110%29.jpg_visor.jpg
+
+obra_noche_estrellada.jpg
+Vincent van Gogh. La noche estrellada, 1889.
+Reproducción vía Wikimedia Commons / Google Art Project. Obra del Museum of Modern Art, Nueva York. Dominio público.
+Ficha de la obra: https://www.moma.org/collection/works/79802
+https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg
+https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/960px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg
+
+obra_memoria.jpg
+Salvador Dalí. La persistencia de la memoria, 1931.
+Imagen del Museum of Modern Art, Nueva York. © Salvador Dalí, Fundació Gala-Salvador Dalí / Artists Rights Society (ARS), New York.
+Ficha de la obra: https://www.moma.org/collection/works/79018
+https://www.moma.org/media/W1siZiIsIjYxOTY1OSJdLFsicCIsImNvbnZlcnQiLCItcXVhbGl0eSA5MCAtcmVzaXplIDIwMDB4MjAwMFx1MDAzZSJdXQ.jpg?sha=ef9155183ab6bba1
+
+obra_girasoles.jpg
+Vincent van Gogh. Los girasoles, 1889.
+Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation). Reproducción de la ficha oficial, s0031V1962.
+Ficha de la obra: https://www.vangoghmuseum.nl/en/collection/s0031V1962
+https://iiif.micr.io/TZCqF/full/960,/0/default.jpg
+
+obra_almendro.jpg
+Vincent van Gogh. Almendro en flor, 1890.
+Van Gogh Museum, Amsterdam (Vincent van Gogh Foundation). Reproducción de la ficha oficial, s0176V1962.
+Ficha de la obra: https://www.vangoghmuseum.nl/en/collection/s0176V1962
+https://iiif.micr.io/rAERt/full/960,/0/default.jpg
+
+obra_venus.jpg
+Sandro Botticelli. El nacimiento de Venus, Hacia 1485.
+Reproducción de Gallerie degli Uffizi, Florencia, de su ficha oficial.
+Ficha de la obra: https://www.uffizi.it/en/artworks/birth-of-venus
+https://www.datocms-assets.com/103094/1688659635-1503909239806647-605174-2.jpg?auto=format&fit=max&w=960
+
+obra_primavera.jpg
+Sandro Botticelli. La primavera, Hacia 1480.
+Reproducción de Gallerie degli Uffizi, Florencia, de su ficha oficial.
+Ficha de la obra: https://www.uffizi.it/en/artworks/botticelli-spring
+https://www.datocms-assets.com/103094/1688660189-1543409158632122-botticelli-primavera-intero.jpg?auto=format&fit=max&w=960
+
+obra_grito.jpg
+Edvard Munch. El grito, Hacia 1910.
+Edvard Munch, The Scream (1910?). Photo © Munchmuseet. CC BY-NC-SA 4.0. https://creativecommons.org/licenses/by-nc-sa/4.0/
+Ficha de la obra: https://www.munch.no/en/The-Scream/where-can-i-see-the-scream/
+https://www.munch.no/globalassets/kunstverk/skrik_high_res.jpg?w=800&mode=Max&quality=85
+
+obra_madonna.jpg
+Edvard Munch. Madonna, 1894.
+Edvard Munch, Madonna (1894). Photo © Munchmuseet. CC BY-NC-SA 4.0. https://creativecommons.org/licenses/by-nc-sa/4.0/
+Ficha de la obra: https://www.munch.no/en/our-collection/madonna
+https://www.munch.no/globalassets/kunstverk/edvard-munch-madonna.-oil-on-canvas-1894.-photo--munchmuseet?w=800&mode=Max&quality=85
+
+obra_creacion_adan.jpg
+Miguel Ángel. La creación de Adán, Hacia 1511.
+Reproducción vía Wikimedia Commons. La ficha identifica la reproducción como dominio público. Se muestra el panel de la bóveda.
+Ficha de la obra: https://www.museivaticani.va/content/museivaticani/es/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html
+https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg
+https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/960px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg
+
+obra_escuela_atenas.jpg
+Rafael Sanzio. La escuela de Atenas, 1509-1511.
+Reproducción vía Wikimedia Commons. La ficha identifica la reproducción como dominio público.
+Ficha de la obra: https://www.museivaticani.va/content/museivaticani/es/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html
+https://commons.wikimedia.org/wiki/File:Raphael_School_of_Athens.jpg
+https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Raphael_School_of_Athens.jpg/960px-Raphael_School_of_Athens.jpg
+
+obra_gran_ola.jpg
+Katsushika Hokusai. La gran ola de Kanagawa, Hacia 1830-1832.
+The Metropolitan Museum of Art, New York. H. O. Havemeyer Collection, Bequest of Mrs. H. O. Havemeyer, 1929, JP1847. Imagen de dominio público (Open Access / CC0).
+Ficha de la obra: https://www.metmuseum.org/art/collection/search/45434
+https://collectionapi.metmuseum.org/api/collection/v1/iiif/45434/134438/main-image
+
+obra_washington.jpg
+Emanuel Leutze. Washington cruzando el Delaware, 1851.
+The Metropolitan Museum of Art, New York. Gift of John Stewart Kennedy, 1897, 97.34. Imagen de dominio público (Open Access / CC0).
+Ficha de la obra: https://www.metmuseum.org/art/collection/search/11417
+https://collectionapi.metmuseum.org/api/collection/v1/iiif/11417/42494/main-image
+
+obra_mona_lisa.jpg
+Leonardo da Vinci. La Mona Lisa, Siglo XVI.
+Reproducción del C2RMF, vía Wikimedia Commons. La ficha identifica la reproducción como dominio público.
+Ficha de la obra: https://www.louvre.fr/decouvrir/le-palais/de-la-joconde-aux-noces-de-cana
+https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg
+https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/960px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg
+
+obra_libertad.jpg
+Eugène Delacroix. La Libertad guiando al pueblo, 1830.
+Reproducción vía Wikimedia Commons. Fuente de la ficha: Erich Lessing Culture and Fine Arts Archives / Art Resource, NY, vía artsy.net. La ficha la identifica como reproducción de una obra en dominio público.
+Ficha de la obra: https://collections.louvre.fr/en/ark:/53355/cl010065872
+https://commons.wikimedia.org/wiki/File:Eugène_Delacroix_-_Le_28_Juillet._La_Liberté_guidant_le_peuple.jpg
+https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg/960px-Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg
+
+Uso de las imágenes del MUNCH: https://www.munch.no/en/our-collection/photos-of-edvard-munchs-art/

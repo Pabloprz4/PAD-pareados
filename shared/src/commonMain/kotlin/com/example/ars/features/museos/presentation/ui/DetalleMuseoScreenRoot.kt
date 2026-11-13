@@ -25,7 +25,8 @@ fun DetalleMuseoScreenRoot(
     onVolver: () -> Unit,
     onObraClick: (String) -> Unit,
     yaVisitado: Boolean? = null,
-    criaturaObtenidaId: String? = null
+    criaturaObtenidaId: String? = null,
+    recompensasIds: List<String> = emptyList()
 ) {
     val estado by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) { viewModel.onAction(MuseosAction.CargarMuseos) }
@@ -57,6 +58,9 @@ fun DetalleMuseoScreenRoot(
                     bienvenida?.let {
                         Text(stringResource(Res.string.museo_bienvenida, it.nombre))
                     }
+                    estado.criaturas.filter { it.id in recompensasIds }.forEach { criatura ->
+                        Text(stringResource(Res.string.mision_premio_nuevo, criatura.nombre))
+                    }
                     MuseoInformacion(museo, estado.criaturas, estado.progreso)
                 }
             },
@@ -75,7 +79,7 @@ fun DetalleMuseoScreenRoot(
                     }
                 }
             },
-            contenidoMisiones = { MuseoMisiones(museo) }
+            contenidoMisiones = { MuseoMisiones(museo, estado.criaturas, estado.progreso) }
         )
     }
 }

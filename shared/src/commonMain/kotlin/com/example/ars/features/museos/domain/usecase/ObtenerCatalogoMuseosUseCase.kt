@@ -5,12 +5,13 @@ import com.example.ars.features.museos.domain.model.Museo
 import com.example.ars.features.museos.domain.repository.MuseosRepository
 import kotlinx.coroutines.CancellationException
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
-import com.example.ars.features.home.domain.repository.ProgresoRepository
+import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 
 class ObtenerCatalogoMuseosUseCase(
     private val repository: MuseosRepository,
     private val catalogoRepository: CatalogoRepository,
-    private val progresoRepository: ProgresoRepository
+    private val obtenerProgresoUseCase: ObtenerProgresoUseCase,
+    private val evaluarMisionesUseCase: EvaluarMisionesUseCase = EvaluarMisionesUseCase()
 ) {
     suspend operator fun invoke(): Result<List<Museo>> {
         return try {
@@ -22,10 +23,11 @@ class ObtenerCatalogoMuseosUseCase(
                 )
             } else {
                 val obras = catalogoRepository.obtenerObras()
-                val progreso = progresoRepository.obtenerProgreso()
+                val progreso = obtenerProgresoUseCase().getOrThrow()
                 Result.success(museos.map { museo ->
                     val obrasMuseo = obras.filter { it.museoId == museo.id }
                     museo.copy(
+                        progresoMisiones = evaluarMisionesUseCase(museo, obras, progreso).misiones,
                         obrasTotales = obrasMuseo.size,
                         obrasDescubiertas = obrasMuseo.count { it.id in progreso.obrasEscaneadas },
                         criaturasTotales = museo.criaturasIds.size,

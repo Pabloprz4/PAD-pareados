@@ -12,7 +12,9 @@ data class Museo(
     val criaturasTotales: Int,
     val destacado: Boolean = false,
     val descripcion: String = "",
-    val misiones: List<String> = emptyList(),
+    val misiones: List<Mision> = emptyList(),
+    val recompensaMisionesId: String? = null,
+    val progresoMisiones: List<ProgresoMision> = emptyList(),
     val criaturasIds: List<String> = emptyList(),
     val criaturaBienvenidaId: String? = null
 )

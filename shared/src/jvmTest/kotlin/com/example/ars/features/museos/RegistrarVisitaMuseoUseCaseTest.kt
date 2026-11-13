@@ -1,6 +1,7 @@
 package com.example.ars.features.museos
 
 import com.example.ars.ProgresoEnMemoria
+import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.home.domain.model.ProgresoUsuario
 import com.example.ars.features.home.domain.usecase.ElegirCriaturaInicialUseCase
@@ -21,7 +22,7 @@ class RegistrarVisitaMuseoUseCaseTest {
     fun visitaYBienvenidaSeGuardanJuntasUnaSolaVez() = runBlocking {
         val progreso = ProgresoEnMemoria()
         val museo = MuseosRepositoryImpl().obtenerMuseos().first()
-        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())
+        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))
         val primera = registrar(museo).getOrThrow()
         assertFalse(primera.yaVisitado)
         assertEquals("criatura_001", primera.criaturaObtenidaId)
@@ -38,7 +39,7 @@ class RegistrarVisitaMuseoUseCaseTest {
         val anterior = ProgresoUsuario("criatura_001", listOf("criatura_001", "criatura_012"), listOf("museo_002"))
         val progreso = ProgresoEnMemoria(anterior)
         val museo = MuseosRepositoryImpl().obtenerMuseos().first()
-        val resultado = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())(museo).getOrThrow()
+        val resultado = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))(museo).getOrThrow()
         assertNull(resultado.criaturaObtenidaId)
         assertEquals(anterior.criaturasDescubiertas, progreso.progreso.criaturasDescubiertas)
         assertEquals(anterior.criaturaInicialId, progreso.progreso.criaturaInicialId)
@@ -49,7 +50,7 @@ class RegistrarVisitaMuseoUseCaseTest {
     fun museoSinBienvenidaSoloRegistraLaVisita() = runBlocking {
         val progreso = ProgresoEnMemoria()
         val museo = MuseosRepositoryImpl().obtenerMuseos()[1]
-        RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())(museo).getOrThrow()
+        RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))(museo).getOrThrow()
         assertEquals(listOf(museo.id), progreso.progreso.museosVisitados)
         assertTrue(progreso.progreso.criaturasDescubiertas.isEmpty())
     }
@@ -59,7 +60,7 @@ class RegistrarVisitaMuseoUseCaseTest {
         val progreso = ProgresoEnMemoria()
         val museo = MuseosRepositoryImpl().obtenerMuseos().first()
             .copy(criaturaBienvenidaId = "inexistente")
-        val resultado = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())(museo)
+        val resultado = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))(museo)
         assertTrue(resultado.isFailure)
         assertEquals(0, progreso.guardados)
         assertTrue(progreso.progreso.museosVisitados.isEmpty())
@@ -69,7 +70,7 @@ class RegistrarVisitaMuseoUseCaseTest {
     fun elFalloDeGuardadoPermiteReintentarLaBienvenida() = runBlocking {
         val progreso = ProgresoEnMemoria().apply { fallaGuardado = true }
         val museo = MuseosRepositoryImpl().obtenerMuseos().first()
-        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())
+        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))
         assertTrue(registrar(museo).isFailure)
         assertTrue(progreso.progreso.museosVisitados.isEmpty())
         progreso.fallaGuardado = false
@@ -81,7 +82,7 @@ class RegistrarVisitaMuseoUseCaseTest {
     fun dosVisitasYElStarterConservanLosTresCambios() = runBlocking {
         val progreso = ProgresoEnMemoria()
         val museos = MuseosRepositoryImpl().obtenerMuseos()
-        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl())
+        val registrar = RegistrarVisitaMuseoUseCase(progreso, HomeRepositoryImpl(), CatalogoRepositoryImpl(MuseosRepositoryImpl()))
         coroutineScope {
             listOf(
                 async { registrar(museos[0]).getOrThrow() },

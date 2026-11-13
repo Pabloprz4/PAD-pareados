@@ -90,6 +90,12 @@ class HomeRepositoryImpl : HomeRepository {
                 nombre = "Toro Guernica",
                 museo = "Museo Reina Sofía",
                 descripcion = "Criatura cubista inspirada en el toro del Guernica de Pablo Picasso."
+            ),
+            Criatura(
+                id = "criatura_015",
+                nombre = "Caballero del Paisaje",
+                museo = "Museo Thyssen-Bornemisza",
+                descripcion = "Caballero inspirado en Joven caballero en un paisaje de Vittore Carpaccio."
             )
         )
     }
