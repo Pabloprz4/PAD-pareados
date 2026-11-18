@@ -1,4 +1,3 @@
-
 package com.example.ars.features.museos.presentation.ui
 
 import androidx.compose.foundation.Image
@@ -20,21 +19,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import org.jetbrains.compose.resources.stringResource
-import ars.shared.generated.resources.nav_lock
-import ars.shared.generated.resources.museo_bloqueado
-import ars.shared.generated.resources.museo_escanear
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import com.example.ars.features.museos.domain.model.Museo
-
 import org.jetbrains.compose.resources.painterResource
-import ars.shared.generated.resources.Res
-
+import ars.shared.generated.resources.*
 
 @Composable
 fun MuseoCatalogoCard(
@@ -51,8 +44,6 @@ fun MuseoCatalogoCard(
     }
 
     val porcentaje = (progreso * 100).toInt()
-
-
 
     Card(
         modifier = modifier
@@ -138,7 +129,7 @@ fun MuseoCatalogoCard(
                 ) {
                     Column {
                         Text(
-                            text = "OBRAS",
+                            text = stringResource(Res.string.etiqueta_obras),
                             style = MaterialTheme.typography.labelSmall
                         )
 
@@ -152,7 +143,7 @@ fun MuseoCatalogoCard(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "CRIATURAS",
+                            text = stringResource(Res.string.etiqueta_criaturas),
                             style = MaterialTheme.typography.labelSmall
                         )
 
@@ -174,7 +165,7 @@ fun MuseoCatalogoCard(
                 )
 
                 Text(
-                    text = if (desbloqueado) "$porcentaje% de obras escaneadas" else {
+                    text = if (desbloqueado) stringResource(Res.string.museo_porcentaje_obras, porcentaje) else {
                         stringResource(Res.string.museo_escanear)
                     },
                     style = MaterialTheme.typography.bodySmall,

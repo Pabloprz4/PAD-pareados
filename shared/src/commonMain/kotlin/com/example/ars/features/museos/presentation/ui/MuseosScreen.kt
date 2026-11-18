@@ -1,4 +1,3 @@
-
 package com.example.ars.features.museos.presentation.ui
 
 import androidx.compose.foundation.Image
@@ -22,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.example.ars.features.museos.domain.model.Museo
 
 import org.jetbrains.compose.resources.painterResource
-import ars.shared.generated.resources.Res
-import ars.shared.generated.resources.ars_icon_image
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.*
 
 @Composable
 fun MuseosScreen(
@@ -57,18 +56,18 @@ fun MuseosScreen(
             ) {
                 Image(
                     painter = painterResource(Res.drawable.ars_icon_image),
-                    contentDescription = "Logo Ars",
+                    contentDescription = stringResource(Res.string.museos_logo_desc),
                     modifier = Modifier.size(90.dp)
                 )
 
                 Text(
-                    text = "Tu pasaporte cultural",
+                    text = stringResource(Res.string.museos_titulo),
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Explora museos de todo el mundo",
+                    text = stringResource(Res.string.museos_subtitulo),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -88,13 +87,13 @@ fun MuseosScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Tu colección de arte",
+                        text = stringResource(Res.string.museos_coleccion_titulo),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
 
                     Text(
-                        text = "$descubiertas / $totales obras escaneadas",
+                        text = stringResource(Res.string.museos_obras_escaneadas, descubiertas, totales),
                         style = MaterialTheme.typography.headlineSmall
                     )
 
@@ -112,7 +111,7 @@ fun MuseosScreen(
 
         item {
             Text(
-                text = "Museos nacionales",
+                text = stringResource(Res.string.museos_nacionales),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -134,7 +133,7 @@ fun MuseosScreen(
 
         item {
             Text(
-                text = "Museos internacionales",
+                text = stringResource(Res.string.museos_internacionales),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )

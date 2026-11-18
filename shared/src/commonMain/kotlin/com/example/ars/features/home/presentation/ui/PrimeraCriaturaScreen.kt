@@ -28,6 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.ars.features.home.presentation.PrimeraCriaturaAction
 import com.example.ars.features.home.presentation.PrimeraCriaturaUiState
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.*
 
 @Composable
 fun PrimeraCriaturaScreen(
@@ -48,7 +50,7 @@ fun PrimeraCriaturaScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Tu aventura empieza aquí",
+            text = stringResource(Res.string.bienvenida_titulo),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
@@ -57,14 +59,14 @@ fun PrimeraCriaturaScreen(
         )
 
         Text(
-            text = "Elige tu primera criatura para comenzar tu colección.",
+            text = stringResource(Res.string.bienvenida_subtitulo),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 20.dp)
         )
 
         Text(
-            text = "Podrás descubrir las demás durante tu aventura.",
+            text = stringResource(Res.string.bienvenida_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -109,24 +111,17 @@ fun PrimeraCriaturaScreen(
                         } else {
                             null
                         },
-                        etiqueta = if (seleccionada) "Seleccionada" else "Inicial"
+                        etiqueta = if (seleccionada) stringResource(Res.string.criatura_seleccionada) else stringResource(Res.string.criatura_inicial)
                     )
                 }
             }
 
             Text(
                 text = when (criaturaSeleccionada?.id) {
-                    "criatura_001" ->
-                        "Una compañera misteriosa nacida del arte de Velázquez."
-
-                    "criatura_012" ->
-                        "Un misterioso compañero inspirado en El hijo del hombre de René Magritte."
-
-                    "criatura_002" ->
-                        "Un compañero cubista inspirado en el Guernica de Pablo Picasso."
-
-                    else ->
-                        "Desliza para conocerlas y toca tu favorita."
+                    "criatura_001" -> stringResource(Res.string.desc_menina)
+                    "criatura_012" -> stringResource(Res.string.desc_manzana)
+                    "criatura_002" -> stringResource(Res.string.desc_caballo)
+                    else -> stringResource(Res.string.desc_desliza)
                 },
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
@@ -148,7 +143,7 @@ fun PrimeraCriaturaScreen(
                     onAction(PrimeraCriaturaAction.Reintentar)
                 }
             ) {
-                Text("Reintentar")
+                Text(stringResource(Res.string.museo_reintentar))
             }
         }
 
@@ -165,11 +160,11 @@ fun PrimeraCriaturaScreen(
             ) {
                 Text(
                     text = if (state.guardando) {
-                        "Guardando…"
+                        stringResource(Res.string.bienvenida_guardando)
                     } else {
                         criaturaSeleccionada?.let {
-                            "Elegir a ${it.nombre}"
-                        } ?: "Selecciona una criatura"
+                            stringResource(Res.string.bienvenida_elegir, it.nombre)
+                        } ?: stringResource(Res.string.bienvenida_selecciona)
                     }
                 )
             }

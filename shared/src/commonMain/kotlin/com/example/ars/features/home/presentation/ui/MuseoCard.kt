@@ -30,9 +30,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import com.example.ars.features.museos.presentation.ui.imagenMuseo
 import org.jetbrains.compose.resources.stringResource
-import ars.shared.generated.resources.nav_lock
-import ars.shared.generated.resources.museo_bloqueado
-import ars.shared.generated.resources.museo_escanear
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -41,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ars.features.museos.domain.model.Museo
 import org.jetbrains.compose.resources.painterResource
-import ars.shared.generated.resources.Res
+import ars.shared.generated.resources.*
 
 @Composable
 fun MuseoCard(
@@ -60,13 +57,12 @@ fun MuseoCard(
 
     val porcentaje = (progreso * 100).toInt()
 
-
     val estado = if (!desbloqueado) {
         stringResource(Res.string.museo_bloqueado)
     } else if (museo.obrasDescubiertas == 0) {
-        "SIN EXPLORAR"
+        stringResource(Res.string.museo_sin_explorar)
     } else {
-        "EN PROGRESO"
+        stringResource(Res.string.museo_en_progreso)
     }
 
     Card(
@@ -182,7 +178,7 @@ fun MuseoCard(
 
                     Column {
                         Text(
-                            text = "OBRAS",
+                            text = stringResource(Res.string.etiqueta_obras),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -198,7 +194,7 @@ fun MuseoCard(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "CRIATURAS",
+                            text = stringResource(Res.string.etiqueta_criaturas),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -236,7 +232,7 @@ fun MuseoCard(
                 ) {
 
                     Text(
-                        text = if (desbloqueado) "$porcentaje% de obras escaneadas" else {
+                        text = if (desbloqueado) stringResource(Res.string.museo_porcentaje_obras, porcentaje) else {
                             stringResource(Res.string.museo_escanear)
                         },
                         style = MaterialTheme.typography.bodySmall,

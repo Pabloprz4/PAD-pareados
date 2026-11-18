@@ -1,4 +1,3 @@
-
 package com.example.ars.features.home.presentation.ui
 
 import androidx.compose.foundation.Image
@@ -26,10 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.example.ars.features.home.presentation.HomeUiState
 import com.example.ars.features.museos.presentation.ui.MisionCard
 import org.jetbrains.compose.resources.stringResource
-import ars.shared.generated.resources.mision_sin_pendientes
 import org.jetbrains.compose.resources.painterResource
-import ars.shared.generated.resources.Res
-import ars.shared.generated.resources.ars_icon_image
+import ars.shared.generated.resources.*
 
 @Composable
 fun HomeScreen(
@@ -50,21 +47,21 @@ fun HomeScreen(
         // LOGO ORIGINAL DE ARS
         Image(
             painter = painterResource(Res.drawable.ars_icon_image),
-            contentDescription = "Logo ARS",
+            contentDescription = stringResource(Res.string.home_logo_desc),
             modifier = Modifier
                 .size(140.dp)
                 .padding(bottom = 8.dp)
         )
 
         Text(
-            text = "Bienvenido a ARS",
+            text = stringResource(Res.string.home_bienvenida),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 8.dp)
         )
 
         Text(
-            text = "Descubre arte. Completa misiones. Colecciona criaturas.",
+            text = stringResource(Res.string.home_subtitulo),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(
@@ -89,14 +86,14 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "ÚLTIMAS CRIATURAS DESCUBIERTAS",
+                    text = stringResource(Res.string.home_ultimas_criaturas_titulo),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
-                    text = "Descubre criaturas explorando museos",
+                    text = stringResource(Res.string.home_ultimas_criaturas_subtitulo),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -106,11 +103,9 @@ fun HomeScreen(
                 enabled = false,
                 onClick = {}
             ) {
-                Text("Ver todas →")
+                Text(stringResource(Res.string.home_ver_todas))
             }
         }
-
-
 
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -130,7 +125,7 @@ fun HomeScreen(
             state.criaturasDescubiertas.isEmpty()
         ) {
             Text(
-                text = "Todavía no has descubierto criaturas.",
+                text = stringResource(Res.string.home_sin_criaturas),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
@@ -141,7 +136,7 @@ fun HomeScreen(
 
         // 2. MISIONES EMPEZADAS
         Text(
-            text = "MISIONES",
+            text = stringResource(Res.string.home_misiones_titulo),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
@@ -163,7 +158,7 @@ fun HomeScreen(
             MisionCard(mision, state.criaturas)
         }
         TextButton(onClick = onExplorarMuseos) {
-            Text("Explorar museos →")
+            Text(stringResource(Res.string.home_explorar_museos))
         }
 
         // 3. MUSEOS DESTACADOS
@@ -175,7 +170,7 @@ fun HomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "EXPLORA MUSEOS PARA CONSEGUIR CRIATURAS",
+                text = stringResource(Res.string.home_explora_museos_titulo),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -183,7 +178,7 @@ fun HomeScreen(
             )
 
             TextButton(onClick = onExplorarMuseos) {
-                Text("Ver todos →")
+                Text(stringResource(Res.string.home_ver_todos))
             }
         }
 

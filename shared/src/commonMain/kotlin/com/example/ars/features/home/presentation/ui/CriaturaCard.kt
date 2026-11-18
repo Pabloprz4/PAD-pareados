@@ -27,31 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ars.features.home.domain.model.Criatura
 import org.jetbrains.compose.resources.painterResource
-import ars.shared.generated.resources.Res
-import ars.shared.generated.resources.ars_icon_image
-import ars.shared.generated.resources.menina
-import ars.shared.generated.resources.caballo_guernica
-import ars.shared.generated.resources.reloj_dali
-import ars.shared.generated.resources.jardin_delicias
-import ars.shared.generated.resources.girasol
-import ars.shared.generated.resources.ninfa_venus
-import ars.shared.generated.resources.el_grito
-import ars.shared.generated.resources.jupiter_monstruo
-import ars.shared.generated.resources.noche_estrellada
-import ars.shared.generated.resources.dos_manos
-import ars.shared.generated.resources.monstruo_ola
-import ars.shared.generated.resources.manzana_verde
-import ars.shared.generated.resources.mona_lisa
-import ars.shared.generated.resources.toro_guernica
-import ars.shared.generated.resources.caballero
+import org.jetbrains.compose.resources.stringResource
+import ars.shared.generated.resources.*
 
 @Composable
 fun CriaturaCard(
     criatura: Criatura,
     modifier: Modifier = Modifier,
     borde: BorderStroke? = null,
-    etiqueta: String = "DESCUBIERTA"
+    etiqueta: String? = null
 ) {
+    val textoEtiqueta = etiqueta ?: stringResource(Res.string.criatura_descubierta)
+
     val imagenCriatura = when (criatura.nombre) {
         "Menina Fantasmal" -> Res.drawable.menina
         "Caballo Guernica" -> Res.drawable.caballo_guernica
@@ -107,7 +94,7 @@ fun CriaturaCard(
                 )
 
                 Text(
-                    text = etiqueta,
+                    text = textoEtiqueta,
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
@@ -139,7 +126,7 @@ fun CriaturaCard(
                 )
 
                 Text(
-                    text = criatura.museo,
+                    text = if (criatura.museo == "Colección privada") stringResource(Res.string.coleccion_privada) else criatura.museo,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     minLines = 2,
@@ -157,7 +144,7 @@ fun CriaturaCard(
                 ) {
 
                     Text(
-                        text = "Criatura ARS",
+                        text = stringResource(Res.string.criatura_ars),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
