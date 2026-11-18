@@ -1,7 +1,8 @@
 package com.example.ars.features.escaner
 
-import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
+import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
+import com.example.ars.features.escaner.domain.usecase.ValidarQrUseCase
 import com.example.ars.features.escaner.domain.model.CodigoArs
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.domain.usecase.InterpretarQrUseCase
@@ -12,8 +13,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertNull
 
 class ValidarQrUseCaseTest {
-    private val contenedor = DefaultAppContainer()
-    private val validar = contenedor.validarQrUseCase
+    private val validar = ValidarQrUseCase(
+        InterpretarQrUseCase(), CatalogoRepositoryImpl(MuseosRepositoryImpl())
+    )
 
     @Test
     fun interpretaSoloElFormatoCompletoDeArs() {

@@ -3,6 +3,8 @@ package com.example.ars.di
 
 import com.example.ars.core.network.CatalogoRemoto
 import com.example.ars.core.network.crearClienteSupabase
+import com.example.ars.features.cuenta.data.CuentaRepositorySupabase
+import com.example.ars.features.cuenta.domain.CuentaRepository
 import com.example.ars.features.escaner.data.repository.CatalogoRepositoryImpl
 import com.example.ars.features.escaner.data.repository.CatalogoRepositorySupabase
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
@@ -29,7 +31,12 @@ import com.example.ars.features.home.data.repository.ProgresoRepositorySupabase
 import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.home.domain.usecase.ElegirCriaturaInicialUseCase
 
+private val clienteSupabase by lazy { crearClienteSupabase() }
+
 interface AppContainer {
+    val cuentaRepository: CuentaRepository
+    fun paraCuenta(usuarioId: String): AppContainer
+
     // Home
     val obtenerCriaturasUseCase: ObtenerCriaturasUseCase
 
@@ -50,13 +57,13 @@ interface AppContainer {
     val elegirCriaturaInicialUseCase: ElegirCriaturaInicialUseCase
 }
 
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val usuarioId: String? = null) : AppContainer {
 
-    // Repositorio de Inicio
-    // Supabase: un único cliente y un único catálogo para toda la app
-    private val supabase by lazy {
-        crearClienteSupabase()
-    }
+    private val supabase get() = clienteSupabase
+
+    override val cuentaRepository: CuentaRepository by lazy { CuentaRepositorySupabase(supabase) }
+
+    override fun paraCuenta(usuarioId: String): AppContainer = DefaultAppContainer(usuarioId)
 
     private val catalogoRemoto by lazy {
         CatalogoRemoto(supabase)
@@ -111,8 +118,8 @@ class DefaultAppContainer : AppContainer {
 
     //Progresos
     override val progresoRepository: ProgresoRepository by lazy {
-        // se guarda en local y se sincroniza con Supabase
-        ProgresoRepositorySupabase(supabase, local = ProgresoRepositoryImpl())
+        if (usuarioId == null) ProgresoRepositoryImpl()
+        else ProgresoRepositorySupabase(supabase, usuarioId)
     }
 
     //Criaturas iniciales

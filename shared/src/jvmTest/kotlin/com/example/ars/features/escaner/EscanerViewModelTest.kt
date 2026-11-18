@@ -7,7 +7,6 @@ import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.home.data.repository.HomeRepositoryImpl
 import com.example.ars.features.escaner.domain.usecase.RegistrarObraUseCase
 import com.example.ars.features.museos.domain.usecase.RegistrarVisitaMuseoUseCase
-import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.escaner.domain.model.Obra
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.domain.repository.CatalogoRepository
@@ -156,7 +155,9 @@ class EscanerViewModelTest {
     }
 
     private fun crearViewModel(
-        validar: ValidarQrUseCase = DefaultAppContainer().validarQrUseCase,
+        validar: ValidarQrUseCase = ValidarQrUseCase(
+            InterpretarQrUseCase(), CatalogoRepositoryImpl(MuseosRepositoryImpl())
+        ),
         progreso: ProgresoEnMemoria = ProgresoEnMemoria()
     ) = EscanerViewModel(
         validar,

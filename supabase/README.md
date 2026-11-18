@@ -17,7 +17,11 @@ Base de datos relacional en **Supabase** (PostgreSQL) con el catálogo de la app
 4. Comprobar en **Table Editor** que aparecen las tablas con datos.
 5. Para conectar la app hacen falta dos valores de **Project Settings → API**:
    la **Project URL** y la clave **anon / public**. La clave `service_role` **no** debe ir nunca en la app.
-6. Para el progreso sin pedir registro: **Authentication → Sign In / Providers → Allow anonymous sign-ins**.
+6. Aplicar las migraciones de `supabase/migrations` en una base recién creada. En ARS, `progreso_atomico` ya está aplicada.
+7. Mantener habilitado el acceso por correo en **Authentication → Sign In / Providers**.
+   Si la confirmación de correo está activa, Ars pide abrir el enlace y después iniciar sesión.
+   El servicio de correo de prueba de Supabase limita los destinatarios a miembros del equipo.
+   Para admitir otros correos con confirmación, configurar SMTP propio.
 
 ## Modelo
 
@@ -37,5 +41,7 @@ usuario (auth.users)
 ```
 
 - Los **id** son de texto (`museo_001`, `obra_002`, `prado_jardin`…) para que coincidan con los del código y con los QR.
-- Los contadores de cada museo (obras y criaturas totales/descubiertas) no se guardan: se calculan con la vista `progreso_museo`.
+- Los contadores de cada museo se calculan a partir del catálogo y del progreso de la cuenta.
+- Móvil y escritorio consultan el mismo progreso al iniciar sesión. Las altas se guardan juntas mediante `sincronizar_progreso_ars`. La cuenta necesita conexión para consultar y guardar.
+- El invitado conserva la partida local de ese dispositivo. El progreso de invitado queda separado del de la cuenta.
 - **Seguridad (RLS):** el catálogo lo puede leer cualquiera pero no se puede modificar desde la app; cada usuario solo ve y modifica su propio progreso.

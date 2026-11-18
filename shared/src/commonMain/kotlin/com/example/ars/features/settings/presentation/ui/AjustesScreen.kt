@@ -1,4 +1,4 @@
-package com.example.ars.features.settings.presentation.ui
+package com.example.ars.features.ajustes.presentation.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,36 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ars.shared.generated.resources.*
-import com.example.ars.features.settings.presentation.SettingsAction
-import com.example.ars.features.settings.presentation.SettingsUiState
-import com.example.ars.features.settings.presentation.SettingsViewModel
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AjustesScreenRoot(
-    viewModel: SettingsViewModel = viewModel { SettingsViewModel() },
     modoOscuro: Boolean,
     onModoOscuroCambiado: (Boolean) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
-
-    AjustesScreen(
-        state = state,
-        onAction = viewModel::onAction,
-        modoOscuro = modoOscuro,
-        onModoOscuroCambiado = onModoOscuroCambiado
-    )
-}
-
-@Composable
-fun AjustesScreen(
-    state: SettingsUiState,
-    onAction: (SettingsAction) -> Unit,
-    modoOscuro: Boolean,
-    onModoOscuroCambiado: (Boolean) -> Unit
-) {
+    var notificacionesMisiones by remember { mutableStateOf(true) }
     val coloresInterruptor = if (modoOscuro) {
         SwitchDefaults.colors()
     } else {
@@ -55,7 +32,7 @@ fun AjustesScreen(
             .padding(24.dp)
     ) {
         Text(
-            text = stringResource(Res.string.ajustes_titulo),
+            text = "Configuración",
             style = MaterialTheme.typography.headlineMedium
         )
 
@@ -66,7 +43,7 @@ fun AjustesScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(Res.string.ajustes_preferencias),
+                    text = "Preferencias de la app",
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -78,19 +55,17 @@ fun AjustesScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+                        Text(text = "Notificaciones de misiones", style = MaterialTheme.typography.bodyLarge)
                         Text(
-                            text = stringResource(Res.string.ajustes_notificaciones),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = stringResource(Res.string.ajustes_notificaciones_desc),
+                            text = "Avisar al estar cerca de un museo o criatura",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    // pendiente
                     Switch(
-                        checked = state.notificacionesMisiones,
-                        onCheckedChange = { onAction(SettingsAction.CambiarNotificaciones(it)) },
+                        checked = notificacionesMisiones,
+                        onCheckedChange = { notificacionesMisiones = it },
                         colors = coloresInterruptor
                     )
                 }
@@ -103,12 +78,9 @@ fun AjustesScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+                        Text(text = "Tema oscuro", style = MaterialTheme.typography.bodyLarge)
                         Text(
-                            text = stringResource(Res.string.ajustes_tema_oscuro),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = stringResource(Res.string.ajustes_tema_oscuro_desc),
+                            text = "Ajustar apariencia visual",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -119,40 +91,6 @@ fun AjustesScreen(
                         colors = coloresInterruptor
                     )
                 }
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(Res.string.ajustes_idioma),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = stringResource(Res.string.ajustes_idioma_desc),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        FilterChip(
-                            selected = state.idioma == "es",
-                            onClick = { onAction(SettingsAction.CambiarIdioma("es")) },
-                            label = { Text(stringResource(Res.string.ajustes_idioma_es)) }
-                        )
-                        FilterChip(
-                            selected = state.idioma == "en",
-                            onClick = { onAction(SettingsAction.CambiarIdioma("en")) },
-                            label = { Text(stringResource(Res.string.ajustes_idioma_en)) }
-                        )
-                    }
-                }
             }
         }
 
@@ -163,39 +101,16 @@ fun AjustesScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = stringResource(Res.string.ajustes_cuenta_titulo),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = state.nombreUsuario,
-                    onValueChange = { onAction(SettingsAction.CambiarNombreUsuario(it)) },
-                    label = { Text(stringResource(Res.string.ajustes_nombre_usuario)) },
-                    placeholder = { Text(stringResource(Res.string.ajustes_nombre_placeholder)) },
-                    supportingText = { Text(stringResource(Res.string.ajustes_nombre_usuario_desc)) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(Res.string.ajustes_acerca_titulo),
+                    text = "Acerca de ARS",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(Res.string.ajustes_version),
+                    text = "Versión 1.0 - Proyecto PAD",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = stringResource(Res.string.ajustes_acerca_desc),
+                    text = "Exploración de museos y captura de criaturas.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -58,21 +58,4 @@
     <string name="mision_recompensa_pendiente">La recompensa de estas misiones está pendiente de definir.</string>
     <string name="mision_premio_nuevo">¡Misión completada! Has conseguido a %1$s.</string>
     <string name="mision_sin_pendientes">No tienes misiones pendientes en los museos visitados.</string>
-    <string name="ajustes_titulo">Configuración</string>
-    <string name="ajustes_preferencias">Preferencias de la app</string>
-    <string name="ajustes_notificaciones">Notificaciones de misiones</string>
-    <string name="ajustes_notificaciones_desc">Avisar al estar cerca de un museo o criatura</string>
-    <string name="ajustes_tema_oscuro">Tema oscuro</string>
-    <string name="ajustes_tema_oscuro_desc">Ajustar apariencia visual</string>
-    <string name="ajustes_idioma">Idioma</string>
-    <string name="ajustes_idioma_desc">Seleccionar idioma de la aplicación</string>
-    <string name="ajustes_idioma_es">Español</string>
-    <string name="ajustes_idioma_en">Inglés</string>
-    <string name="ajustes_cuenta_titulo">Cuenta de Explorador</string>
-    <string name="ajustes_nombre_usuario">Nombre de usuario</string>
-    <string name="ajustes_nombre_usuario_desc">Tu nombre en el registro de explorador</string>
-    <string name="ajustes_nombre_placeholder">Introduce tu nombre</string>
-    <string name="ajustes_acerca_titulo">Acerca de ARS</string>
-    <string name="ajustes_version">Versión 1.0 - Proyecto PAD</string>
-    <string name="ajustes_acerca_desc">Exploración de museos y captura de criaturas.</string>
 </resources>
