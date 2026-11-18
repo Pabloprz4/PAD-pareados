@@ -8,11 +8,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ars.shared.generated.resources.*
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AjustesScreenRoot(
     modoOscuro: Boolean,
-    onModoOscuroCambiado: (Boolean) -> Unit
+    onModoOscuroCambiado: (Boolean) -> Unit,
+    correoCuenta: String?,
+    cuentaCargando: Boolean,
+    mensajeCuenta: StringResource?,
+    onCuentaClick: () -> Unit
 ) {
     var notificacionesMisiones by remember { mutableStateOf(true) }
     val coloresInterruptor = if (modoOscuro) {
@@ -37,6 +44,21 @@ fun AjustesScreenRoot(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(stringResource(Res.string.cuenta_titulo), style = MaterialTheme.typography.titleMedium)
+                correoCuenta?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
+                mensajeCuenta?.let {
+                    Text(stringResource(it), color = MaterialTheme.colorScheme.error)
+                }
+                TextButton(onClick = onCuentaClick, enabled = !cuentaCargando) {
+                    Text(stringResource(if (correoCuenta == null) Res.string.cuenta_entrar else Res.string.cuenta_salir))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Card(
             modifier = Modifier.fillMaxWidth()

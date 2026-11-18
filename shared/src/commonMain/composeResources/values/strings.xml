@@ -58,4 +58,23 @@
     <string name="mision_recompensa_pendiente">La recompensa de estas misiones está pendiente de definir.</string>
     <string name="mision_premio_nuevo">¡Misión completada! Has conseguido a %1$s.</string>
     <string name="mision_sin_pendientes">No tienes misiones pendientes en los museos visitados.</string>
+    <string name="cuenta_titulo">Cuenta</string>
+    <string name="cuenta_entrar">Iniciar sesión</string>
+    <string name="cuenta_registro">Crear cuenta</string>
+    <string name="cuenta_ya_tengo">Ya tengo cuenta</string>
+    <string name="cuenta_invitado">Continuar como invitado</string>
+    <string name="cuenta_salir">Cerrar sesión</string>
+    <string name="cuenta_correo">Correo electrónico</string>
+    <string name="cuenta_clave">Contraseña</string>
+    <string name="cuenta_correo_invalido">Escribe un correo válido.</string>
+    <string name="cuenta_clave_corta">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="cuenta_clave_vacia">Escribe tu contraseña.</string>
+    <string name="cuenta_confirmar">Revisa el correo. Abre el enlace de confirmación y luego inicia sesión en Ars.</string>
+    <string name="cuenta_credenciales">El correo o la contraseña son incorrectos.</string>
+    <string name="cuenta_sin_confirmar">Confirma tu correo antes de iniciar sesión.</string>
+    <string name="cuenta_ya_registrado">Ya existe una cuenta con ese correo.</string>
+    <string name="cuenta_correo_no_autorizado">Supabase no pudo enviar la confirmación a este correo. Prueba con un correo del equipo.</string>
+    <string name="cuenta_demasiados_intentos">Demasiados intentos. Espera un poco antes de volver a probar.</string>
+    <string name="cuenta_error">No se pudo continuar. Revisa la conexión e inténtalo de nuevo.</string>
+    <string name="cuenta_error_salir">No se pudo cerrar la sesión. Inténtalo de nuevo.</string>
 </resources>

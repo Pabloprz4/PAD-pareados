@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,11 +15,17 @@ import androidx.navigation.compose.dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.rememberViewModelStoreOwner
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -31,6 +38,10 @@ import com.example.ars.core.ui.theme.ArsTheme
 import com.example.ars.di.AppContainer
 import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
+import com.example.ars.features.cuenta.domain.SesionCuenta
+import com.example.ars.features.cuenta.presentation.CuentaAction
+import com.example.ars.features.cuenta.presentation.CuentaViewModel
+import com.example.ars.features.cuenta.presentation.ui.CuentaScreenRoot
 import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
 import com.example.ars.features.escaner.presentation.ui.DetalleObraScreenRoot
@@ -62,259 +73,332 @@ fun App(
         onModoOscuroCambiado(modoOscuro)
     }
 
+    val cuentaViewModel: CuentaViewModel = viewModel {
+        CuentaViewModel(appContainer.cuentaRepository)
+    }
+    val estadoCuenta by cuentaViewModel.state.collectAsStateWithLifecycle()
+    val sesion = estadoCuenta.sesion
+    val cuenta = sesion as? SesionCuenta.Activa
+
     ArsTheme(modoOscuro = modoOscuro) {
-        val navController = rememberNavController()
-        val backStackEntry by navController.currentBackStackEntryAsState()
-
-        val mostrandoBienvenida =
-            backStackEntry == null ||
-                    backStackEntry?.destination
-                        ?.hasRoute<Route.PrimeraCriatura>() == true
-
-        val homeViewModel = viewModel {
-            HomeViewModel(
-                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                obtenerMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
-                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase
-            )
-        }
-
-        val escanerViewModel = if (onLeerQr != null) {
-            viewModel {
-                EscanerViewModel(
-                    validarQrUseCase = appContainer.validarQrUseCase,
-                    registrarVisitaMuseoUseCase = appContainer.registrarVisitaMuseoUseCase,
-                    registrarObraUseCase = appContainer.registrarObraUseCase
-                )
+        if (sesion == SesionCuenta.Cargando) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
         } else {
-            null
-        }
-
-        val selectedItem = when {
-            backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
-                ArsNavigationItem.Escanear
-
-            backStackEntry?.destination?.hasRoute<Route.Museos>() == true ||
-                    backStackEntry?.destination?.hasRoute<Route.DetalleMuseo>() == true ||
-                    backStackEntry?.destination?.hasRoute<Route.DetalleObra>() == true ->
-                ArsNavigationItem.Museos
-
-            backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
-                ArsNavigationItem.Ajustes
-
-            else ->
-                ArsNavigationItem.Inicio
-        }
-
-        // Esperamos a terminar la bienvenida antes de abrir una notificación.
-        LaunchedEffect(toScreen, mostrandoBienvenida) {
-            if (!mostrandoBienvenida) {
-                toScreen?.let { destino ->
-                    if (destino != Route.Escaner || onLeerQr != null) {
-                        navController.navigate(destino) {
-                            popUpTo<Route.Home>()
-                            launchSingleTop = true
-                        }
-                    }
-
-                    onDestinoAbierto()
+            // Al cambiar de cuenta se descartan la navegación y los ViewModels de la partida anterior.
+            key(cuenta?.id) {
+                val contenedor = remember(appContainer, cuenta?.id) {
+                    cuenta?.let { appContainer.paraCuenta(it.id) } ?: appContainer
+                }
+                CompositionLocalProvider(LocalViewModelStoreOwner provides rememberViewModelStoreOwner()) {
+                    NavegacionArs(
+                        appContainer = contenedor,
+                        cuentaViewModel = cuentaViewModel,
+                        cuenta = cuenta,
+                        modoOscuro = modoOscuro,
+                        onModoOscuroCambiado = { modoOscuro = it },
+                        toScreen = toScreen,
+                        onDestinoAbierto = onDestinoAbierto,
+                        onLeerQr = onLeerQr
+                    )
                 }
             }
         }
+    }
+}
 
-        Scaffold(
-            bottomBar = {
-                if (!mostrandoBienvenida) {
-                    ArsNavigationBar(
-                        selectedItem = selectedItem,
-                        mostrarEscaner = onLeerQr != null,
-                        onItemSelected = { item ->
-                            val destino = when (item) {
-                                ArsNavigationItem.Inicio -> Route.Home
-                                ArsNavigationItem.Museos -> Route.Museos
-                                ArsNavigationItem.Escanear -> Route.Escaner
-                                ArsNavigationItem.Ajustes -> Route.Ajustes
-                                ArsNavigationItem.Colecciones -> null
+@Composable
+private fun NavegacionArs(
+    appContainer: AppContainer,
+    cuentaViewModel: CuentaViewModel,
+    cuenta: SesionCuenta.Activa?,
+    modoOscuro: Boolean,
+    onModoOscuroCambiado: (Boolean) -> Unit,
+    toScreen: Route?,
+    onDestinoAbierto: () -> Unit,
+    onLeerQr: (((String?) -> Unit, () -> Unit, () -> Unit) -> Unit)?
+) {
+    val estadoCuenta by cuentaViewModel.state.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+
+    val mostrandoBienvenida =
+        backStackEntry == null ||
+                backStackEntry?.destination
+                    ?.hasRoute<Route.PrimeraCriatura>() == true ||
+                backStackEntry?.destination?.hasRoute<Route.Cuenta>() == true
+
+    val homeViewModel = viewModel {
+        HomeViewModel(
+            obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+            obtenerMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
+            obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase
+        )
+    }
+
+    val escanerViewModel = if (onLeerQr != null) {
+        viewModel {
+            EscanerViewModel(
+                validarQrUseCase = appContainer.validarQrUseCase,
+                registrarVisitaMuseoUseCase = appContainer.registrarVisitaMuseoUseCase,
+                registrarObraUseCase = appContainer.registrarObraUseCase
+            )
+        }
+    } else {
+        null
+    }
+
+    val selectedItem = when {
+        backStackEntry?.destination?.hasRoute<Route.Escaner>() == true ->
+            ArsNavigationItem.Escanear
+
+        backStackEntry?.destination?.hasRoute<Route.Museos>() == true ||
+                backStackEntry?.destination?.hasRoute<Route.DetalleMuseo>() == true ||
+                backStackEntry?.destination?.hasRoute<Route.DetalleObra>() == true ->
+            ArsNavigationItem.Museos
+
+        backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
+            ArsNavigationItem.Ajustes
+
+        else ->
+            ArsNavigationItem.Inicio
+    }
+
+    // Esperamos a terminar la bienvenida antes de abrir una notificación.
+    LaunchedEffect(toScreen, mostrandoBienvenida) {
+        if (!mostrandoBienvenida) {
+            toScreen?.let { destino ->
+                if (destino != Route.Escaner || onLeerQr != null) {
+                    navController.navigate(destino) {
+                        popUpTo<Route.Home>()
+                        launchSingleTop = true
+                    }
+                }
+
+                onDestinoAbierto()
+            }
+        }
+    }
+
+    Scaffold(
+        bottomBar = {
+            if (!mostrandoBienvenida) {
+                ArsNavigationBar(
+                    selectedItem = selectedItem,
+                    mostrarEscaner = onLeerQr != null,
+                    onItemSelected = { item ->
+                        val destino = when (item) {
+                            ArsNavigationItem.Inicio -> Route.Home
+                            ArsNavigationItem.Museos -> Route.Museos
+                            ArsNavigationItem.Escanear -> Route.Escaner
+                            ArsNavigationItem.Ajustes -> Route.Ajustes
+                            ArsNavigationItem.Colecciones -> null
+                        }
+
+                        if (destino != null && item != selectedItem) {
+                            navController.navigate(destino) {
+                                popUpTo<Route.Home>()
+                                launchSingleTop = true
                             }
-
-                            if (destino != null && item != selectedItem) {
-                                navController.navigate(destino) {
-                                    popUpTo<Route.Home>()
-                                    launchSingleTop = true
+                        }
+                    }
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = if (cuenta == null) Route.Cuenta else Route.PrimeraCriatura
+            ) {
+                composable<Route.Cuenta> {
+                    CuentaScreenRoot(
+                        viewModel = cuentaViewModel,
+                        onInvitado = {
+                            cuentaViewModel.onAction(CuentaAction.LimpiarFormulario)
+                            if (navController.previousBackStackEntry != null) {
+                                navController.popBackStack()
+                            } else {
+                                navController.navigate(Route.PrimeraCriatura) {
+                                    popUpTo<Route.Cuenta> { inclusive = true }
                                 }
                             }
                         }
                     )
                 }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = Route.PrimeraCriatura
-                ) {
-                    composable<Route.PrimeraCriatura> {
-                        val primeraCriaturaViewModel: PrimeraCriaturaViewModel =
-                            viewModel {
-                                PrimeraCriaturaViewModel(
-                                    obtenerCriaturasUseCase =
-                                        appContainer.obtenerCriaturasUseCase,
-                                    obtenerProgresoUseCase =
-                                        appContainer.obtenerProgresoUseCase,
-                                    elegirCriaturaInicialUseCase =
-                                        appContainer.elegirCriaturaInicialUseCase
-                                )
-                            }
 
-                        PrimeraCriaturaScreenRoot(
-                            viewModel = primeraCriaturaViewModel,
-                            onEleccionCompletada = {
-                                navController.navigate(Route.Home) {
-                                    popUpTo<Route.PrimeraCriatura> {
-                                        inclusive = true
-                                    }
-
-                                    launchSingleTop = true
-                                }
-                            }
-                        )
-                    }
-
-                    composable<Route.Home> {
-                        HomeScreenRoot(
-                            viewModel = homeViewModel,
-                            onExplorarMuseos = {
-                                navController.navigate(Route.Museos) {
-                                    launchSingleTop = true
-                                }
-                            },
-                            onMuseoClick = { museoId ->
-                                navController.navigate(Route.DetalleMuseo(museoId)) {
-                                    launchSingleTop = true
-                                }
-                            }
-                        )
-                    }
-
-                    composable<Route.Museos> {
-                        val museosViewModel = viewModel {
-                            MuseosViewModel(
-                                obtenerCatalogoMuseosUseCase =
-                                    appContainer.obtenerCatalogoMuseosUseCase,
-                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
+                composable<Route.PrimeraCriatura> {
+                    val primeraCriaturaViewModel: PrimeraCriaturaViewModel =
+                        viewModel {
+                            PrimeraCriaturaViewModel(
+                                obtenerCriaturasUseCase =
+                                    appContainer.obtenerCriaturasUseCase,
+                                obtenerProgresoUseCase =
+                                    appContainer.obtenerProgresoUseCase,
+                                elegirCriaturaInicialUseCase =
+                                    appContainer.elegirCriaturaInicialUseCase
                             )
                         }
 
-                        MuseosScreenRoot(
-                            viewModel = museosViewModel,
-                            onMuseoClick = { museo ->
+                    PrimeraCriaturaScreenRoot(
+                        viewModel = primeraCriaturaViewModel,
+                        onEleccionCompletada = {
+                            navController.navigate(Route.Home) {
+                                popUpTo<Route.PrimeraCriatura> {
+                                    inclusive = true
+                                }
+
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+
+                composable<Route.Home> {
+                    HomeScreenRoot(
+                        viewModel = homeViewModel,
+                        onExplorarMuseos = {
+                            navController.navigate(Route.Museos) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onMuseoClick = { museoId ->
+                            navController.navigate(Route.DetalleMuseo(museoId)) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+
+                composable<Route.Museos> {
+                    val museosViewModel = viewModel {
+                        MuseosViewModel(
+                            obtenerCatalogoMuseosUseCase =
+                                appContainer.obtenerCatalogoMuseosUseCase,
+                            obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                            obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                            obtenerObrasUseCase = appContainer.obtenerObrasUseCase
+                        )
+                    }
+
+                    MuseosScreenRoot(
+                        viewModel = museosViewModel,
+                        onMuseoClick = { museo ->
+                            navController.navigate(
+                                Route.DetalleMuseo(museoId = museo.id)
+                            ) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+
+                dialog<Route.DetalleMuseo> { entrada ->
+                    val ruta = entrada.toRoute<Route.DetalleMuseo>()
+
+                    val detalleMuseoViewModel = viewModel {
+                        MuseosViewModel(
+                            obtenerCatalogoMuseosUseCase =
+                                appContainer.obtenerCatalogoMuseosUseCase,
+                            obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                            obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                            obtenerObrasUseCase = appContainer.obtenerObrasUseCase
+                        )
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
+                    ) {
+                        DetalleMuseoScreenRoot(
+                            museoId = ruta.museoId,
+                            viewModel = detalleMuseoViewModel,
+                            onVolver = { navController.popBackStack() },
+                            onObraClick = { obraId ->
+                                navController.navigate(Route.DetalleObra(obraId)) {
+                                    launchSingleTop = true
+                                }
+                            },
+                            yaVisitado = ruta.yaVisitado,
+                            criaturaObtenidaId = ruta.criaturaObtenidaId,
+                            recompensasIds = ruta.recompensasIds
+                        )
+                    }
+                }
+
+                dialog<Route.DetalleObra> { entrada ->
+                    val ruta = entrada.toRoute<Route.DetalleObra>()
+                    val obraViewModel = viewModel {
+                        MuseosViewModel(
+                            obtenerCatalogoMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
+                            obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
+                            obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                            obtenerObrasUseCase = appContainer.obtenerObrasUseCase
+                        )
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(24.dp),
+                        modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
+                    ) {
+                        DetalleObraScreenRoot(
+                            obraId = ruta.obraId,
+                            viewModel = obraViewModel,
+                            criaturaBienvenidaId = ruta.criaturaBienvenidaId,
+                            recompensasIds = ruta.recompensasIds,
+                            onCerrar = { navController.popBackStack() }
+                        )
+                    }
+                }
+
+                composable<Route.Ajustes> {
+                    AjustesScreenRoot(
+                        modoOscuro = modoOscuro,
+                        onModoOscuroCambiado = onModoOscuroCambiado,
+                        correoCuenta = cuenta?.correo,
+                        cuentaCargando = estadoCuenta.cargando,
+                        mensajeCuenta = estadoCuenta.mensaje,
+                        onCuentaClick = {
+                            if (cuenta == null) {
+                                cuentaViewModel.onAction(CuentaAction.LimpiarFormulario)
+                                navController.navigate(Route.Cuenta) { launchSingleTop = true }
+                            } else {
+                                cuentaViewModel.onAction(CuentaAction.Salir)
+                            }
+                        }
+                    )
+                }
+
+                if (onLeerQr != null && escanerViewModel != null) {
+                    composable<Route.Escaner> {
+                        EscanerScreenRoot(
+                            viewModel = escanerViewModel,
+                            onLeerQr = onLeerQr,
+                            onMuseoEscaneado = { visita ->
                                 navController.navigate(
-                                    Route.DetalleMuseo(museoId = museo.id)
+                                    Route.DetalleMuseo(
+                                        museoId = visita.museoId,
+                                        yaVisitado = visita.yaVisitado,
+                                        criaturaObtenidaId = visita.criaturaObtenidaId,
+                                        recompensasIds = visita.recompensasIds
+                                    )
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            },
+                            onObraEscaneada = { registro ->
+                                navController.navigate(
+                                    Route.DetalleObra(registro.obraId, registro.criaturaBienvenidaId, registro.recompensasIds)
                                 ) {
                                     launchSingleTop = true
                                 }
                             }
                         )
-                    }
-
-                    dialog<Route.DetalleMuseo> { entrada ->
-                        val ruta = entrada.toRoute<Route.DetalleMuseo>()
-
-                        val detalleMuseoViewModel = viewModel {
-                            MuseosViewModel(
-                                obtenerCatalogoMuseosUseCase =
-                                    appContainer.obtenerCatalogoMuseosUseCase,
-                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
-                            )
-                        }
-
-                        Surface(
-                            shape = RoundedCornerShape(24.dp),
-                            modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
-                        ) {
-                            DetalleMuseoScreenRoot(
-                                museoId = ruta.museoId,
-                                viewModel = detalleMuseoViewModel,
-                                onVolver = { navController.popBackStack() },
-                                onObraClick = { obraId ->
-                                    navController.navigate(Route.DetalleObra(obraId)) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                yaVisitado = ruta.yaVisitado,
-                                criaturaObtenidaId = ruta.criaturaObtenidaId,
-                                recompensasIds = ruta.recompensasIds
-                            )
-                        }
-                    }
-
-                    dialog<Route.DetalleObra> { entrada ->
-                        val ruta = entrada.toRoute<Route.DetalleObra>()
-                        val obraViewModel = viewModel {
-                            MuseosViewModel(
-                                obtenerCatalogoMuseosUseCase = appContainer.obtenerCatalogoMuseosUseCase,
-                                obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase,
-                                obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
-                                obtenerObrasUseCase = appContainer.obtenerObrasUseCase
-                            )
-                        }
-                        Surface(
-                            shape = RoundedCornerShape(24.dp),
-                            modifier = Modifier.fillMaxWidth().heightIn(max = 680.dp)
-                        ) {
-                            DetalleObraScreenRoot(
-                                obraId = ruta.obraId,
-                                viewModel = obraViewModel,
-                                criaturaBienvenidaId = ruta.criaturaBienvenidaId,
-                                recompensasIds = ruta.recompensasIds,
-                                onCerrar = { navController.popBackStack() }
-                            )
-                        }
-                    }
-
-                    composable<Route.Ajustes> {
-                        AjustesScreenRoot(
-                            modoOscuro = modoOscuro,
-                            onModoOscuroCambiado = { modoOscuro = it }
-                        )
-                    }
-
-                    if (onLeerQr != null && escanerViewModel != null) {
-                        composable<Route.Escaner> {
-                            EscanerScreenRoot(
-                                viewModel = escanerViewModel,
-                                onLeerQr = onLeerQr,
-                                onMuseoEscaneado = { visita ->
-                                    navController.navigate(
-                                        Route.DetalleMuseo(
-                                            museoId = visita.museoId,
-                                            yaVisitado = visita.yaVisitado,
-                                            criaturaObtenidaId = visita.criaturaObtenidaId,
-                                            recompensasIds = visita.recompensasIds
-                                        )
-                                    ) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                onObraEscaneada = { registro ->
-                                    navController.navigate(
-                                        Route.DetalleObra(registro.obraId, registro.criaturaBienvenidaId, registro.recompensasIds)
-                                    ) {
-                                        launchSingleTop = true
-                                    }
-                                }
-                            )
-                        }
                     }
                 }
             }
