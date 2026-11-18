@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 sealed interface SesionCuenta {
     data object Cargando : SesionCuenta
+    data object FalloRenovacion : SesionCuenta
     data object SinCuenta : SesionCuenta
     data class Activa(val id: String, val correo: String) : SesionCuenta
 }

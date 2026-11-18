@@ -76,5 +76,6 @@
     <string name="cuenta_correo_no_autorizado">Supabase no pudo enviar la confirmación a este correo. Prueba con un correo del equipo.</string>
     <string name="cuenta_demasiados_intentos">Demasiados intentos. Espera un poco antes de volver a probar.</string>
     <string name="cuenta_error">No se pudo continuar. Revisa la conexión e inténtalo de nuevo.</string>
+    <string name="cuenta_error_renovar">No se pudo renovar la sesión. Se volverá a intentar automáticamente.</string>
     <string name="cuenta_error_salir">No se pudo cerrar la sesión. Inténtalo de nuevo.</string>
 </resources>

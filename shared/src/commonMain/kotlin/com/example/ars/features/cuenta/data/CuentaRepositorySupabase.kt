@@ -20,6 +20,7 @@ class CuentaRepositorySupabase(cliente: SupabaseClient) : CuentaRepository {
     override val sesion = auth.sessionStatus.map { estado ->
         when (estado) {
             SessionStatus.Initializing -> SesionCuenta.Cargando
+            is SessionStatus.RefreshFailure -> SesionCuenta.FalloRenovacion
             is SessionStatus.Authenticated -> {
                 val usuario = estado.session.user
                 // Una sesión anónima antigua sigue siendo una partida de invitado.
@@ -30,7 +31,7 @@ class CuentaRepositorySupabase(cliente: SupabaseClient) : CuentaRepository {
                     SesionCuenta.SinCuenta
                 }
             }
-            else -> SesionCuenta.SinCuenta
+            is SessionStatus.NotAuthenticated -> SesionCuenta.SinCuenta
         }
     }.distinctUntilChanged()
 

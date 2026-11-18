@@ -21,8 +21,21 @@ class CuentaViewModel(private val repository: CuentaRepository) : ViewModel() {
         viewModelScope.launch {
             repository.sesion.collect { sesion ->
                 _state.update {
-                    if (sesion is SesionCuenta.Activa) it.copy(sesion = sesion, clave = "", mensaje = null)
-                    else it.copy(sesion = sesion)
+                    when (sesion) {
+                        is SesionCuenta.Activa ->
+                            it.copy(sesion = sesion, clave = "", mensaje = null, esError = false)
+                        SesionCuenta.FalloRenovacion -> it.copy(
+                            // Si ya había una cuenta abierta, esperamos sin volver al inicio de sesión.
+                            sesion = (it.sesion as? SesionCuenta.Activa) ?: SesionCuenta.SinCuenta,
+                            mensaje = Res.string.cuenta_error_renovar,
+                            esError = true
+                        )
+                        SesionCuenta.SinCuenta -> it.copy(
+                            sesion = sesion,
+                            mensaje = it.mensaje.takeUnless { mensaje -> mensaje == Res.string.cuenta_error_renovar }
+                        )
+                        SesionCuenta.Cargando -> it.copy(sesion = sesion)
+                    }
                 }
             }
         }
