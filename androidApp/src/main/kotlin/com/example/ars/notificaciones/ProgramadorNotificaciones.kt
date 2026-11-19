@@ -2,6 +2,7 @@ package com.example.ars.notificaciones
 
 import android.content.Context
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.ars.Route
@@ -9,6 +10,12 @@ import java.util.concurrent.TimeUnit
 import kotlinx.serialization.json.Json
 
 object ProgramadorNotificaciones {
+    private const val RECORDATORIO = "recordatorio_vuelta"
+
+    fun cancelarRecordatorio(context: Context) {
+        WorkManager.getInstance(context.applicationContext).cancelUniqueWork(RECORDATORIO)
+    }
+
     fun programarNotificacion(
         context: Context,
         titulo: String,
@@ -28,6 +35,6 @@ object ProgramadorNotificaciones {
             .setInputData(datos)
             .build()
 
-        WorkManager.getInstance(context.applicationContext).enqueue(trabajo)
+        WorkManager.getInstance(context.applicationContext).enqueueUniqueWork(RECORDATORIO, ExistingWorkPolicy.REPLACE, trabajo)
     }
 }

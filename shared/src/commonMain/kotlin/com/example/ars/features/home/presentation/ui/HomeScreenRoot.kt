@@ -11,6 +11,7 @@ import com.example.ars.features.home.presentation.HomeViewModel
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeViewModel,
+    onVerCriaturas: () -> Unit = {},
     onExplorarMuseos: () -> Unit = {},
     onMuseoClick: (String) -> Unit = {}
 ) {
@@ -23,6 +24,7 @@ fun HomeScreenRoot(
 
     HomeScreen(
         state = state,
+        onVerCriaturas = onVerCriaturas,
         onExplorarMuseos = onExplorarMuseos,
         onMuseoClick = onMuseoClick
     )

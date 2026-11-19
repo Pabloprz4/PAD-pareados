@@ -11,6 +11,7 @@ import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
 import com.example.ars.features.museos.domain.model.Mision
 import com.example.ars.features.museos.domain.model.ObjetivoMision
 import com.example.ars.features.museos.domain.usecase.EvaluarMisionesUseCase
+import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -26,6 +27,39 @@ class MisionesUseCaseTest {
     private val museosRepository = MuseosRepositoryImpl()
     private val catalogo = CatalogoRepositoryImpl(museosRepository)
     private val evaluar = EvaluarMisionesUseCase()
+
+    @Test
+    fun manzanaSeObtieneEnMunchYElMuseoExigeLasDosObras() = runBlocking {
+        val id = "museo_007"
+        val progreso = ProgresoEnMemoria(ProgresoUsuario(
+            criaturaInicialId = "criatura_001",
+            criaturasDescubiertas = listOf("criatura_001"),
+            museosVisitados = listOf(id),
+            obrasEscaneadas = listOf("obra_munch_grito")
+        ))
+        val obtener = ObtenerProgresoUseCase(progreso, museosRepository, catalogo)
+        val museos = ObtenerCatalogoMuseosUseCase(museosRepository, catalogo, obtener)
+
+        assertFalse(museos().getOrThrow().first { it.id == id }.completado)
+        assertTrue("criatura_012" in progreso.progreso.criaturasDescubiertas)
+        assertFalse("criatura_007" in progreso.progreso.criaturasDescubiertas)
+
+        progreso.guardarProgreso(progreso.progreso.copy(
+            obrasEscaneadas = listOf("obra_munch_grito", "obra_munch_madonna")
+        ))
+        assertTrue(museos().getOrThrow().first { it.id == id }.completado)
+        assertTrue("criatura_007" in progreso.progreso.criaturasDescubiertas)
+
+        progreso.guardarProgreso(ProgresoUsuario(
+            criaturaInicialId = "criatura_012",
+            criaturasDescubiertas = listOf("criatura_012"),
+            museosVisitados = listOf(id),
+            obrasEscaneadas = listOf("obra_munch_grito", "obra_munch_madonna")
+        ))
+        val munch = museos().getOrThrow().first { it.id == id }
+        assertEquals(listOf("munch_cantidad"), munch.progresoMisiones.map { it.mision.id })
+        assertTrue(munch.completado)
+    }
 
     @Test
     fun laCantidadCuentaObrasDistintasDelMuseo() = runBlocking {
@@ -194,9 +228,10 @@ class MisionesUseCaseTest {
             val registrar = RegistrarObraUseCase(progreso, HomeRepositoryImpl(), catalogo)
             val propias = obras.filter { it.museoId == museo.id }
             assertEquals(2, propias.size, museo.nombre)
-            assertTrue(evaluar(museo, obras, progreso.progreso).misiones.all { it.disponible }, museo.nombre)
+            val misionesAplicables = evaluar(museo, obras, progreso.progreso).misiones
+            assertTrue(misionesAplicables.all { it.disponible }, museo.nombre)
             propias.forEach { registrar(it, museo).getOrThrow() }
-            assertEquals(museo.misiones.map { it.id }.toSet(), progreso.progreso.misionesCompletadas.toSet())
+            assertEquals(misionesAplicables.map { it.mision.id }.toSet(), progreso.progreso.misionesCompletadas.toSet())
             assertTrue(museo.criaturasIds.all { it in progreso.progreso.criaturasDescubiertas }, museo.nombre)
         }
     }

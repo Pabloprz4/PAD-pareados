@@ -3,7 +3,7 @@
     <string name="nav_inicio">Home</string>
     <string name="nav_batalla">Battle</string>
     <string name="nav_escanear">Scan</string>
-    <string name="nav_colecciones">Collections</string>
+    <string name="nav_colecciones">Creatures</string>
     <string name="nav_ajustes">Settings</string>
     <string name="escaner_titulo">Scan QR</string>
     <string name="escaner_indicaciones">Scan the QR code of a museum or artwork.</string>
@@ -82,7 +82,7 @@
     <string name="home_sin_criaturas">"You haven't discovered any creatures yet."</string>
     <string name="home_misiones_titulo">QUESTS</string>
     <string name="home_explorar_museos">Explore museums →</string>
-    <string name="home_explora_museos_titulo">EXPLORE MUSEUMS TO GET CREATURES</string>
+    <string name="home_explora_museos_titulo">MUSEUMS IN PROGRESS</string>
     <string name="home_ver_todos">View all →</string>
     <string name="museos_logo_desc">Ars Logo</string>
     <string name="museos_titulo">Your cultural passport</string>
@@ -148,4 +148,6 @@
     <string name="home_error_museos">Could not load museums.</string>
     <string name="home_error_criaturas">Could not load creatures.</string>
     <string name="home_error_progreso">Could not load your progress.</string>
+    <string name="home_sin_museos_en_curso">Museums you have visited and are still completing will appear here.</string>
+    <string name="museo_completado">Museum completed</string>
 </resources>

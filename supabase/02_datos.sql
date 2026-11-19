@@ -27,7 +27,7 @@ insert into criatura (id, nombre, descripcion, museo_id) values
   ('criatura_009', 'Remolino Estrellado', 'Remolino flotante inspirado en La noche estrellada de Vincent van Gogh.', 'museo_004'),
   ('criatura_010', 'Manos de la Creación', 'Manos flotantes inspiradas en La creación de Adán de Miguel Ángel.', 'museo_008'),
   ('criatura_011', 'Garra de Kanagawa', 'Garra de agua inspirada en La gran ola de Kanagawa de Katsushika Hokusai.', 'museo_009'),
-  ('criatura_012', 'Manzana con Traje', 'Manzana con traje inspirada en El hijo del hombre de René Magritte.', NULL),
+  ('criatura_012', 'Manzana con Traje', 'Manzana con traje inspirada en El hijo del hombre de René Magritte.', 'museo_007'),
   ('criatura_013', 'Dama de la Mona Lisa', 'Dama flotante inspirada en La Mona Lisa de Leonardo da Vinci.', 'museo_010'),
   ('criatura_014', 'Toro Guernica', 'Criatura cubista inspirada en el toro del Guernica de Pablo Picasso.', 'museo_002'),
   ('criatura_015', 'Caballero del Paisaje', 'Caballero inspirado en Joven caballero en un paisaje de Vittore Carpaccio.', 'museo_003');
@@ -37,7 +37,6 @@ update museo set criatura_bienvenida_id = 'criatura_001' where id = 'museo_001';
 update museo set recompensa_misiones_id = 'criatura_015' where id = 'museo_003';
 update museo set recompensa_misiones_id = 'criatura_005' where id = 'museo_005';
 update museo set recompensa_misiones_id = 'criatura_006' where id = 'museo_006';
-update museo set recompensa_misiones_id = 'criatura_007' where id = 'museo_007';
 update museo set recompensa_misiones_id = 'criatura_010' where id = 'museo_008';
 update museo set recompensa_misiones_id = 'criatura_011' where id = 'museo_009';
 update museo set recompensa_misiones_id = 'criatura_013' where id = 'museo_010';
@@ -77,8 +76,8 @@ insert into mision (id, museo_id, titulo, tipo, cantidad_obras, recompensa_criat
   ('vangogh_obra', 'museo_005', 'Escanear Los girasoles', 'OBRAS_CONCRETAS', NULL, NULL, 2),
   ('uffizi_cantidad', 'museo_006', 'Escanear 2 obras distintas de la Galería Uffizi', 'CANTIDAD_OBRAS', 2, NULL, 1),
   ('uffizi_obra', 'museo_006', 'Escanear El nacimiento de Venus', 'OBRAS_CONCRETAS', NULL, NULL, 2),
-  ('munch_cantidad', 'museo_007', 'Escanear 2 obras distintas del Museo MUNCH', 'CANTIDAD_OBRAS', 2, NULL, 1),
-  ('munch_obra', 'museo_007', 'Escanear El grito', 'OBRAS_CONCRETAS', NULL, NULL, 2),
+  ('munch_cantidad', 'museo_007', 'Escanear 2 obras distintas del Museo MUNCH', 'CANTIDAD_OBRAS', 2, 'criatura_007', 1),
+  ('munch_obra', 'museo_007', 'Escanear El grito', 'OBRAS_CONCRETAS', NULL, 'criatura_012', 2),
   ('vaticano_cantidad', 'museo_008', 'Escanear 2 obras distintas de los Museos Vaticanos', 'CANTIDAD_OBRAS', 2, NULL, 1),
   ('vaticano_obra', 'museo_008', 'Escanear La creación de Adán', 'OBRAS_CONCRETAS', NULL, NULL, 2),
   ('met_cantidad', 'museo_009', 'Escanear 2 obras distintas del Met', 'CANTIDAD_OBRAS', 2, NULL, 1),

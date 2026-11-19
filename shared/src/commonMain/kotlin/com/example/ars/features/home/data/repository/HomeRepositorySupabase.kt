@@ -21,9 +21,12 @@ class HomeRepositorySupabase(
                     Criatura(
                         id = criatura.id,
                         nombre = criatura.nombre,
-                        museo = criatura.museoId
-                            ?.let { museos[it]?.nombre }
-                            ?: "Colección privada",
+                        // El MUNCH da Manzana como premio, pero su obra sigue siendo de una colección privada.
+                        museo = if (criatura.id == "criatura_012") {
+                            "Colección privada"
+                        } else {
+                            criatura.museoId?.let { museos[it]?.nombre } ?: "Colección privada"
+                        },
                         descripcion = criatura.descripcion
                     )
                 }

@@ -23,6 +23,7 @@ import com.example.ars.core.storage.inicializarAlmacenamientoLocal
 class MainActivity : ComponentActivity() {
     private var toScreen by mutableStateOf<Route?>(null)
     private val lectorQr by lazy { LectorQrAndroid(this) }
+    private var leyendoQr = false
 
     private val solicitarPermiso = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -45,7 +46,23 @@ class MainActivity : ComponentActivity() {
                     toScreen = null
                     intent?.removeExtra(EXTRA_TO_SCREEN)
                 },
-                onLeerQr = lectorQr::leer,
+                onLeerQr = { leido, cancelado, error ->
+                    leyendoQr = true
+                    lectorQr.leer(
+                        {
+                            leyendoQr = false
+                            leido(it)
+                        },
+                        {
+                            leyendoQr = false
+                            cancelado()
+                        },
+                        {
+                            leyendoQr = false
+                            error()
+                        }
+                    )
+                },
                 onModoOscuroCambiado = { oscuro ->
                     WindowCompat.getInsetsController(window, window.decorView).apply {
                         isAppearanceLightStatusBars = !oscuro
@@ -62,10 +79,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        ProgramadorNotificaciones.cancelarRecordatorio(this)
+    }
+
     override fun onStop() {
         super.onStop()
         // programamos al salir de la app, pero no por girar la pantalla
-        if (!isChangingConfigurations &&
+        if (!isChangingConfigurations && !leyendoQr &&
             checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
         ) {
@@ -73,7 +95,7 @@ class MainActivity : ComponentActivity() {
                 context = applicationContext,
                 titulo = getString(R.string.recordatorio_titulo),
                 mensaje = getString(R.string.recordatorio_mensaje),
-                demoraSegundos = 5L, // 5s solo para la prueba
+                demoraSegundos = 5L,
                 destino = Route.Home
             )
         }

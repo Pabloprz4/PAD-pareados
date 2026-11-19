@@ -9,13 +9,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class SettingsViewModel : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsUiState())
     val state: StateFlow<SettingsUiState> = _state.asStateFlow()
 
+    private val escrituraTema = Mutex()
+
     private companion object {
+        const val CLAVE_TEMA_OSCURO = "tema_oscuro"
         const val CLAVE_IDIOMA = "idioma_preferido"
         const val CLAVE_NOMBRE_USUARIO = "nombre_usuario"
     }
@@ -26,6 +31,14 @@ class SettingsViewModel : ViewModel() {
 
     fun onAction(action: SettingsAction) {
         when (action) {
+            is SettingsAction.CambiarTemaOscuro -> {
+                _state.update { it.copy(modoOscuro = action.activado) }
+                viewModelScope.launch {
+                    escrituraTema.withLock {
+                        guardarTextoLocal(CLAVE_TEMA_OSCURO, _state.value.modoOscuro.toString())
+                    }
+                }
+            }
             is SettingsAction.CambiarNotificaciones -> {
                 _state.update { it.copy(notificacionesMisiones = action.activadas) }
             }
@@ -41,10 +54,12 @@ class SettingsViewModel : ViewModel() {
     private fun cargarAjustes() {
         viewModelScope.launch {
             _state.update { it.copy(cargando = true) }
+            val temaGuardado = leerTextoLocal(CLAVE_TEMA_OSCURO) == "true"
             val idiomaGuardado = leerTextoLocal(CLAVE_IDIOMA) ?: "es"
             val nombreGuardado = leerTextoLocal(CLAVE_NOMBRE_USUARIO) ?: ""
             _state.update {
                 it.copy(
+                    modoOscuro = temaGuardado,
                     idioma = idiomaGuardado,
                     nombreUsuario = nombreGuardado,
                     cargando = false

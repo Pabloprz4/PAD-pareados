@@ -169,16 +169,15 @@ class MuseosRepositoryImpl : MuseosRepository {
                 criaturasDescubiertas = 0,
                 criaturasTotales = 1,
                 descripcion = "El Museo MUNCH está dedicado al artista Edvard Munch en Oslo.",
-                criaturasIds = listOf("criatura_007"),
-                recompensaMisionesId = "criatura_007",
+                criaturasIds = listOf("criatura_007", "criatura_012"),
                 misiones = listOf(
                     Mision(
                         "munch_cantidad", "Escanear 2 obras distintas del Museo MUNCH",
-                        ObjetivoMision.CantidadObras(2)
+                        ObjetivoMision.CantidadObras(2), "criatura_007"
                     ),
                     Mision(
                         "munch_obra", "Escanear El grito",
-                        ObjetivoMision.ObrasConcretas(listOf("obra_munch_grito"))
+                        ObjetivoMision.ObrasConcretas(listOf("obra_munch_grito")), "criatura_012"
                     )
                 )
             ),

@@ -17,4 +17,8 @@ data class Museo(
     val progresoMisiones: List<ProgresoMision> = emptyList(),
     val criaturasIds: List<String> = emptyList(),
     val criaturaBienvenidaId: String? = null
-)
+) {
+    val completado: Boolean
+        get() = obrasTotales > 0 && obrasDescubiertas == obrasTotales &&
+            progresoMisiones.all { it.completada }
+}

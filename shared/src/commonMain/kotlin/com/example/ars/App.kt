@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +52,7 @@ import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 import com.example.ars.features.home.presentation.ui.PrimeraCriaturaScreenRoot
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
+import com.example.ars.features.settings.presentation.SettingsAction
 import com.example.ars.features.settings.presentation.SettingsViewModel
 import androidx.navigation.toRoute
 import com.example.ars.features.museos.presentation.ui.DetalleMuseoScreenRoot
@@ -72,10 +72,9 @@ fun App(
     ) -> Unit)? = null,
     onModoOscuroCambiado: (Boolean) -> Unit = {}
 ) {
-    var modoOscuro by rememberSaveable { mutableStateOf(false) }
-
     val settingsViewModel: SettingsViewModel = viewModel { SettingsViewModel() }
     val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+    val modoOscuro = settingsState.modoOscuro
     var idiomaAplicado by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(settingsState.idioma) {
@@ -114,7 +113,7 @@ fun App(
                         cuenta = cuenta,
                         settingsViewModel = settingsViewModel,
                         modoOscuro = modoOscuro,
-                        onModoOscuroCambiado = { modoOscuro = it },
+                        onModoOscuroCambiado = { settingsViewModel.onAction(SettingsAction.CambiarTemaOscuro(it)) },
                         toScreen = toScreen,
                         onDestinoAbierto = onDestinoAbierto,
                         onLeerQr = onLeerQr
@@ -288,6 +287,11 @@ private fun NavegacionArs(
                         composable<Route.Home> {
                             HomeScreenRoot(
                                 viewModel = homeViewModel,
+                                onVerCriaturas = {
+                                    navController.navigate(Route.Colecciones) {
+                                        launchSingleTop = true
+                                    }
+                                },
                                 onExplorarMuseos = {
                                     navController.navigate(Route.Museos) {
                                         launchSingleTop = true

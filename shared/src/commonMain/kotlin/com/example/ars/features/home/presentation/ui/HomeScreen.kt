@@ -31,6 +31,7 @@ import ars.shared.generated.resources.*
 @Composable
 fun HomeScreen(
     state: HomeUiState,
+    onVerCriaturas: () -> Unit = {},
     onExplorarMuseos: () -> Unit = {},
     onMuseoClick: (String) -> Unit = {}
 ) {
@@ -99,10 +100,7 @@ fun HomeScreen(
                 )
             }
 
-            TextButton(
-                enabled = false,
-                onClick = {}
-            ) {
+            TextButton(onClick = onVerCriaturas) {
                 Text(stringResource(Res.string.home_ver_todas))
             }
         }
@@ -182,12 +180,18 @@ fun HomeScreen(
             }
         }
 
+        val museosEnCurso = state.museos.filter {
+            it.id in state.progreso.museosVisitados && !it.completado
+        }
+        if (!state.cargando && museosEnCurso.isEmpty()) {
+            Text(stringResource(Res.string.home_sin_museos_en_curso))
+        }
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
-                items = state.museos.filter { it.destacado },
+                items = museosEnCurso,
                 key = { it.id }
             ) { museo ->
                 MuseoCard(

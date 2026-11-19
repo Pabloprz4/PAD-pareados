@@ -3,7 +3,7 @@
     <string name="nav_inicio">Inicio</string>
     <string name="nav_batalla">Batalla</string>
     <string name="nav_escanear">Escanear</string>
-    <string name="nav_colecciones">Colecciones</string>
+    <string name="nav_colecciones">Criaturas</string>
     <string name="nav_ajustes">Ajustes</string>
     <string name="escaner_titulo">Escanear QR</string>
     <string name="escaner_indicaciones">Escanea el QR de un museo o de una obra.</string>
@@ -82,7 +82,7 @@
     <string name="home_sin_criaturas">Todavía no has descubierto criaturas.</string>
     <string name="home_misiones_titulo">MISIONES</string>
     <string name="home_explorar_museos">Explorar museos →</string>
-    <string name="home_explora_museos_titulo">EXPLORA MUSEOS PARA CONSEGUIR CRIATURAS</string>
+    <string name="home_explora_museos_titulo">MUSEOS EN CURSO</string>
     <string name="home_ver_todos">Ver todos →</string>
     <string name="museos_logo_desc">Logo Ars</string>
     <string name="museos_titulo">Tu pasaporte cultural</string>
@@ -148,4 +148,6 @@
     <string name="home_error_museos">No se han podido cargar los museos.</string>
     <string name="home_error_criaturas">No se han podido cargar las criaturas.</string>
     <string name="home_error_progreso">No se ha podido cargar tu progreso.</string>
+    <string name="home_sin_museos_en_curso">Aquí aparecerán los museos que visites y aún tengas por completar.</string>
+    <string name="museo_completado">Museo completado</string>
 </resources>

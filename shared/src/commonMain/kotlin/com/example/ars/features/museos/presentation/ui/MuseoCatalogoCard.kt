@@ -88,10 +88,10 @@ fun MuseoCatalogoCard(
                         )
                 )
 
-                if (!desbloqueado) {
+                if (!desbloqueado || museo.completado) {
                     Icon(
-                        painter = painterResource(Res.drawable.nav_lock),
-                        contentDescription = stringResource(Res.string.museo_bloqueado),
+                        painter = painterResource(if (desbloqueado) Res.drawable.nav_check else Res.drawable.nav_lock),
+                        contentDescription = stringResource(if (desbloqueado) Res.string.museo_completado else Res.string.museo_bloqueado),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.align(Alignment.TopEnd).padding(12.dp)
                             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
@@ -166,8 +166,10 @@ fun MuseoCatalogoCard(
                 )
 
                 Text(
-                    text = if (desbloqueado) stringResource(Res.string.museo_porcentaje_obras, porcentaje) else {
-                        stringResource(Res.string.museo_escanear)
+                    text = when {
+                        !desbloqueado -> stringResource(Res.string.museo_escanear)
+                        museo.completado -> stringResource(Res.string.museo_completado)
+                        else -> stringResource(Res.string.museo_porcentaje_obras, porcentaje)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
