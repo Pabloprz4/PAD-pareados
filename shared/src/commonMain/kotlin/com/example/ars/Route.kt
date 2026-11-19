@@ -40,7 +40,10 @@ sealed interface Route {
 
     @Serializable
     data object Colecciones : Route
-
+    @Serializable
+    data class DetalleCriatura(
+        val criaturaId: String
+    ) : Route
 
 
 

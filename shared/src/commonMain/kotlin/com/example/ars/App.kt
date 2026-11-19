@@ -58,6 +58,7 @@ import androidx.navigation.toRoute
 import com.example.ars.features.museos.presentation.ui.DetalleMuseoScreenRoot
 import com.example.ars.features.colecciones.presentation.ColeccionesViewModel
 import com.example.ars.features.colecciones.presentation.ui.ColeccionesScreenRoot
+import com.example.ars.features.colecciones.presentation.ui.DetalleCriaturaScreenRoot
 
 
 @Composable
@@ -337,7 +338,14 @@ private fun NavegacionArs(
                             }
 
                             ColeccionesScreenRoot(
-                                viewModel = coleccionesViewModel
+                                viewModel = coleccionesViewModel,
+                                onCriaturaClick = { criaturaId ->
+                                    navController.navigate(
+                                        Route.DetalleCriatura(criaturaId)
+                                    ) {
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
 
@@ -394,6 +402,34 @@ private fun NavegacionArs(
                                     criaturaBienvenidaId = ruta.criaturaBienvenidaId,
                                     recompensasIds = ruta.recompensasIds,
                                     onCerrar = { navController.popBackStack() }
+                                )
+                            }
+                        }
+
+                        dialog<Route.DetalleCriatura> { entrada ->
+                            val ruta = entrada.toRoute<Route.DetalleCriatura>()
+
+                            val detalleCriaturaViewModel: ColeccionesViewModel = viewModel {
+                                ColeccionesViewModel(
+                                    obtenerCriaturasUseCase =
+                                        appContainer.obtenerCriaturasUseCase,
+                                    obtenerProgresoUseCase =
+                                        appContainer.obtenerProgresoUseCase
+                                )
+                            }
+
+                            Surface(
+                                shape = RoundedCornerShape(24.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(max = 680.dp)
+                            ) {
+                                DetalleCriaturaScreenRoot(
+                                    criaturaId = ruta.criaturaId,
+                                    viewModel = detalleCriaturaViewModel,
+                                    onCerrar = {
+                                        navController.popBackStack()
+                                    }
                                 )
                             }
                         }

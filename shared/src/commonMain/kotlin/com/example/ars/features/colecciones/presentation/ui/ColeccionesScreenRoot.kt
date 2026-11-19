@@ -9,7 +9,8 @@ import com.example.ars.features.colecciones.presentation.ColeccionesViewModel
 
 @Composable
 fun ColeccionesScreenRoot(
-    viewModel: ColeccionesViewModel
+    viewModel: ColeccionesViewModel,
+    onCriaturaClick: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -19,6 +20,7 @@ fun ColeccionesScreenRoot(
 
     ColeccionesScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onCriaturaClick = onCriaturaClick
     )
 }

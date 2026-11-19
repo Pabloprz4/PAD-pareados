@@ -2,6 +2,7 @@ package com.example.ars.features.colecciones.presentation.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -14,32 +15,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import ars.shared.generated.resources.*
 import com.example.ars.features.colecciones.presentation.ColeccionesAction
 import com.example.ars.features.colecciones.presentation.ColeccionesUiState
 import com.example.ars.features.home.presentation.ui.CriaturaCard
-import org.jetbrains.compose.resources.stringResource
-
-private val ArsCrema = Color(0xFFF7F0E4)
-private val ArsPergamino = Color(0xFFE8D8BC)
-private val ArsDorado = Color(0xFFB8893F)
-private val ArsDoradoClaro = Color(0xFFE8D3A5)
-private val ArsMarron = Color(0xFF3D3024)
 
 @Composable
 fun ColeccionesScreen(
     state: ColeccionesUiState,
-    onAction: (ColeccionesAction) -> Unit
+    onAction: (ColeccionesAction) -> Unit,
+    onCriaturaClick: (String) -> Unit
 ) {
     var filtro by rememberSaveable {
         mutableIntStateOf(0)
     }
 
+    val colores = MaterialTheme.colorScheme
     val descubiertasIds = state.progreso.criaturasDescubiertas.toSet()
 
     val criaturasVisibles = when (filtro) {
@@ -63,17 +58,17 @@ fun ColeccionesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ArsCrema)
+            .background(colores.background)
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = ArsCrema,
-            contentColor = ArsMarron,
+            color = colores.surface,
+            contentColor = colores.onSurface,
             border = BorderStroke(
                 width = 1.dp,
-                color = ArsDorado.copy(alpha = 0.45f)
+                color = colores.primary.copy(alpha = 0.35f)
             )
         ) {
             Column(
@@ -82,8 +77,8 @@ fun ColeccionesScreen(
                     .background(
                         Brush.horizontalGradient(
                             colors = listOf(
-                                ArsPergamino,
-                                ArsCrema
+                                colores.primary.copy(alpha = 0.12f),
+                                colores.surface
                             )
                         )
                     )
@@ -91,17 +86,17 @@ fun ColeccionesScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = stringResource(Res.string.colecciones_titulo),
+                    text = "Tus criaturas",
                     style = MaterialTheme.typography.headlineLarge,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
-                    color = ArsMarron
+                    color = colores.onSurface
                 )
 
                 Text(
-                    text = stringResource(Res.string.colecciones_subtitulo),
+                    text = "El arte cobra vida en tu colección.",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = ArsMarron.copy(alpha = 0.75f)
+                    color = colores.onSurfaceVariant
                 )
 
                 if (!state.cargando && state.totalCriaturas > 0) {
@@ -111,21 +106,18 @@ fun ColeccionesScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(
-                                Res.string.colecciones_progreso,
-                                state.totalDescubiertas,
-                                state.totalCriaturas
-                            ),
+                            text = "${state.totalDescubiertas} de " +
+                                    "${state.totalCriaturas} descubiertas",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
-                            color = ArsMarron,
+                            color = colores.onSurface,
                             modifier = Modifier.weight(1f)
                         )
 
                         Text(
-                            text = stringResource(Res.string.colecciones_porcentaje, (progreso * 100).toInt()),
+                            text = "${(progreso * 100).toInt()} %",
                             fontWeight = FontWeight.Bold,
-                            color = ArsMarron
+                            color = colores.onSurface
                         )
                     }
 
@@ -136,8 +128,8 @@ fun ColeccionesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(8.dp),
-                        color = ArsDorado,
-                        trackColor = ArsDoradoClaro
+                        color = colores.primary,
+                        trackColor = colores.primary.copy(alpha = 0.15f)
                     )
                 }
             }
@@ -150,58 +142,61 @@ fun ColeccionesScreen(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = ArsDorado)
+                CircularProgressIndicator()
             }
         } else {
             if (state.error) {
                 Text(
-                    text = stringResource(Res.string.colecciones_error),
-                    color = MaterialTheme.colorScheme.error
+                    text = "No se ha podido cargar tu colección. " +
+                            "Inténtalo de nuevo.",
+                    color = colores.error
                 )
 
                 TextButton(
                     onClick = {
                         onAction(ColeccionesAction.Reintentar)
-                    },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = ArsMarron
-                    )
+                    }
                 ) {
-                    Text(stringResource(Res.string.museo_reintentar))
+                    Text("Reintentar")
                 }
             }
 
             if (state.criaturas.isNotEmpty()) {
-                FlowRow(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    listOf(
-                        Res.string.colecciones_todas,
-                        Res.string.colecciones_descubiertas,
-                        Res.string.colecciones_pendientes
-                    )
+                    listOf("Todas", "Descubiertas", "Pendientes")
                         .forEachIndexed { indice, titulo ->
                             FilterChip(
                                 selected = filtro == indice,
-                                onClick = { filtro = indice },
-                                label = { Text(stringResource(titulo)) },
+                                onClick = {
+                                    filtro = indice
+                                },
+                                label = {
+                                    Text(titulo)
+                                },
                                 colors = FilterChipDefaults.filterChipColors(
-                                    containerColor = ArsCrema,
-                                    labelColor = ArsMarron,
-                                    selectedContainerColor = ArsDoradoClaro,
-                                    selectedLabelColor = ArsMarron
+                                    containerColor = colores.surface,
+                                    labelColor = colores.onSurface,
+                                    selectedContainerColor =
+                                        colores.primary.copy(alpha = 0.18f),
+                                    selectedLabelColor = colores.onSurface
                                 )
                             )
                         }
                 }
 
                 LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 230.dp),
+                    columns = GridCells.Adaptive(
+                        minSize = 230.dp
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(bottom = 16.dp),
+                    contentPadding = PaddingValues(
+                        bottom = 16.dp
+                    ),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
@@ -213,18 +208,26 @@ fun ColeccionesScreen(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.TopCenter
                         ) {
-                            if (criatura.id in descubiertasIds) {
-                                CriaturaCard(
-                                    criatura = criatura,
-                                    borde = BorderStroke(
-                                        width = 2.dp,
-                                        color = ArsDorado
+                            Box(
+                                modifier = Modifier
+                                    .width(230.dp)
+                                    .clickable(
+                                        role = Role.Button,
+                                        onClickLabel = "Ver ficha de criatura",
+                                        onClick = {
+                                            onCriaturaClick(criatura.id)
+                                        }
                                     )
-                                )
-                            } else {
-                                CriaturaPendienteCard(
-                                    museo = criatura.museo
-                                )
+                            ) {
+                                if (criatura.id in descubiertasIds) {
+                                    CriaturaCard(
+                                        criatura = criatura
+                                    )
+                                } else {
+                                    CriaturaPendienteCard(
+                                        museo = criatura.museo
+                                    )
+                                }
                             }
                         }
                     }
@@ -237,12 +240,13 @@ fun ColeccionesScreen(
                         ) {
                             Text(
                                 text = if (filtro == 2) {
-                                    stringResource(Res.string.colecciones_completa)
+                                    "¡Has descubierto todas las criaturas!"
                                 } else {
-                                    stringResource(Res.string.colecciones_vacia)
+                                    "Explora museos para descubrir " +
+                                            "tu primera criatura."
                                 },
                                 textAlign = TextAlign.Center,
-                                color = ArsMarron,
+                                color = colores.onBackground,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(24.dp)
@@ -259,27 +263,21 @@ fun ColeccionesScreen(
 private fun CriaturaPendienteCard(
     museo: String
 ) {
+    val colores = MaterialTheme.colorScheme
+
     Surface(
         modifier = Modifier.width(230.dp),
         shape = RoundedCornerShape(24.dp),
-        color = ArsCrema,
-        contentColor = ArsMarron,
+        color = colores.surface,
+        contentColor = colores.onSurface,
         border = BorderStroke(
             width = 1.dp,
-            color = ArsDorado.copy(alpha = 0.5f)
+            color = colores.outlineVariant
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            ArsPergamino,
-                            ArsCrema
-                        )
-                    )
-                )
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -291,8 +289,8 @@ private fun CriaturaPendienteCard(
                     .background(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                ArsDoradoClaro,
-                                ArsPergamino
+                                colores.surface,
+                                colores.surfaceVariant
                             )
                         ),
                         shape = RoundedCornerShape(16.dp)
@@ -301,10 +299,10 @@ private fun CriaturaPendienteCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(24.dp),
-                    color = ArsCrema,
+                    color = colores.surface,
                     border = BorderStroke(
                         width = 1.dp,
-                        color = ArsDorado
+                        color = colores.outlineVariant
                     )
                 ) {
                     Text(
@@ -315,37 +313,37 @@ private fun CriaturaPendienteCard(
                         ),
                         style = MaterialTheme.typography.displayMedium,
                         fontFamily = FontFamily.Serif,
-                        color = ArsMarron
+                        color = colores.onSurfaceVariant
                     )
                 }
             }
 
             Text(
-                text = stringResource(Res.string.colecciones_misterio),
+                text = "Un misterio te espera",
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = ArsMarron
+                color = colores.onSurface
             )
 
             Text(
-                text = if (museo == "Colección privada") stringResource(Res.string.coleccion_privada) else museo,
+                text = museo,
                 style = MaterialTheme.typography.bodyMedium,
-                color = ArsMarron.copy(alpha = 0.75f),
+                color = colores.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 minLines = 2
             )
 
             HorizontalDivider(
-                color = ArsDoradoClaro
+                color = colores.outlineVariant
             )
 
             Text(
-                text = stringResource(Res.string.colecciones_por_descubrir),
+                text = "POR DESCUBRIR",
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
-                color = ArsMarron
+                color = colores.onSurfaceVariant
             )
         }
     }
