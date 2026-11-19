@@ -38,5 +38,10 @@ sealed interface Route {
     data object PrimeraCriatura : Route
 
 
+    @Serializable
+    data object Colecciones : Route
+
+
+
 
 }

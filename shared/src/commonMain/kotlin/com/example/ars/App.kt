@@ -56,6 +56,8 @@ import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
 import com.example.ars.features.settings.presentation.SettingsViewModel
 import androidx.navigation.toRoute
 import com.example.ars.features.museos.presentation.ui.DetalleMuseoScreenRoot
+import com.example.ars.features.colecciones.presentation.ColeccionesViewModel
+import com.example.ars.features.colecciones.presentation.ui.ColeccionesScreenRoot
 
 
 @Composable
@@ -182,6 +184,8 @@ private fun NavegacionArs(
                 backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
                     ArsNavigationItem.Ajustes
 
+                backStackEntry?.destination?.hasRoute<Route.Colecciones>() == true ->
+                    ArsNavigationItem.Colecciones
                 else ->
                     ArsNavigationItem.Inicio
             }
@@ -214,7 +218,7 @@ private fun NavegacionArs(
                                     ArsNavigationItem.Museos -> Route.Museos
                                     ArsNavigationItem.Escanear -> Route.Escaner
                                     ArsNavigationItem.Ajustes -> Route.Ajustes
-                                    ArsNavigationItem.Colecciones -> null
+                                    ArsNavigationItem.Colecciones -> Route.Colecciones
                                 }
 
                                 if (destino != null && item != selectedItem) {
@@ -317,6 +321,19 @@ private fun NavegacionArs(
                                         launchSingleTop = true
                                     }
                                 }
+                            )
+                        }
+
+                        composable<Route.Colecciones> {
+                            val coleccionesViewModel: ColeccionesViewModel = viewModel {
+                                ColeccionesViewModel(
+                                    obtenerCriaturasUseCase = appContainer.obtenerCriaturasUseCase,
+                                    obtenerProgresoUseCase = appContainer.obtenerProgresoUseCase
+                                )
+                            }
+
+                            ColeccionesScreenRoot(
+                                viewModel = coleccionesViewModel
                             )
                         }
 
