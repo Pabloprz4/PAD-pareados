@@ -68,9 +68,9 @@
     <string name="ajustes_idioma_desc">Select application language</string>
     <string name="ajustes_idioma_es">Spanish</string>
     <string name="ajustes_idioma_en">English</string>
-    <string name="ajustes_cuenta_titulo">Explorer Account</string>
+    <string name="ajustes_cuenta_titulo">Explorer profile</string>
     <string name="ajustes_nombre_usuario">Username</string>
-    <string name="ajustes_nombre_usuario_desc">Your name in the explorer registry</string>
+    <string name="ajustes_nombre_usuario_desc">Saved on this device.</string>
     <string name="ajustes_nombre_placeholder">Enter your name</string>
     <string name="ajustes_acerca_titulo">About ARS</string>
     <string name="ajustes_version">Version 1.0 - PAD Project</string>
@@ -93,13 +93,15 @@
     <string name="museos_obras_escaneadas">%1$d / %2$d artworks scanned</string>
     <string name="museos_nacionales">National museums</string>
     <string name="museos_internacionales">International museums</string>
+    <string name="cuenta_titulo">Account</string>
+    <string name="cuenta_salir">Sign out</string>
     <string name="cuenta_registro">Create account</string>
     <string name="cuenta_entrar">Sign in</string>
     <string name="cuenta_correo">Email</string>
     <string name="cuenta_clave">Password</string>
     <string name="cuenta_ya_tengo">Already have an account? Sign in</string>
     <string name="cuenta_invitado">Continue as guest</string>
-    <string name="cuenta_error_renovar">Could not refresh session. Please sign in again.</string>
+    <string name="cuenta_error_renovar">Could not refresh your session. The app will try again automatically.</string>
     <string name="cuenta_correo_invalido">Enter a valid email address.</string>
     <string name="cuenta_clave_corta">Password must be at least 6 characters long.</string>
     <string name="cuenta_clave_vacia">Enter your password.</string>
@@ -118,7 +120,7 @@
     <string name="etiqueta_criaturas">CREATURES</string>
     <string name="museo_sin_explorar">UNEXPLORED</string>
     <string name="museo_en_progreso">IN PROGRESS</string>
-    <string name="museo_porcentaje_obras">%1$d%% artworks scanned</string>
+    <string name="museo_porcentaje_obras">%1$d% artworks scanned</string>
     <string name="bienvenida_titulo">Your adventure begins here</string>
     <string name="bienvenida_subtitulo">Choose your first creature to start your collection.</string>
     <string name="bienvenida_desc">You can discover the rest during your adventure.</string>

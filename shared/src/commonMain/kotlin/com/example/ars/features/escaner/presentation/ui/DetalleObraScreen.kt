@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
+import com.example.ars.core.i18n.textoCatalogo
 import com.example.ars.features.escaner.domain.model.Obra
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -33,16 +34,17 @@ fun DetalleObraScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         TextButton(onClick = onCerrar) { Text(stringResource(Res.string.museo_cerrar)) }
-        Text(obra.titulo, style = MaterialTheme.typography.headlineSmall)
+        val titulo = textoCatalogo("${obra.id}_titulo", obra.titulo)
+        Text(titulo, style = MaterialTheme.typography.headlineSmall)
         Image(
             painter = painterResource(imagenObra(obra.id)),
-            contentDescription = obra.titulo,
+            contentDescription = titulo,
             contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxWidth().height(240.dp)
         )
-        Text(obra.autor, style = MaterialTheme.typography.titleMedium)
+        Text(textoCatalogo("${obra.id}_autor", obra.autor), style = MaterialTheme.typography.titleMedium)
         Text(museo, style = MaterialTheme.typography.bodyMedium)
-        Text(obra.descripcion)
+        Text(textoCatalogo("${obra.id}_descripcion", obra.descripcion))
         bienvenida?.let { Text(stringResource(Res.string.museo_bienvenida, it)) }
         recompensas.forEach { nombre ->
             Text(stringResource(Res.string.mision_premio_nuevo, nombre))

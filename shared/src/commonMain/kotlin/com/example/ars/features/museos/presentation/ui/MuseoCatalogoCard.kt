@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import com.example.ars.core.i18n.textoCatalogo
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -104,7 +105,7 @@ fun MuseoCatalogoCard(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = museo.ciudad.uppercase(),
+                        text = textoCatalogo("${museo.id}_ciudad", museo.ciudad).uppercase(),
                         color = Color.White.copy(alpha = 0.85f),
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold

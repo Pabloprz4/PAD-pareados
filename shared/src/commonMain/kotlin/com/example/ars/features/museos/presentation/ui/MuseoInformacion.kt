@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
+import com.example.ars.core.i18n.textoCatalogo
 import com.example.ars.features.home.domain.model.Criatura
 import com.example.ars.features.home.domain.model.ProgresoUsuario
 import com.example.ars.features.museos.domain.model.Museo
@@ -42,8 +43,10 @@ fun MuseoInformacion(museo: Museo, criaturas: List<Criatura>, progreso: Progreso
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().height(160.dp)
         )
-        Text("${museo.ciudad}, ${museo.pais}", style = MaterialTheme.typography.titleMedium)
-        Text(museo.descripcion)
+        val ciudad = textoCatalogo("${museo.id}_ciudad", museo.ciudad)
+        val pais = textoCatalogo("${museo.id}_pais", museo.pais)
+        Text("$ciudad, $pais", style = MaterialTheme.typography.titleMedium)
+        Text(textoCatalogo("${museo.id}_descripcion", museo.descripcion))
         Text(stringResource(Res.string.museo_criaturas), style = MaterialTheme.typography.titleMedium)
         val criaturasMuseo = criaturas.filter { it.id in museo.criaturasIds }
         if (criaturasMuseo.isEmpty()) {

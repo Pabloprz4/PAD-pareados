@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,20 +14,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.rememberViewModelStoreOwner
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.ars.core.i18n.LocalIdioma
 import com.example.ars.core.i18n.cambiarIdiomaLocale
 import com.example.ars.core.ui.navigation.ArsNavigationBar
 import com.example.ars.core.ui.navigation.ArsNavigationItem
@@ -34,7 +40,10 @@ import com.example.ars.core.ui.theme.ArsTheme
 import com.example.ars.di.AppContainer
 import com.example.ars.di.DefaultAppContainer
 import com.example.ars.features.ajustes.presentation.ui.AjustesScreenRoot
-import com.example.ars.features.settings.presentation.SettingsViewModel
+import com.example.ars.features.cuenta.domain.SesionCuenta
+import com.example.ars.features.cuenta.presentation.CuentaAction
+import com.example.ars.features.cuenta.presentation.CuentaViewModel
+import com.example.ars.features.cuenta.presentation.ui.CuentaScreenRoot
 import com.example.ars.features.escaner.presentation.EscanerViewModel
 import com.example.ars.features.escaner.presentation.ui.EscanerScreenRoot
 import com.example.ars.features.escaner.presentation.ui.DetalleObraScreenRoot
@@ -44,6 +53,7 @@ import com.example.ars.features.home.presentation.ui.HomeScreenRoot
 import com.example.ars.features.home.presentation.ui.PrimeraCriaturaScreenRoot
 import com.example.ars.features.museos.presentation.MuseosViewModel
 import com.example.ars.features.museos.presentation.ui.MuseosScreenRoot
+import com.example.ars.features.settings.presentation.SettingsViewModel
 import androidx.navigation.toRoute
 import com.example.ars.features.museos.presentation.ui.DetalleMuseoScreenRoot
 
@@ -63,24 +73,82 @@ fun App(
     var modoOscuro by rememberSaveable { mutableStateOf(false) }
 
     val settingsViewModel: SettingsViewModel = viewModel { SettingsViewModel() }
-    val settingsState by settingsViewModel.state.collectAsState()
+    val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
+    var idiomaAplicado by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(settingsState.idioma) {
+        cambiarIdiomaLocale(settingsState.idioma)
+        idiomaAplicado = settingsState.idioma
+    }
 
     LaunchedEffect(modoOscuro) {
         onModoOscuroCambiado(modoOscuro)
     }
 
+    val cuentaViewModel: CuentaViewModel = viewModel {
+        CuentaViewModel(appContainer.cuentaRepository)
+    }
+    val estadoCuenta by cuentaViewModel.state.collectAsStateWithLifecycle()
+    val sesion = estadoCuenta.sesion
+    val cuenta = sesion as? SesionCuenta.Activa
+
+    val idioma = idiomaAplicado
+    ArsTheme(modoOscuro = modoOscuro) {
+        if (sesion == SesionCuenta.Cargando || idioma == null) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            // Al cambiar de cuenta se descartan la navegación y los ViewModels de la partida anterior.
+            key(cuenta?.id) {
+                val contenedor = remember(appContainer, cuenta?.id) {
+                    cuenta?.let { appContainer.paraCuenta(it.id) } ?: appContainer
+                }
+                CompositionLocalProvider(LocalViewModelStoreOwner provides rememberViewModelStoreOwner()) {
+                    NavegacionArs(
+                        idioma = idioma,
+                        appContainer = contenedor,
+                        cuentaViewModel = cuentaViewModel,
+                        cuenta = cuenta,
+                        settingsViewModel = settingsViewModel,
+                        modoOscuro = modoOscuro,
+                        onModoOscuroCambiado = { modoOscuro = it },
+                        toScreen = toScreen,
+                        onDestinoAbierto = onDestinoAbierto,
+                        onLeerQr = onLeerQr
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavegacionArs(
+    idioma: String,
+    appContainer: AppContainer,
+    cuentaViewModel: CuentaViewModel,
+    cuenta: SesionCuenta.Activa?,
+    settingsViewModel: SettingsViewModel,
+    modoOscuro: Boolean,
+    onModoOscuroCambiado: (Boolean) -> Unit,
+    toScreen: Route?,
+    onDestinoAbierto: () -> Unit,
+    onLeerQr: (((String?) -> Unit, () -> Unit, () -> Unit) -> Unit)?
+) {
+    val estadoCuenta by cuentaViewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
 
-    cambiarIdiomaLocale(settingsState.idioma)
-
-    key(settingsState.idioma) {
-        ArsTheme(modoOscuro = modoOscuro) {
+    CompositionLocalProvider(LocalIdioma provides idioma) {
+        // Al cambiar el idioma se actualizan los textos y se conserva la ruta.
+        key(idioma) {
             val backStackEntry by navController.currentBackStackEntryAsState()
 
             val mostrandoBienvenida =
                 backStackEntry == null ||
                         backStackEntry?.destination
-                            ?.hasRoute<Route.PrimeraCriatura>() == true
+                            ?.hasRoute<Route.PrimeraCriatura>() == true ||
+                        backStackEntry?.destination?.hasRoute<Route.Cuenta>() == true
 
             val homeViewModel = viewModel {
                 HomeViewModel(
@@ -168,8 +236,24 @@ fun App(
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = Route.PrimeraCriatura
+                        startDestination = if (cuenta == null) Route.Cuenta else Route.PrimeraCriatura
                     ) {
+                        composable<Route.Cuenta> {
+                            CuentaScreenRoot(
+                                viewModel = cuentaViewModel,
+                                onInvitado = {
+                                    cuentaViewModel.onAction(CuentaAction.LimpiarFormulario)
+                                    if (navController.previousBackStackEntry != null) {
+                                        navController.popBackStack()
+                                    } else {
+                                        navController.navigate(Route.PrimeraCriatura) {
+                                            popUpTo<Route.Cuenta> { inclusive = true }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+
                         composable<Route.PrimeraCriatura> {
                             val primeraCriaturaViewModel: PrimeraCriaturaViewModel =
                                 viewModel {
@@ -297,7 +381,18 @@ fun App(
                             AjustesScreenRoot(
                                 viewModel = settingsViewModel,
                                 modoOscuro = modoOscuro,
-                                onModoOscuroCambiado = { nuevoModo -> modoOscuro = nuevoModo }
+                                onModoOscuroCambiado = onModoOscuroCambiado,
+                                correoCuenta = cuenta?.correo,
+                                cuentaCargando = estadoCuenta.cargando,
+                                mensajeCuenta = estadoCuenta.mensaje,
+                                onCuentaClick = {
+                                    if (cuenta == null) {
+                                        cuentaViewModel.onAction(CuentaAction.LimpiarFormulario)
+                                        navController.navigate(Route.Cuenta) { launchSingleTop = true }
+                                    } else {
+                                        cuentaViewModel.onAction(CuentaAction.Salir)
+                                    }
+                                }
                             )
                         }
 

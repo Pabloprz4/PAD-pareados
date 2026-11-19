@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
+import com.example.ars.core.i18n.textoCatalogo
 import com.example.ars.features.escaner.domain.model.Obra
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -50,6 +51,7 @@ fun imagenObra(obraId: String): DrawableResource = when (obraId) {
 
 @Composable
 fun ObraCard(obra: Obra, escaneada: Boolean, onClick: () -> Unit) {
+    val titulo = textoCatalogo("${obra.id}_titulo", obra.titulo)
     Card(
         modifier = Modifier.fillMaxWidth().alpha(if (escaneada) 1f else 0.7f)
             .clickable(enabled = escaneada, onClick = onClick)
@@ -60,7 +62,7 @@ fun ObraCard(obra: Obra, escaneada: Boolean, onClick: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(imagenObra(obra.id)),
-                contentDescription = obra.titulo,
+                contentDescription = titulo,
                 contentScale = ContentScale.Fit,
                 colorFilter = if (escaneada) null else {
                     ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
@@ -71,8 +73,8 @@ fun ObraCard(obra: Obra, escaneada: Boolean, onClick: () -> Unit) {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(obra.titulo, style = MaterialTheme.typography.titleMedium)
-                Text(obra.autor, style = MaterialTheme.typography.bodyMedium)
+                Text(titulo, style = MaterialTheme.typography.titleMedium)
+                Text(textoCatalogo("${obra.id}_autor", obra.autor), style = MaterialTheme.typography.bodyMedium)
                 Text(
                     stringResource(if (escaneada) Res.string.obra_escaneada else Res.string.obra_pendiente),
                     style = MaterialTheme.typography.labelMedium

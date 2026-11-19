@@ -41,6 +41,7 @@ import ars.shared.generated.resources.escaner_obra_desconocida
 import ars.shared.generated.resources.escaner_obra_identificada
 import ars.shared.generated.resources.escaner_titulo
 import ars.shared.generated.resources.escaner_validando
+import com.example.ars.core.i18n.textoCatalogo
 import com.example.ars.features.escaner.domain.model.ResultadoValidacionQr
 import com.example.ars.features.escaner.presentation.EscanerAction
 import com.example.ars.features.escaner.presentation.EscanerUiState
@@ -96,15 +97,18 @@ fun EscanerScreen(state: EscanerUiState, onAction: (EscanerAction) -> Unit) {
                 Text(stringResource(Res.string.escaner_museo_identificado), style = MaterialTheme.typography.titleLarge)
                 Text(resultado.museo.nombre)
                 Text(stringResource(Res.string.escaner_id, resultado.museo.id))
-                Text(stringResource(Res.string.escaner_ciudad, resultado.museo.ciudad))
+                val ciudad = textoCatalogo("${resultado.museo.id}_ciudad", resultado.museo.ciudad)
+                Text(stringResource(Res.string.escaner_ciudad, ciudad))
             }
             is ResultadoValidacionQr.ObraValida -> {
                 Text(stringResource(Res.string.escaner_obra_identificada), style = MaterialTheme.typography.titleLarge)
-                Text(resultado.obra.titulo)
-                Text(stringResource(Res.string.escaner_id, resultado.obra.id))
-                Text(stringResource(Res.string.escaner_autor, resultado.obra.autor))
+                val obra = resultado.obra
+                val autor = textoCatalogo("${obra.id}_autor", obra.autor)
+                Text(textoCatalogo("${obra.id}_titulo", obra.titulo))
+                Text(stringResource(Res.string.escaner_id, obra.id))
+                Text(stringResource(Res.string.escaner_autor, autor))
                 Text(stringResource(Res.string.escaner_museo, resultado.museo.nombre))
-                Text(resultado.obra.descripcion)
+                Text(textoCatalogo("${obra.id}_descripcion", obra.descripcion))
             }
             ResultadoValidacionQr.CodigoInvalido -> Text(stringResource(Res.string.escaner_codigo_invalido))
             ResultadoValidacionQr.MuseoDesconocido -> Text(stringResource(Res.string.escaner_museo_desconocido))

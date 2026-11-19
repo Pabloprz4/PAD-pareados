@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ars</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
+    <script>
+        // Compose usa navigator.languages para elegir los recursos.
+        const idiomasOriginales = Object.getOwnPropertyDescriptor(Navigator.prototype, "languages").get;
+        let idiomaArs;
+        Object.defineProperty(navigator, "languages", {
+            get: () => idiomaArs ? [idiomaArs] : idiomasOriginales.call(navigator)
+        });
+
+        window.cambiarIdiomaArs = (idioma) => {
+            if (idiomaArs === idioma) return;
+            idiomaArs = idioma;
+            document.documentElement.lang = idioma;
+            window.dispatchEvent(new Event("languagechange"));
+        };
+    </script>
 </head>
 <body style="text-align: center; align-content: center">
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 50 50" role="presentation">

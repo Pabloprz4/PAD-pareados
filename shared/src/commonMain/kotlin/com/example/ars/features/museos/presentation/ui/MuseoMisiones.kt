@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
+import com.example.ars.core.i18n.textoCatalogo
 import com.example.ars.features.home.domain.model.Criatura
 import com.example.ars.features.home.domain.model.ProgresoUsuario
 import com.example.ars.features.museos.domain.model.Museo
@@ -31,7 +32,7 @@ fun MisionCard(estado: ProgresoMision, criaturas: List<Criatura>) {
         ) {
             Row {
                 Text(
-                    estado.mision.titulo,
+                    textoCatalogo("${estado.mision.id}_titulo", estado.mision.titulo),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )

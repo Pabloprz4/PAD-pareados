@@ -8,26 +8,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ars.shared.generated.resources.*
 import com.example.ars.features.settings.presentation.SettingsAction
 import com.example.ars.features.settings.presentation.SettingsUiState
 import com.example.ars.features.settings.presentation.SettingsViewModel
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AjustesScreenRoot(
-    viewModel: SettingsViewModel = viewModel { SettingsViewModel() },
+    viewModel: SettingsViewModel,
     modoOscuro: Boolean,
-    onModoOscuroCambiado: (Boolean) -> Unit
+    onModoOscuroCambiado: (Boolean) -> Unit,
+    correoCuenta: String?,
+    cuentaCargando: Boolean,
+    mensajeCuenta: StringResource?,
+    onCuentaClick: () -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     AjustesScreen(
         state = state,
         onAction = viewModel::onAction,
         modoOscuro = modoOscuro,
-        onModoOscuroCambiado = onModoOscuroCambiado
+        onModoOscuroCambiado = onModoOscuroCambiado,
+        correoCuenta = correoCuenta,
+        cuentaCargando = cuentaCargando,
+        mensajeCuenta = mensajeCuenta,
+        onCuentaClick = onCuentaClick
     )
 }
 
@@ -36,7 +45,11 @@ fun AjustesScreen(
     state: SettingsUiState,
     onAction: (SettingsAction) -> Unit,
     modoOscuro: Boolean,
-    onModoOscuroCambiado: (Boolean) -> Unit
+    onModoOscuroCambiado: (Boolean) -> Unit,
+    correoCuenta: String?,
+    cuentaCargando: Boolean,
+    mensajeCuenta: StringResource?,
+    onCuentaClick: () -> Unit
 ) {
     val coloresInterruptor = if (modoOscuro) {
         SwitchDefaults.colors()
@@ -60,6 +73,21 @@ fun AjustesScreen(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(stringResource(Res.string.cuenta_titulo), style = MaterialTheme.typography.titleMedium)
+                correoCuenta?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
+                mensajeCuenta?.let {
+                    Text(stringResource(it), color = MaterialTheme.colorScheme.error)
+                }
+                TextButton(onClick = onCuentaClick, enabled = !cuentaCargando) {
+                    Text(stringResource(if (correoCuenta == null) Res.string.cuenta_entrar else Res.string.cuenta_salir))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Card(
             modifier = Modifier.fillMaxWidth()
@@ -88,6 +116,7 @@ fun AjustesScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    // pendiente
                     Switch(
                         checked = state.notificacionesMisiones,
                         onCheckedChange = { onAction(SettingsAction.CambiarNotificaciones(it)) },

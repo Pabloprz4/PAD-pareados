@@ -68,9 +68,9 @@
     <string name="ajustes_idioma_desc">Seleccionar idioma de la aplicación</string>
     <string name="ajustes_idioma_es">Español</string>
     <string name="ajustes_idioma_en">Inglés</string>
-    <string name="ajustes_cuenta_titulo">Cuenta de Explorador</string>
+    <string name="ajustes_cuenta_titulo">Perfil de explorador</string>
     <string name="ajustes_nombre_usuario">Nombre de usuario</string>
-    <string name="ajustes_nombre_usuario_desc">Tu nombre en el registro de explorador</string>
+    <string name="ajustes_nombre_usuario_desc">Se guarda en este dispositivo.</string>
     <string name="ajustes_nombre_placeholder">Introduce tu nombre</string>
     <string name="ajustes_acerca_titulo">Acerca de ARS</string>
     <string name="ajustes_version">Versión 1.0 - Proyecto PAD</string>
@@ -93,13 +93,15 @@
     <string name="museos_obras_escaneadas">%1$d / %2$d obras escaneadas</string>
     <string name="museos_nacionales">Museos nacionales</string>
     <string name="museos_internacionales">Museos internacionales</string>
+    <string name="cuenta_titulo">Cuenta</string>
+    <string name="cuenta_salir">Cerrar sesión</string>
     <string name="cuenta_registro">Crear cuenta</string>
     <string name="cuenta_entrar">Iniciar sesión</string>
     <string name="cuenta_correo">Correo electrónico</string>
     <string name="cuenta_clave">Contraseña</string>
     <string name="cuenta_ya_tengo">¿Ya tienes cuenta? Inicia sesión</string>
     <string name="cuenta_invitado">Continuar como invitado</string>
-    <string name="cuenta_error_renovar">No se ha podido renovar la sesión. Vuelve a entrar.</string>
+    <string name="cuenta_error_renovar">No se pudo renovar la sesión. Se volverá a intentar automáticamente.</string>
     <string name="cuenta_correo_invalido">Introduce un correo electrónico válido.</string>
     <string name="cuenta_clave_corta">La contraseña debe tener al menos 6 caracteres.</string>
     <string name="cuenta_clave_vacia">Introduce tu contraseña.</string>
@@ -118,7 +120,7 @@
     <string name="etiqueta_criaturas">CRIATURAS</string>
     <string name="museo_sin_explorar">SIN EXPLORAR</string>
     <string name="museo_en_progreso">EN PROGRESO</string>
-    <string name="museo_porcentaje_obras">%1$d%% de obras escaneadas</string>
+    <string name="museo_porcentaje_obras">%1$d% de obras escaneadas</string>
     <string name="bienvenida_titulo">Tu aventura empieza aquí</string>
     <string name="bienvenida_subtitulo">Elige tu primera criatura para comenzar tu colección.</string>
     <string name="bienvenida_desc">Podrás descubrir las demás durante tu aventura.</string>
