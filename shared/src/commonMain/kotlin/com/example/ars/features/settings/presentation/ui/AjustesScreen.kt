@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ars.core.i18n.LocalIdioma
 import ars.shared.generated.resources.*
 import com.example.ars.features.settings.presentation.SettingsAction
 import com.example.ars.features.settings.presentation.SettingsUiState
@@ -171,12 +172,12 @@ fun AjustesScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterChip(
-                            selected = state.idioma == "es",
+                            selected = LocalIdioma.current == "es",
                             onClick = { onAction(SettingsAction.CambiarIdioma("es")) },
                             label = { Text(stringResource(Res.string.ajustes_idioma_es)) }
                         )
                         FilterChip(
-                            selected = state.idioma == "en",
+                            selected = LocalIdioma.current == "en",
                             onClick = { onAction(SettingsAction.CambiarIdioma("en")) },
                             label = { Text(stringResource(Res.string.ajustes_idioma_en)) }
                         )

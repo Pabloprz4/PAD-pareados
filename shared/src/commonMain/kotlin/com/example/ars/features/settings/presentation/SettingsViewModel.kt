@@ -18,6 +18,7 @@ class SettingsViewModel : ViewModel() {
     val state: StateFlow<SettingsUiState> = _state.asStateFlow()
 
     private val escrituraTema = Mutex()
+    private val escrituraIdioma = Mutex()
 
     private companion object {
         const val CLAVE_TEMA_OSCURO = "tema_oscuro"
@@ -55,7 +56,7 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch {
             _state.update { it.copy(cargando = true) }
             val temaGuardado = leerTextoLocal(CLAVE_TEMA_OSCURO) == "true"
-            val idiomaGuardado = leerTextoLocal(CLAVE_IDIOMA) ?: "es"
+            val idiomaGuardado = leerTextoLocal(CLAVE_IDIOMA).takeIf { it == "en" } ?: "es"
             val nombreGuardado = leerTextoLocal(CLAVE_NOMBRE_USUARIO) ?: ""
             _state.update {
                 it.copy(
@@ -71,7 +72,9 @@ class SettingsViewModel : ViewModel() {
     private fun guardarIdioma(nuevoIdioma: String) {
         _state.update { it.copy(idioma = nuevoIdioma) }
         viewModelScope.launch {
-            guardarTextoLocal(CLAVE_IDIOMA, nuevoIdioma)
+            escrituraIdioma.withLock {
+                guardarTextoLocal(CLAVE_IDIOMA, _state.value.idioma)
+            }
         }
     }
 

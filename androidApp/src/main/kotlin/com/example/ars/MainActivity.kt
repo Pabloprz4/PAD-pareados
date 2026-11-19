@@ -1,9 +1,11 @@
 package com.example.ars
 
 import android.Manifest
+import android.app.LocaleManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -62,6 +64,13 @@ class MainActivity : ComponentActivity() {
                             error()
                         }
                     )
+                },
+                onIdiomaCambiado = { idioma ->
+                    val gestor = getSystemService(LocaleManager::class.java)
+                    val idiomas = LocaleList.forLanguageTags(idioma)
+                    if (gestor.applicationLocales != idiomas) {
+                        gestor.applicationLocales = idiomas
+                    }
                 },
                 onModoOscuroCambiado = { oscuro ->
                     WindowCompat.getInsetsController(window, window.decorView).apply {

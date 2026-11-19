@@ -71,7 +71,8 @@ fun App(
         onCancelado: () -> Unit,
         onError: () -> Unit
     ) -> Unit)? = null,
-    onModoOscuroCambiado: (Boolean) -> Unit = {}
+    onModoOscuroCambiado: (Boolean) -> Unit = {},
+    onIdiomaCambiado: (String) -> Unit = {}
 ) {
     val settingsViewModel: SettingsViewModel = viewModel {
         SettingsViewModel()
@@ -84,9 +85,13 @@ fun App(
         mutableStateOf<String?>(null)
     }
 
-    LaunchedEffect(settingsState.idioma) {
-        cambiarIdiomaLocale(settingsState.idioma)
-        idiomaAplicado = settingsState.idioma
+    val idiomaPreferido = settingsState.idioma
+    LaunchedEffect(idiomaPreferido, settingsState.cargando) {
+        if (!settingsState.cargando) {
+            onIdiomaCambiado(idiomaPreferido)
+            cambiarIdiomaLocale(idiomaPreferido)
+            idiomaAplicado = idiomaPreferido
+        }
     }
 
     LaunchedEffect(modoOscuro) {

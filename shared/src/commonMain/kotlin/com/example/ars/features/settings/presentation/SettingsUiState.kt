@@ -5,5 +5,5 @@ data class SettingsUiState(
     val modoOscuro: Boolean = false,
     val idioma: String = "es",
     val nombreUsuario: String = "",
-    val cargando: Boolean = false
+    val cargando: Boolean = true
 )
