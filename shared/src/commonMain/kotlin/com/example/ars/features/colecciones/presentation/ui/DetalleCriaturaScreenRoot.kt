@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ars.shared.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import com.example.ars.features.colecciones.presentation.ColeccionesAction
 import com.example.ars.features.colecciones.presentation.ColeccionesViewModel
 
@@ -42,7 +44,7 @@ fun DetalleCriaturaScreenRoot(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 TextButton(onClick = onCerrar) {
-                    Text("Cerrar")
+                    Text(stringResource(Res.string.museo_cerrar))
                 }
 
                 CircularProgressIndicator()
@@ -57,12 +59,11 @@ fun DetalleCriaturaScreenRoot(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 TextButton(onClick = onCerrar) {
-                    Text("Cerrar")
+                    Text(stringResource(Res.string.museo_cerrar))
                 }
 
                 Text(
-                    text = "No se ha podido cargar la criatura. " +
-                            "Inténtalo de nuevo.",
+                    text = stringResource(Res.string.criatura_ficha_error),
                     color = MaterialTheme.colorScheme.error
                 )
 
@@ -73,7 +74,7 @@ fun DetalleCriaturaScreenRoot(
                         )
                     }
                 ) {
-                    Text("Reintentar")
+                    Text(stringResource(Res.string.museo_reintentar))
                 }
             }
         }
@@ -86,11 +87,11 @@ fun DetalleCriaturaScreenRoot(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 TextButton(onClick = onCerrar) {
-                    Text("Cerrar")
+                    Text(stringResource(Res.string.museo_cerrar))
                 }
 
                 Text(
-                    text = "No se ha encontrado esta criatura."
+                    text = stringResource(Res.string.criatura_ficha_no_encontrada)
                 )
             }
         }

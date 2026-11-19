@@ -150,4 +150,13 @@
     <string name="home_error_progreso">No se ha podido cargar tu progreso.</string>
     <string name="home_sin_museos_en_curso">Aquí aparecerán los museos que visites y aún tengas por completar.</string>
     <string name="museo_completado">Museo completado</string>
+    <string name="criatura_ver_ficha">Ver ficha de criatura</string>
+    <string name="criatura_historia">Su historia</string>
+    <string name="criatura_historia_pendiente">La historia de esta criatura estará disponible próximamente.</string>
+    <string name="criatura_desconocida">Una criatura por descubrir</string>
+    <string name="criatura_pista">Tu pista</string>
+    <string name="criatura_pista_manzana">Museo MUNCH · El grito</string>
+    <string name="criatura_pista_museo">Explora este museo y consulta sus misiones para conocer las criaturas que puedes conseguir.</string>
+    <string name="criatura_ficha_error">No se ha podido cargar la criatura. Inténtalo de nuevo.</string>
+    <string name="criatura_ficha_no_encontrada">No se ha encontrado esta criatura.</string>
 </resources>

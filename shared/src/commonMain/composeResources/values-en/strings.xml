@@ -150,4 +150,13 @@
     <string name="home_error_progreso">Could not load your progress.</string>
     <string name="home_sin_museos_en_curso">Museums you have visited and are still completing will appear here.</string>
     <string name="museo_completado">Museum completed</string>
+    <string name="criatura_ver_ficha">Open creature details</string>
+    <string name="criatura_historia">Its story</string>
+    <string name="criatura_historia_pendiente">This creature’s story is coming soon.</string>
+    <string name="criatura_desconocida">An undiscovered creature</string>
+    <string name="criatura_pista">Your clue</string>
+    <string name="criatura_pista_manzana">MUNCH Museum · The Scream</string>
+    <string name="criatura_pista_museo">Explore this museum and check its quests to see which creatures you can obtain.</string>
+    <string name="criatura_ficha_error">Could not load this creature. Try again.</string>
+    <string name="criatura_ficha_no_encontrada">This creature could not be found.</string>
 </resources>

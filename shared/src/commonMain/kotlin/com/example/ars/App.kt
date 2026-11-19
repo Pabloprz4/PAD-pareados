@@ -184,7 +184,8 @@ private fun NavegacionArs(
                 backStackEntry?.destination?.hasRoute<Route.Ajustes>() == true ->
                     ArsNavigationItem.Ajustes
 
-                backStackEntry?.destination?.hasRoute<Route.Colecciones>() == true ->
+                backStackEntry?.destination?.hasRoute<Route.Colecciones>() == true ||
+                        backStackEntry?.destination?.hasRoute<Route.DetalleCriatura>() == true ->
                     ArsNavigationItem.Colecciones
                 else ->
                     ArsNavigationItem.Inicio

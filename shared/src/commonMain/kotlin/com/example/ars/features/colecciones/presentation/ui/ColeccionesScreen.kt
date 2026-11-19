@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ars.shared.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import com.example.ars.features.colecciones.presentation.ColeccionesAction
 import com.example.ars.features.colecciones.presentation.ColeccionesUiState
 import com.example.ars.features.home.presentation.ui.CriaturaCard
@@ -86,7 +88,7 @@ fun ColeccionesScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Tus criaturas",
+                    text = stringResource(Res.string.colecciones_titulo),
                     style = MaterialTheme.typography.headlineLarge,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
@@ -94,7 +96,7 @@ fun ColeccionesScreen(
                 )
 
                 Text(
-                    text = "El arte cobra vida en tu colección.",
+                    text = stringResource(Res.string.colecciones_subtitulo),
                     style = MaterialTheme.typography.bodyLarge,
                     color = colores.onSurfaceVariant
                 )
@@ -106,8 +108,7 @@ fun ColeccionesScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${state.totalDescubiertas} de " +
-                                    "${state.totalCriaturas} descubiertas",
+                            text = stringResource(Res.string.colecciones_progreso, state.totalDescubiertas, state.totalCriaturas),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = colores.onSurface,
@@ -115,7 +116,7 @@ fun ColeccionesScreen(
                         )
 
                         Text(
-                            text = "${(progreso * 100).toInt()} %",
+                            text = stringResource(Res.string.colecciones_porcentaje, (progreso * 100).toInt()),
                             fontWeight = FontWeight.Bold,
                             color = colores.onSurface
                         )
@@ -147,8 +148,7 @@ fun ColeccionesScreen(
         } else {
             if (state.error) {
                 Text(
-                    text = "No se ha podido cargar tu colección. " +
-                            "Inténtalo de nuevo.",
+                    text = stringResource(Res.string.colecciones_error),
                     color = colores.error
                 )
 
@@ -157,16 +157,16 @@ fun ColeccionesScreen(
                         onAction(ColeccionesAction.Reintentar)
                     }
                 ) {
-                    Text("Reintentar")
+                    Text(stringResource(Res.string.museo_reintentar))
                 }
             }
 
             if (state.criaturas.isNotEmpty()) {
-                Row(
+                FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    listOf("Todas", "Descubiertas", "Pendientes")
+                    listOf(Res.string.colecciones_todas, Res.string.colecciones_descubiertas, Res.string.colecciones_pendientes)
                         .forEachIndexed { indice, titulo ->
                             FilterChip(
                                 selected = filtro == indice,
@@ -174,7 +174,7 @@ fun ColeccionesScreen(
                                     filtro = indice
                                 },
                                 label = {
-                                    Text(titulo)
+                                    Text(stringResource(titulo))
                                 },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = colores.surface,
@@ -213,7 +213,7 @@ fun ColeccionesScreen(
                                     .width(230.dp)
                                     .clickable(
                                         role = Role.Button,
-                                        onClickLabel = "Ver ficha de criatura",
+                                        onClickLabel = stringResource(Res.string.criatura_ver_ficha),
                                         onClick = {
                                             onCriaturaClick(criatura.id)
                                         }
@@ -240,10 +240,9 @@ fun ColeccionesScreen(
                         ) {
                             Text(
                                 text = if (filtro == 2) {
-                                    "¡Has descubierto todas las criaturas!"
+                                    stringResource(Res.string.colecciones_completa)
                                 } else {
-                                    "Explora museos para descubrir " +
-                                            "tu primera criatura."
+                                    stringResource(Res.string.colecciones_vacia)
                                 },
                                 textAlign = TextAlign.Center,
                                 color = colores.onBackground,
@@ -319,7 +318,7 @@ private fun CriaturaPendienteCard(
             }
 
             Text(
-                text = "Un misterio te espera",
+                text = stringResource(Res.string.colecciones_misterio),
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold,
@@ -328,7 +327,7 @@ private fun CriaturaPendienteCard(
             )
 
             Text(
-                text = museo,
+                text = if (museo == "Colección privada") stringResource(Res.string.coleccion_privada) else museo,
                 style = MaterialTheme.typography.bodyMedium,
                 color = colores.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -340,7 +339,7 @@ private fun CriaturaPendienteCard(
             )
 
             Text(
-                text = "POR DESCUBRIR",
+                text = stringResource(Res.string.colecciones_por_descubrir),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = colores.onSurfaceVariant

@@ -87,4 +87,19 @@
     <string name="met_obra_titulo">Scan The Great Wave off Kanagawa</string>
     <string name="louvre_cantidad_titulo">Scan 2 different artworks at the Louvre</string>
     <string name="louvre_obra_titulo">Scan Mona Lisa</string>
+    <string name="criatura_001_descripcion">A creature you obtain automatically when you visit the Prado Museum.</string>
+    <string name="criatura_002_descripcion">A Cubist creature unlocked through the Reina Sofía quests.</string>
+    <string name="criatura_003_descripcion">A surrealist creature inspired by Dalí’s The Persistence of Memory.</string>
+    <string name="criatura_004_descripcion">A humanoid inspired by Hieronymus Bosch’s The Garden of Earthly Delights.</string>
+    <string name="criatura_005_descripcion">A blazing sunflower inspired by Vincent van Gogh’s Sunflowers.</string>
+    <string name="criatura_006_descripcion">A little nymph inspired by Sandro Botticelli’s The Birth of Venus.</string>
+    <string name="criatura_007_descripcion">A spectre inspired by Edvard Munch’s The Scream.</string>
+    <string name="criatura_008_descripcion">A creature inspired by Francisco de Goya’s Saturn Devouring His Son.</string>
+    <string name="criatura_009_descripcion">A floating swirl inspired by Vincent van Gogh’s The Starry Night.</string>
+    <string name="criatura_010_descripcion">Floating hands inspired by Michelangelo’s The Creation of Adam.</string>
+    <string name="criatura_011_descripcion">A claw made of water inspired by Katsushika Hokusai’s The Great Wave off Kanagawa.</string>
+    <string name="criatura_012_descripcion">An apple in a suit inspired by René Magritte’s The Son of Man.</string>
+    <string name="criatura_013_descripcion">A floating lady inspired by Leonardo da Vinci’s Mona Lisa.</string>
+    <string name="criatura_014_descripcion">A Cubist creature inspired by the bull in Pablo Picasso’s Guernica.</string>
+    <string name="criatura_015_descripcion">A knight inspired by Vittore Carpaccio’s Young Knight in a Landscape.</string>
 </resources>
