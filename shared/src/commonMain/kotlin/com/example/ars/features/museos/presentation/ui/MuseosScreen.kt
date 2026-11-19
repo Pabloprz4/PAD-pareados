@@ -12,22 +12,22 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
+import ars.shared.generated.resources.*
 import com.example.ars.features.museos.domain.model.Museo
-
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ars.shared.generated.resources.*
 
 @Composable
 fun MuseosScreen(
     museos: List<Museo>,
     museosVisitados: List<String>,
+    onVerObras: () -> Unit,
     onMuseoClick: (Museo) -> Unit = {}
 ) {
     val nacionales = museos.filter { it.pais == "España" }
@@ -56,7 +56,9 @@ fun MuseosScreen(
             ) {
                 Image(
                     painter = painterResource(Res.drawable.ars_icon_image),
-                    contentDescription = stringResource(Res.string.museos_logo_desc),
+                    contentDescription = stringResource(
+                        Res.string.museos_logo_desc
+                    ),
                     modifier = Modifier.size(90.dp)
                 )
 
@@ -86,14 +88,35 @@ fun MuseosScreen(
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
-                        text = stringResource(Res.string.museos_coleccion_titulo),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(
+                                Res.string.museos_coleccion_titulo
+                            ),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        TextButton(onClick = onVerObras) {
+                            Text(
+                                text = stringResource(
+                                    Res.string.museos_ver_obras
+                                )
+                            )
+                        }
+                    }
 
                     Text(
-                        text = stringResource(Res.string.museos_obras_escaneadas, descubiertas, totales),
+                        text = stringResource(
+                            Res.string.museos_obras_escaneadas,
+                            descubiertas,
+                            totales
+                        ),
                         style = MaterialTheme.typography.headlineSmall
                     )
 
@@ -121,11 +144,16 @@ fun MuseosScreen(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(nacionales, key = { it.id }) { museo ->
+                items(
+                    items = nacionales,
+                    key = { it.id }
+                ) { museo ->
                     MuseoCatalogoCard(
                         museo = museo,
                         desbloqueado = museo.id in museosVisitados,
-                        onClick = { onMuseoClick(museo) }
+                        onClick = {
+                            onMuseoClick(museo)
+                        }
                     )
                 }
             }
@@ -143,11 +171,16 @@ fun MuseosScreen(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(internacionales, key = { it.id }) { museo ->
+                items(
+                    items = internacionales,
+                    key = { it.id }
+                ) { museo ->
                     MuseoCatalogoCard(
                         museo = museo,
                         desbloqueado = museo.id in museosVisitados,
-                        onClick = { onMuseoClick(museo) }
+                        onClick = {
+                            onMuseoClick(museo)
+                        }
                     )
                 }
             }

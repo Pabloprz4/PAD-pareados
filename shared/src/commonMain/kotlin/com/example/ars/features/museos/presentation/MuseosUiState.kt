@@ -32,4 +32,11 @@ data class MuseosUiState(
         } else {
             0f
         }
+
+    val obrasConseguidas: List<Obra>
+        get() = progreso.obrasEscaneadas.mapNotNull { obraId ->
+            obras.firstOrNull { obra ->
+                obra.id == obraId
+            }
+        }
 }

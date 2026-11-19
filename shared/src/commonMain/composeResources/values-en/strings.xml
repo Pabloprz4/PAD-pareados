@@ -159,4 +159,9 @@
     <string name="criatura_pista_museo">Explore this museum and check its quests to see which creatures you can obtain.</string>
     <string name="criatura_ficha_error">Could not load this creature. Try again.</string>
     <string name="criatura_ficha_no_encontrada">This creature could not be found.</string>
+    <string name="museos_ver_obras">View all</string>
+    <string name="obras_conseguidas_titulo">Your discovered artworks</string>
+    <string name="obras_conseguidas_volver">Back to museums</string>
+    <string name="obras_conseguidas_vacia">You have not scanned any artworks yet. Explore a museum to start your collection.</string>
+    <string name="obras_conseguidas_error">Could not load your discovered artworks.</string>
 </resources>

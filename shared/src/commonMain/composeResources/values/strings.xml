@@ -159,4 +159,9 @@
     <string name="criatura_pista_museo">Explora este museo y consulta sus misiones para conocer las criaturas que puedes conseguir.</string>
     <string name="criatura_ficha_error">No se ha podido cargar la criatura. Inténtalo de nuevo.</string>
     <string name="criatura_ficha_no_encontrada">No se ha encontrado esta criatura.</string>
+    <string name="museos_ver_obras">Ver todas</string>
+    <string name="obras_conseguidas_titulo">Tus obras descubiertas</string>
+    <string name="obras_conseguidas_volver">Volver a museos</string>
+    <string name="obras_conseguidas_vacia">Todavía no has escaneado ninguna obra. Explora un museo para comenzar tu colección.</string>
+    <string name="obras_conseguidas_error">No se han podido cargar tus obras descubiertas.</string>
 </resources>

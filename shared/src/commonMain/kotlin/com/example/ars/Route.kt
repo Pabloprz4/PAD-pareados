@@ -46,5 +46,6 @@ sealed interface Route {
     ) : Route
 
 
-
+    @Serializable
+    data object ObrasConseguidas : Route
 }
