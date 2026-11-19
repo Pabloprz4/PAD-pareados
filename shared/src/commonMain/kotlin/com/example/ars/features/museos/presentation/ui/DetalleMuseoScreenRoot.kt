@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -52,7 +53,11 @@ fun DetalleMuseoScreenRoot(
             contenidoInformacion = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     yaVisitado?.let {
-                        Text(stringResource(if (it) Res.string.museo_repetido else Res.string.museo_nuevo))
+                        Text(
+                            stringResource(if (it) Res.string.museo_repetido else Res.string.museo_nuevo),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = if (it) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
+                        )
                     }
                     val bienvenida = estado.criaturas.firstOrNull { it.id == criaturaObtenidaId }
                     bienvenida?.let {

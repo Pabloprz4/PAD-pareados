@@ -7,7 +7,7 @@ data class ColeccionesUiState(
     val cargando: Boolean = true,
     val criaturas: List<Criatura> = emptyList(),
     val progreso: ProgresoUsuario = ProgresoUsuario(),
-    val error: String? = null
+    val error: Boolean = false
 ) {
 
     val criaturasDescubiertas: List<Criatura>

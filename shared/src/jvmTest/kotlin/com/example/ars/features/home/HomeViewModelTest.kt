@@ -1,6 +1,9 @@
 package com.example.ars.features.home
 
 import androidx.lifecycle.ViewModelStore
+import ars.shared.generated.resources.Res
+import ars.shared.generated.resources.home_error_criaturas
+import ars.shared.generated.resources.home_error_museos
 import com.example.ars.ProgresoEnMemoria
 import com.example.ars.CatalogoEnMemoria
 import com.example.ars.features.museos.data.repository.MuseosRepositoryImpl
@@ -25,7 +28,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class HomeViewModelTest {
@@ -72,7 +74,7 @@ class HomeViewModelTest {
                     val state = viewModel.state.first { !it.cargando }
                     assertEquals(museos, state.museos)
                     assertEquals(criaturas, state.criaturas)
-                    assertNull(state.error)
+                    assertTrue(state.errores.isEmpty())
                 } finally {
                     store.clear()
                 }
@@ -92,7 +94,7 @@ class HomeViewModelTest {
                     repository.museos.completeExceptionally(IllegalStateException("Fallo de museos"))
                     repository.criaturas.complete(criaturas)
                     val state = viewModel.state.first { !it.cargando }
-                    assertEquals("Fallo de museos", state.error)
+                    assertEquals(listOf(Res.string.home_error_museos), state.errores)
                     assertEquals(criaturas, state.criaturas)
                     assertTrue(state.museos.isEmpty())
                 } finally {
@@ -114,7 +116,7 @@ class HomeViewModelTest {
                     repository.museos.completeExceptionally(IllegalStateException())
                     repository.criaturas.completeExceptionally(IllegalArgumentException("Fallo de criaturas"))
                     val state = viewModel.state.first { !it.cargando }
-                    assertEquals("No se han podido cargar los museos.\nFallo de criaturas", state.error)
+                    assertEquals(listOf(Res.string.home_error_museos, Res.string.home_error_criaturas), state.errores)
                 } finally {
                     store.clear()
                 }
@@ -137,7 +139,7 @@ class HomeViewModelTest {
                     repository.museosFinalizados.await()
                     repository.criaturasFinalizadas.await()
                     val state = viewModel.state.first { !it.cargando }
-                    assertNull(state.error)
+                    assertTrue(state.errores.isEmpty())
                     assertFalse(repository.museos.isCompleted)
                     assertFalse(repository.criaturas.isCompleted)
                 } finally {

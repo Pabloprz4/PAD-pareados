@@ -121,7 +121,7 @@ fun HomeScreen(
 
         if (
             !state.cargando &&
-            state.error == null &&
+            state.errores.isEmpty() &&
             state.criaturasDescubiertas.isEmpty()
         ) {
             Text(
@@ -198,9 +198,9 @@ fun HomeScreen(
             }
         }
 
-        state.error?.let { error ->
+        if (state.errores.isNotEmpty()) {
             Text(
-                text = error,
+                text = state.errores.map { stringResource(it) }.joinToString("\n"),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.padding(top = 16.dp)
             )

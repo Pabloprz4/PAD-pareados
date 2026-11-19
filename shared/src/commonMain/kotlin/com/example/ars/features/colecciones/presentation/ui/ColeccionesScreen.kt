@@ -19,9 +19,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ars.shared.generated.resources.*
 import com.example.ars.features.colecciones.presentation.ColeccionesAction
 import com.example.ars.features.colecciones.presentation.ColeccionesUiState
 import com.example.ars.features.home.presentation.ui.CriaturaCard
+import org.jetbrains.compose.resources.stringResource
 
 private val ArsCrema = Color(0xFFF7F0E4)
 private val ArsPergamino = Color(0xFFE8D8BC)
@@ -89,7 +91,7 @@ fun ColeccionesScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Tus criaturas",
+                    text = stringResource(Res.string.colecciones_titulo),
                     style = MaterialTheme.typography.headlineLarge,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
@@ -97,7 +99,7 @@ fun ColeccionesScreen(
                 )
 
                 Text(
-                    text = "El arte cobra vida en tu colección.",
+                    text = stringResource(Res.string.colecciones_subtitulo),
                     style = MaterialTheme.typography.bodyLarge,
                     color = ArsMarron.copy(alpha = 0.75f)
                 )
@@ -109,8 +111,11 @@ fun ColeccionesScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${state.totalDescubiertas} de " +
-                                    "${state.totalCriaturas} descubiertas",
+                            text = stringResource(
+                                Res.string.colecciones_progreso,
+                                state.totalDescubiertas,
+                                state.totalCriaturas
+                            ),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = ArsMarron,
@@ -118,7 +123,7 @@ fun ColeccionesScreen(
                         )
 
                         Text(
-                            text = "${(progreso * 100).toInt()} %",
+                            text = stringResource(Res.string.colecciones_porcentaje, (progreso * 100).toInt()),
                             fontWeight = FontWeight.Bold,
                             color = ArsMarron
                         )
@@ -148,9 +153,9 @@ fun ColeccionesScreen(
                 CircularProgressIndicator(color = ArsDorado)
             }
         } else {
-            state.error?.let { mensaje ->
+            if (state.error) {
                 Text(
-                    text = mensaje,
+                    text = stringResource(Res.string.colecciones_error),
                     color = MaterialTheme.colorScheme.error
                 )
 
@@ -162,21 +167,25 @@ fun ColeccionesScreen(
                         contentColor = ArsMarron
                     )
                 ) {
-                    Text("Reintentar")
+                    Text(stringResource(Res.string.museo_reintentar))
                 }
             }
 
             if (state.criaturas.isNotEmpty()) {
-                Row(
+                FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    listOf("Todas", "Descubiertas", "Pendientes")
+                    listOf(
+                        Res.string.colecciones_todas,
+                        Res.string.colecciones_descubiertas,
+                        Res.string.colecciones_pendientes
+                    )
                         .forEachIndexed { indice, titulo ->
                             FilterChip(
                                 selected = filtro == indice,
                                 onClick = { filtro = indice },
-                                label = { Text(titulo) },
+                                label = { Text(stringResource(titulo)) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     containerColor = ArsCrema,
                                     labelColor = ArsMarron,
@@ -228,9 +237,9 @@ fun ColeccionesScreen(
                         ) {
                             Text(
                                 text = if (filtro == 2) {
-                                    "¡Has descubierto todas las criaturas!"
+                                    stringResource(Res.string.colecciones_completa)
                                 } else {
-                                    "Explora museos para descubrir tu primera criatura."
+                                    stringResource(Res.string.colecciones_vacia)
                                 },
                                 textAlign = TextAlign.Center,
                                 color = ArsMarron,
@@ -312,7 +321,7 @@ private fun CriaturaPendienteCard(
             }
 
             Text(
-                text = "Un misterio te espera",
+                text = stringResource(Res.string.colecciones_misterio),
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold,
@@ -321,7 +330,7 @@ private fun CriaturaPendienteCard(
             )
 
             Text(
-                text = museo,
+                text = if (museo == "Colección privada") stringResource(Res.string.coleccion_privada) else museo,
                 style = MaterialTheme.typography.bodyMedium,
                 color = ArsMarron.copy(alpha = 0.75f),
                 textAlign = TextAlign.Center,
@@ -333,7 +342,7 @@ private fun CriaturaPendienteCard(
             )
 
             Text(
-                text = "POR DESCUBRIR",
+                text = stringResource(Res.string.colecciones_por_descubrir),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = ArsMarron

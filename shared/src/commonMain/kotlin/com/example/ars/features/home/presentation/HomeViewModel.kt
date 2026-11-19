@@ -2,6 +2,10 @@ package com.example.ars.features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ars.shared.generated.resources.Res
+import ars.shared.generated.resources.home_error_criaturas
+import ars.shared.generated.resources.home_error_museos
+import ars.shared.generated.resources.home_error_progreso
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
 import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
 import com.example.ars.features.museos.domain.usecase.ObtenerCatalogoMuseosUseCase
@@ -34,7 +38,7 @@ class HomeViewModel(
         _state.update {
             it.copy(
                 cargando = true,
-                error = null
+                errores = emptyList()
             )
         }
 
@@ -58,18 +62,9 @@ class HomeViewModel(
                     val progreso = cargaProgreso.await()
 
                     val errores = listOfNotNull(
-                        museos.exceptionOrNull()?.let {
-                            it.message
-                                ?: "No se han podido cargar los museos."
-                        },
-                        criaturas.exceptionOrNull()?.let {
-                            it.message
-                                ?: "No se han podido cargar las criaturas."
-                        },
-                        progreso.exceptionOrNull()?.let {
-                            it.message
-                                ?: "No se ha podido cargar tu progreso."
-                        }
+                        Res.string.home_error_museos.takeIf { museos.isFailure },
+                        Res.string.home_error_criaturas.takeIf { criaturas.isFailure },
+                        Res.string.home_error_progreso.takeIf { progreso.isFailure }
                     )
 
                     _state.update {
@@ -77,9 +72,7 @@ class HomeViewModel(
                             museos = museos.getOrNull() ?: it.museos,
                             criaturas = criaturas.getOrNull() ?: it.criaturas,
                             progreso = progreso.getOrNull() ?: it.progreso,
-                            error = errores
-                                .takeIf { lista -> lista.isNotEmpty() }
-                                ?.joinToString("\n")
+                            errores = errores
                         )
                     }
                 }

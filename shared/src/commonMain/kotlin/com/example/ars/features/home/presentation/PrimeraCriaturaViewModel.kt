@@ -2,6 +2,9 @@ package com.example.ars.features.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ars.shared.generated.resources.Res
+import ars.shared.generated.resources.bienvenida_error_carga
+import ars.shared.generated.resources.bienvenida_error_guardado
 import com.example.ars.features.home.domain.usecase.ElegirCriaturaInicialUseCase
 import com.example.ars.features.home.domain.usecase.ObtenerCriaturasUseCase
 import com.example.ars.features.home.domain.usecase.ObtenerProgresoUseCase
@@ -101,7 +104,7 @@ class PrimeraCriaturaViewModel(
 
                 _state.update {
                     it.copy(
-                        error = "No se han podido cargar los datos. Inténtalo de nuevo."
+                        error = Res.string.bienvenida_error_carga
                     )
                 }
             } finally {
@@ -164,7 +167,7 @@ class PrimeraCriaturaViewModel(
 
                 _state.update {
                     it.copy(
-                        error = "No se ha podido guardar tu elección. Inténtalo de nuevo."
+                        error = Res.string.bienvenida_error_guardado
                     )
                 }
             } finally {

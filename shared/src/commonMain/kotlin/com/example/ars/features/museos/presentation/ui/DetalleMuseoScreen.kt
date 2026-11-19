@@ -1,6 +1,7 @@
 package com.example.ars.features.museos.presentation.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -12,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
@@ -31,14 +34,19 @@ fun DetalleMuseoScreen(
     var pestanaSeleccionada by rememberSaveable { mutableIntStateOf(0) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-        TextButton(onClick = onVolver) {
-            Text(stringResource(Res.string.museo_cerrar))
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = nombreMuseo,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.weight(1f)
+            )
+            TextButton(onClick = onVolver) {
+                Text(stringResource(Res.string.museo_cerrar))
+            }
         }
-        Text(
-            text = nombreMuseo,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
         val pestanas = listOf(
             Res.string.museo_informacion,
             Res.string.museo_obras,
@@ -53,14 +61,16 @@ fun DetalleMuseoScreen(
                 )
             }
         }
-        Column(
-            modifier = Modifier.weight(1f, fill = false)
-                .verticalScroll(rememberScrollState()).padding(top = 16.dp)
-        ) {
-            when (pestanaSeleccionada) {
-                0 -> contenidoInformacion()
-                1 -> contenidoObras()
-                2 -> contenidoMisiones()
+        key(pestanaSeleccionada) {
+            Column(
+                modifier = Modifier.weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState()).padding(top = 16.dp)
+            ) {
+                when (pestanaSeleccionada) {
+                    0 -> contenidoInformacion()
+                    1 -> contenidoObras()
+                    2 -> contenidoMisiones()
+                }
             }
         }
     }

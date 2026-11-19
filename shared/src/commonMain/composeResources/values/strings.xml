@@ -8,7 +8,6 @@
     <string name="escaner_titulo">Escanear QR</string>
     <string name="escaner_indicaciones">Escanea el QR de un museo o de una obra.</string>
     <string name="escaner_museo_activo">Último museo: %1$s</string>
-    <string name="escaner_ninguno">Ninguno</string>
     <string name="escaner_leer_qr">Leer QR</string>
     <string name="escaner_leyendo">Leyendo QR…</string>
     <string name="escaner_validando">Comprobando el código…</string>
@@ -23,7 +22,6 @@
     <string name="escaner_codigo_invalido">El QR está vacío o no tiene el formato de Ars.</string>
     <string name="escaner_museo_desconocido">El museo no está en el catálogo.</string>
     <string name="escaner_obra_desconocida">La obra no está en el catálogo.</string>
-    <string name="escaner_datos_muestra">Catálogo de muestra</string>
     <string name="nav_museos">Museos</string>
     <string name="museo_bloqueado">Museo bloqueado</string>
     <string name="museo_escanear">Escanea el QR del museo para desbloquearlo.</string>
@@ -133,4 +131,21 @@
     <string name="bienvenida_guardando">Guardando…</string>
     <string name="bienvenida_elegir">Elegir a %1$s</string>
     <string name="bienvenida_selecciona">Selecciona una criatura</string>
+    <string name="colecciones_titulo">Tus criaturas</string>
+    <string name="colecciones_subtitulo">El arte cobra vida en tu colección.</string>
+    <string name="colecciones_progreso">%1$d de %2$d descubiertas</string>
+    <string name="colecciones_porcentaje">%1$d %</string>
+    <string name="colecciones_todas">Todas</string>
+    <string name="colecciones_descubiertas">Descubiertas</string>
+    <string name="colecciones_pendientes">Pendientes</string>
+    <string name="colecciones_completa">¡Has descubierto todas las criaturas!</string>
+    <string name="colecciones_vacia">Explora museos para descubrir tu primera criatura.</string>
+    <string name="colecciones_misterio">Un misterio te espera</string>
+    <string name="colecciones_por_descubrir">POR DESCUBRIR</string>
+    <string name="colecciones_error">No se ha podido cargar tu colección. Inténtalo de nuevo.</string>
+    <string name="bienvenida_error_carga">No se han podido cargar los datos. Inténtalo de nuevo.</string>
+    <string name="bienvenida_error_guardado">No se ha podido guardar tu elección. Inténtalo de nuevo.</string>
+    <string name="home_error_museos">No se han podido cargar los museos.</string>
+    <string name="home_error_criaturas">No se han podido cargar las criaturas.</string>
+    <string name="home_error_progreso">No se ha podido cargar tu progreso.</string>
 </resources>

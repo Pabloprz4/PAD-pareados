@@ -131,7 +131,7 @@ fun PrimeraCriaturaScreen(
 
         state.error?.let { mensaje ->
             Text(
-                text = mensaje,
+                text = stringResource(mensaje),
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 20.dp)

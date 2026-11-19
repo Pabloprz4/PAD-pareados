@@ -69,11 +69,11 @@ fun MuseoCard(
     Card(
         modifier = modifier
             .width(360.dp)
-            .alpha(if (desbloqueado) 1f else 0.7f)
+            .alpha(if (desbloqueado) 1f else 0.85f)
             .clickable(enabled = desbloqueado, onClick = onClick),
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = if (desbloqueado) 3.dp else 0.dp
         ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

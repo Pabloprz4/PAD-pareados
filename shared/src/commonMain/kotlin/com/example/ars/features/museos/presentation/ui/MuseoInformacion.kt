@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import ars.shared.generated.resources.*
@@ -41,12 +43,13 @@ fun MuseoInformacion(museo: Museo, criaturas: List<Criatura>, progreso: Progreso
             painter = painterResource(imagenMuseo(museo.id)),
             contentDescription = museo.nombre,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth().height(160.dp)
+            modifier = Modifier.fillMaxWidth().height(174.dp).clip(MaterialTheme.shapes.large)
         )
         val ciudad = textoCatalogo("${museo.id}_ciudad", museo.ciudad)
         val pais = textoCatalogo("${museo.id}_pais", museo.pais)
-        Text("$ciudad, $pais", style = MaterialTheme.typography.titleMedium)
+        Text("$ciudad, $pais", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Text(textoCatalogo("${museo.id}_descripcion", museo.descripcion))
+        HorizontalDivider()
         Text(stringResource(Res.string.museo_criaturas), style = MaterialTheme.typography.titleMedium)
         val criaturasMuseo = criaturas.filter { it.id in museo.criaturasIds }
         if (criaturasMuseo.isEmpty()) {

@@ -49,14 +49,14 @@ fun MuseoCatalogoCard(
     Card(
         modifier = modifier
             .width(320.dp)
-            .alpha(if (desbloqueado) 1f else 0.7f)
+            .alpha(if (desbloqueado) 1f else 0.85f)
             .clickable(enabled = desbloqueado, onClick = onClick),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            defaultElevation = if (desbloqueado) 3.dp else 0.dp
         )
     ) {
         Column {

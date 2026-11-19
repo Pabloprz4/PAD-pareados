@@ -36,7 +36,7 @@ class ColeccionesViewModel(
         _state.update {
             it.copy(
                 cargando = true,
-                error = null
+                error = false
             )
         }
 
@@ -66,7 +66,7 @@ class ColeccionesViewModel(
             } catch (_: Exception) {
                 _state.update {
                     it.copy(
-                        error = "No se ha podido cargar tu colección. Inténtalo de nuevo."
+                        error = true
                     )
                 }
             } finally {

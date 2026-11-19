@@ -8,7 +8,6 @@
     <string name="escaner_titulo">Scan QR</string>
     <string name="escaner_indicaciones">Scan the QR code of a museum or artwork.</string>
     <string name="escaner_museo_activo">Last museum: %1$s</string>
-    <string name="escaner_ninguno">None</string>
     <string name="escaner_leer_qr">Read QR</string>
     <string name="escaner_leyendo">Reading QR…</string>
     <string name="escaner_validando">Checking code…</string>
@@ -23,7 +22,6 @@
     <string name="escaner_codigo_invalido">The QR code is empty or does not have Ars format.</string>
     <string name="escaner_museo_desconocido">The museum is not in the catalog.</string>
     <string name="escaner_obra_desconocida">The artwork is not in the catalog.</string>
-    <string name="escaner_datos_muestra">Sample catalog</string>
     <string name="nav_museos">Museums</string>
     <string name="museo_bloqueado">Locked museum</string>
     <string name="museo_escanear">"Scan the museum's QR code to unlock it."</string>
@@ -133,4 +131,21 @@
     <string name="bienvenida_guardando">Saving…</string>
     <string name="bienvenida_elegir">Choose %1$s</string>
     <string name="bienvenida_selecciona">Select a creature</string>
+    <string name="colecciones_titulo">Your creatures</string>
+    <string name="colecciones_subtitulo">Art comes to life in your collection.</string>
+    <string name="colecciones_progreso">%1$d of %2$d discovered</string>
+    <string name="colecciones_porcentaje">%1$d%</string>
+    <string name="colecciones_todas">All</string>
+    <string name="colecciones_descubiertas">Discovered</string>
+    <string name="colecciones_pendientes">Undiscovered</string>
+    <string name="colecciones_completa">You’ve discovered every creature!</string>
+    <string name="colecciones_vacia">Explore museums to discover your first creature.</string>
+    <string name="colecciones_misterio">A mystery awaits</string>
+    <string name="colecciones_por_descubrir">UNDISCOVERED</string>
+    <string name="colecciones_error">Could not load your collection. Try again.</string>
+    <string name="bienvenida_error_carga">Could not load the data. Try again.</string>
+    <string name="bienvenida_error_guardado">Could not save your choice. Try again.</string>
+    <string name="home_error_museos">Could not load museums.</string>
+    <string name="home_error_criaturas">Could not load creatures.</string>
+    <string name="home_error_progreso">Could not load your progress.</string>
 </resources>
