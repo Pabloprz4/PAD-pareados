@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -76,28 +75,19 @@ fun ColeccionesScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(
-                                colores.primary.copy(alpha = 0.12f),
-                                colores.surface
-                            )
-                        )
-                    )
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     text = stringResource(Res.string.colecciones_titulo),
                     style = MaterialTheme.typography.headlineLarge,
-                    fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
                     color = colores.onSurface
                 )
 
                 Text(
                     text = stringResource(Res.string.colecciones_subtitulo),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = colores.onSurfaceVariant
                 )
 
@@ -311,7 +301,6 @@ private fun CriaturaPendienteCard(
                             vertical = 8.dp
                         ),
                         style = MaterialTheme.typography.displayMedium,
-                        fontFamily = FontFamily.Serif,
                         color = colores.onSurfaceVariant
                     )
                 }
@@ -320,7 +309,6 @@ private fun CriaturaPendienteCard(
             Text(
                 text = stringResource(Res.string.colecciones_misterio),
                 style = MaterialTheme.typography.titleMedium,
-                fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = colores.onSurface

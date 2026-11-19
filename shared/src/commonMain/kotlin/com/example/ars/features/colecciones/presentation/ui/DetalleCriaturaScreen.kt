@@ -15,7 +15,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,7 +63,6 @@ fun DetalleCriaturaScreen(
                 Text(
                     text = stringResource(Res.string.criatura_historia),
                     style = MaterialTheme.typography.titleLarge,
-                    fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -80,14 +78,12 @@ fun DetalleCriaturaScreen(
                 Text(
                     text = "?",
                     style = MaterialTheme.typography.displayLarge,
-                    fontFamily = FontFamily.Serif,
                     color = colores.primary
                 )
 
                 Text(
                     text = stringResource(Res.string.criatura_desconocida),
                     style = MaterialTheme.typography.headlineSmall,
-                    fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
